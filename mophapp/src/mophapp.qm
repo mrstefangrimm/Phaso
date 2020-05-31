@@ -1,0 +1,3906 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="4.4.0" links="0">
+ <framework name="qpn"/>
+ <package name="AOs" stereotype="0x02">
+  <class name="DKbIn" superclass="qpn::QActive">
+   <operation name="shiftIn32" type="uint32_t" visibility="0x02" properties="0x00">
+    <code>uint32_t myDataIn = 0;
+
+for (int i=31; i&gt;=0; i--)
+{
+  digitalWrite(CLOCKPIN_IN, 0);
+  delayMicroseconds(2);
+  int temp = digitalRead(DATAPIN_IN);
+  if (temp) {
+    bitSet(myDataIn, i);
+    // Debug: Serial.print(i);
+  }
+  digitalWrite(CLOCKPIN_IN, 1);
+}
+return myDataIn;
+</code>
+   </operation>
+   <statechart>
+    <initial target="../1">
+     <action>QActive_armX((QActive *)me, 0U,
+  DKBREADINVERVAL,
+  DKBREADINVERVAL);
+
+pinMode(LATCHPIN_IN, OUTPUT);
+pinMode(CLOCKPIN_IN, OUTPUT);
+pinMode(DATAPIN_IN,  INPUT);
+
+spoutln(RSINIT, RSSTATEMACHINE, RSDKBIN);</action>
+     <initial_glyph conn="9,5,5,0,14,5">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="Read">
+     <tran trig="Q_TIMEOUT">
+      <action brief="shift in">digitalWrite(LATCHPIN_IN, 1);
+delayMicroseconds(20);
+digitalWrite(LATCHPIN_IN, 0);
+uint32_t dkbin = DKbIn_shiftIn32(me);
+// Debug: Serial.println(dkbin, HEX);
+
+if (dkbin != 0) {
+  processDKb((QMActive*)&amp;AO_Application, dkbin);
+}</action>
+      <tran_glyph conn="14,17,3,-1,16">
+       <action box="0,-2,19,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="14,10,26,13"/>
+    </state>
+    <state_diagram size="52,30"/>
+   </statechart>
+  </class>
+  <class name="DKbOut" superclass="qpn::QActive">
+   <statechart>
+    <initial target="../1">
+     <action>pinMode(CLOCKPIN_OUT, OUTPUT);
+pinMode(LATCHPIN_OUT, OUTPUT);
+pinMode(DATAPIN_OUT,  OUTPUT);
+
+spoutln(RSINIT, RSSTATEMACHINE, RSDKBOUT);</action>
+     <initial_glyph conn="9,3,5,0,11,3">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="LED">
+     <initial target="../6">
+      <initial_glyph conn="15,10,5,0,17,4">
+       <action box="0,-2,10,2"/>
+      </initial_glyph>
+     </initial>
+     <tran trig="REMOTE_MODE" target="../7">
+      <tran_glyph conn="6,45,3,3,20">
+       <action box="0,-2,14,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="CALIBRATION_MODE" target="../8">
+      <tran_glyph conn="6,57,3,3,20">
+       <action box="0,-2,16,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="PRESET_MODE" target="../5">
+      <tran_glyph conn="6,31,3,3,20">
+       <action box="0,-2,13,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="MANUAL_MOTION_MODE" target="../6">
+      <tran_glyph conn="6,20,3,3,20">
+       <action box="0,-2,21,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="PreSetLED">
+      <entry>// Debug: Serial.println(F(&quot;DKbOut: Enter PreSetLED&quot;));
+
+byte whichPin = 0; // DKb r0: 4;
+byte bitsToSend = 0;
+
+digitalWrite(LATCHPIN_OUT, LOW);
+bitWrite(bitsToSend, whichPin, HIGH);
+shiftOut(DATAPIN_OUT, CLOCKPIN_OUT, MSBFIRST, bitsToSend);
+digitalWrite(LATCHPIN_OUT, HIGH);</entry>
+      <state_glyph node="26,27,22,10">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="ManualMotionLED">
+      <entry>// Debug: Serial.println(F(&quot;DKbOut: Enter ManualMotionLED&quot;));
+
+byte whichPin = 1; // DKb r0: 5;
+byte bitsToSend = 0;
+
+digitalWrite(LATCHPIN_OUT, LOW);
+bitWrite(bitsToSend, whichPin, HIGH);
+shiftOut(DATAPIN_OUT, CLOCKPIN_OUT, MSBFIRST, bitsToSend);
+digitalWrite(LATCHPIN_OUT, HIGH);</entry>
+      <state_glyph node="26,14,22,10">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="RemoteLED">
+      <entry>// Debug: Serial.println(F(&quot;DKbOut: Enter RemoteLED&quot;));
+
+byte whichPin = 3; // DKb r0: 2;
+byte bitsToSend = 0;
+
+digitalWrite(LATCHPIN_OUT, LOW);
+bitWrite(bitsToSend, whichPin, HIGH);
+shiftOut(DATAPIN_OUT, CLOCKPIN_OUT, MSBFIRST, bitsToSend);
+digitalWrite(LATCHPIN_OUT, HIGH);</entry>
+      <state_glyph node="26,40,22,10">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="CalibrationLED">
+      <entry>// Debug: Serial.println(F(&quot;DKbOut: Enter CalibrationLED&quot;));
+
+byte whichPin = 2; // DKb r0: 3;
+byte bitsToSend = 0;
+
+digitalWrite(LATCHPIN_OUT, LOW);
+bitWrite(bitsToSend, whichPin, HIGH);
+shiftOut(DATAPIN_OUT, CLOCKPIN_OUT, MSBFIRST, bitsToSend);
+digitalWrite(LATCHPIN_OUT, HIGH);</entry>
+      <state_glyph node="26,53,22,10">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="6,6,50,61"/>
+    </state>
+    <state_diagram size="97,81"/>
+   </statechart>
+  </class>
+  <class name="MotorsOut" superclass="qpn::QActive">
+   <attribute name="servoPosition[NUMSERVOS]" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="target[NUMSERVOS]" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="stepSize[NUMSERVOS]" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="sendPositionCounter" type="uint16_t" visibility="0x02" properties="0x00"/>
+   <attribute name="initializeCounter" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="isPositionStreamActive" type="bool" visibility="0x02" properties="0x00"/>
+   <operation name="isInitialized" type="bool" visibility="0x02" properties="0x00">
+    <code>return me-&gt;initializeCounter == NUMSERVOS;</code>
+   </operation>
+   <operation name="isCalibrationMode" type="bool" visibility="0x02" properties="0x00">
+    <code>return impl.Calibration;</code>
+   </operation>
+   <statechart>
+    <initial target="../2">
+     <action>// Give the capacitor time to load
+QActive_armX((QActive *)me, 0U,
+  MOTORSTARTUPDELAY*5,
+  MOTORSTARTUPDELAY*5);
+
+servoLib.begin();
+me-&gt;initializeCounter = 0;
+me-&gt;sendPositionCounter = 1;
+me-&gt;isPositionStreamActive = false;
+
+spoutln(RSINIT, RSSTATEMACHINE, RSMOTOROUT);</action>
+     <initial_glyph conn="6,7,5,3,18">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="Active">
+     <documentation>// Timings:
+// servoLib.write for 16 motors takes 9 ms
+// Serial print takes 0.2 ms
+// Meassured with the oscilloscope and digitalWrite(HIGH/LOW)</documentation>
+     <entry>spoutln(RSENTER, RSSTATE, RSACTIVE);</entry>
+     <tran trig="MOTOR_STEP_FORWARD">
+      <action>uint32_t par = Q_PAR(me);
+MotorEvArgs data(par);
+// Debug: Serial.println(par, HEX);
+
+me-&gt;stepSize[data.ServoNum] = data.StepSize;
+int pos = me-&gt;servoPosition[data.ServoNum] + data.Pos;
+if (pos &lt; 0) { pos = 0; }
+else if (pos &gt; 255) { pos = 255; }
+
+me-&gt;target[data.ServoNum] = pos;</action>
+      <tran_glyph conn="23,29,3,-1,21">
+       <action box="0,-2,23,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="MOTOR_STEP_BACKWARD">
+      <action>uint32_t par = Q_PAR(me);
+MotorEvArgs data(par);
+// Debug: Serial.println(par, HEX);
+
+me-&gt;stepSize[data.ServoNum] = data.StepSize;
+// Debug: Serial.println(data.StepSize);
+int pos = me-&gt;servoPosition[data.ServoNum] - data.Pos;
+if (pos &lt; 0) { pos = 0; }
+else if (pos &gt; 255) { pos = 255; }
+
+me-&gt;target[data.ServoNum] = pos;</action>
+      <tran_glyph conn="23,33,3,-1,21">
+       <action box="0,-3,22,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="POSITIONSTREAM">
+      <action>uint32_t par = Q_PAR(me);
+PositionStreamEvArgs data(par);
+
+me-&gt;isPositionStreamActive = data.Enabled;
+if (me-&gt;isPositionStreamActive) {
+  spoutln(RSSTART, RSPOSITION, RSSTREAM);
+}
+else {
+  spoutln(RSSTOP, RSPOSITION, RSSTREAM);
+}
+</action>
+      <tran_glyph conn="23,36,3,-1,18">
+       <action box="0,-2,16,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="Simulation">
+      <entry>spoutln(RSENTER, RSSTATE, RSACTIVE, RSSIMULATION);</entry>
+      <tran trig="Q_TIMEOUT">
+       <action>
+#ifdef SERIALIN
+bool isMoving = false;
+#endif
+
+for (int n=0; n &lt; NUMSERVOS; n++) {
+
+  int newPos = me-&gt;servoPosition[n];
+  if (me-&gt;servoPosition[n] &lt; me-&gt;target[n]) {
+    newPos = min(me-&gt;servoPosition[n]+me-&gt;stepSize[n], me-&gt;target[n]);
+  }
+  if (me-&gt;target[n] &lt; me-&gt;servoPosition[n]) {
+    newPos = max(me-&gt;servoPosition[n]-me-&gt;stepSize[n], me-&gt;target[n]);
+  }
+  if (newPos != me-&gt;servoPosition[n]) {
+    me-&gt;servoPosition[n] = newPos;
+    #ifdef SERIALIN
+    isMoving = true;
+    #endif
+    servoLib.write(n, me-&gt;servoPosition[n]);
+  }
+}
+
+#ifdef SERIALIN
+if (!isMoving &amp;&amp; me-&gt;isPositionStreamActive) {
+  if (me-&gt;sendPositionCounter % NUMSERVOS == 0) {
+    uint8_t servo = 0xF &amp; ((me-&gt;sendPositionCounter / NUMSERVOS) - 1);
+    spout(RSPIPE);
+    Serial.print(servo, HEX);
+    Serial.print(me-&gt;servoPosition[servo]);
+    spout(RSPIPE);
+    if (me-&gt;sendPositionCounter == (NUMSERVOS * NUMSERVOS)) me-&gt;sendPositionCounter = 0;
+  }
+  me-&gt;sendPositionCounter++;
+}
+#endif</action>
+       <tran_glyph conn="26,58,3,-1,12">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="CALIBRATION_MODE" target="../../4">
+       <tran_glyph conn="51,54,1,3,12">
+        <action box="0,-2,17,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="MOTOR_MOVE_ASOLUTE">
+       <action>uint32_t par = Q_PAR(me);
+MotorEvArgs data(par);
+// Debug: Serial.println(par, HEX);
+
+me-&gt;stepSize[data.ServoNum] = data.StepSize;
+if (data.Pos &gt;= 0 &amp;&amp; data.Pos &lt;= 255) {
+  me-&gt;target[data.ServoNum] = data.Pos;
+} else {
+  me-&gt;target[data.ServoNum] = me-&gt;servoPosition[data.ServoNum];
+}</action>
+       <tran_glyph conn="26,51,3,-1,20">
+        <action box="0,-2,23,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="26,41,25,21">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="Calibration">
+      <entry>spoutln(RSENTER, RSSTATE, RSACTIVE, RSCALIBRATION);
+
+for (int n = 0; n &lt; NUMSERVOS; n++) {
+  servoLib.write(n, 150);
+  me-&gt;servoPosition[n] = 150;
+  me-&gt;target[n] = 150;
+  me-&gt;stepSize[n] = 1;
+}</entry>
+      <tran trig="Q_TIMEOUT">
+       <action>
+#ifdef SERIALIN
+bool isMoving = false;
+#endif
+
+for (int n=0; n &lt; NUMSERVOS; n++) {
+
+  int newPos = me-&gt;servoPosition[n];
+  if (me-&gt;servoPosition[n] &lt; me-&gt;target[n]) {
+    newPos = min(me-&gt;servoPosition[n]+me-&gt;stepSize[n], me-&gt;target[n]);
+  }
+  if (me-&gt;target[n] &lt; me-&gt;servoPosition[n]) {
+    newPos = max(me-&gt;servoPosition[n]-me-&gt;stepSize[n], me-&gt;target[n]);
+  }
+  if (newPos != me-&gt;servoPosition[n]) {
+    me-&gt;servoPosition[n] = newPos;
+    #ifdef SERIALIN
+    isMoving = true;
+    #endif
+    servoLib.write(n, me-&gt;servoPosition[n]);
+  }
+}
+
+#ifdef SERIALIN
+if (!isMoving &amp;&amp; me-&gt;isPositionStreamActive) {
+  if (me-&gt;sendPositionCounter % 10 == 0) {
+    int servo = 0xF &amp; ((me-&gt;sendPositionCounter / 10) - 1);
+    spout(RSPIPE);
+    Serial.print(servo);
+    Serial.print(me-&gt;servoPosition[servo] * 2 + 100);
+    spout(RSPIPE);
+    if (me-&gt;sendPositionCounter == (NUMSERVOS * 10)) me-&gt;sendPositionCounter = 0;
+  }
+  me-&gt;sendPositionCounter++;
+}
+#endif</action>
+       <tran_glyph conn="63,58,3,-1,12">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="63,44,18,18">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="23,21,60,44">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state name="Wait">
+     <entry>spoutln(RSENTER, RSSTATE, RSWAIT);</entry>
+     <tran trig="Q_TIMEOUT">
+      <action>QActive_armX((QActive *)me, 0U,
+  MOTORSTARTUPDELAY,
+  MOTORSTARTUPDELAY);</action>
+      <choice>
+       <guard brief="is initialized">MotorsOut_isInitialized(me)</guard>
+       <action>QActive_armX((QActive *)me, 0U,
+  MOTORSENDINTERVAL,
+  MOTORSENDINTERVAL);</action>
+       <choice target="../../../../1/3">
+        <guard brief="else"/>
+        <choice_glyph conn="57,29,4,0,7,-9,5">
+         <action box="0,3,10,2"/>
+        </choice_glyph>
+       </choice>
+       <choice target="../../../../1/4">
+        <guard brief="isCalibrationMode">MotorsOut_isCalibrationMode(me)</guard>
+        <choice_glyph conn="57,29,5,0,16,15">
+         <action box="1,0,15,2"/>
+        </choice_glyph>
+       </choice>
+       <choice_glyph conn="41,12,4,-1,4,16,13">
+        <action box="-11,2,11,2"/>
+       </choice_glyph>
+      </choice>
+      <choice>
+       <guard brief="else">!MotorsOut_isInitialized(me)</guard>
+       <action>// Debug: Serial.print(&quot;Initialize: &quot;); Serial.println(me-&gt;initializeCounter);
+
+servoLib.write(me-&gt;initializeCounter, 127);
+me-&gt;servoPosition[me-&gt;initializeCounter] = 127;
+me-&gt;target[me-&gt;initializeCounter] = 127;
+me-&gt;stepSize[me-&gt;initializeCounter] = 1;
+
+me-&gt;initializeCounter++;</action>
+       <choice_glyph conn="41,12,5,-1,6">
+        <action box="1,-3,10,2"/>
+       </choice_glyph>
+      </choice>
+      <tran_glyph conn="24,12,3,-1,17">
+       <action box="0,-3,12,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="24,4,28,10">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="89,81"/>
+   </statechart>
+  </class>
+  <class name="SerialIn" superclass="qpn::QActive">
+   <attribute name="remainingBytes" type="uint8_t" visibility="0x00" properties="0x00"/>
+   <attribute name="rwByteCounter" type="uint16_t" visibility="0x00" properties="0x00"/>
+   <attribute name="txtCmdLineInput[22]" type="char" visibility="0x02" properties="0x00"/>
+   <attribute name="txtCmdLineInputPos" type="uint8_t" visibility="0x00" properties="0x00"/>
+   <operation name="processRemainingBytes" type="void" visibility="0x00" properties="0x00">
+    <code>while (me-&gt;remainingBytes &gt; 1 &amp;&amp; Serial.available() &gt; 1) {
+  uint8_t tmpLow = Serial.read();
+  uint8_t tmpHigh = Serial.read();
+  // Debug: Serial.println(tmpLow, HEX); Serial.println(tmpHigh, HEX);
+  uint16_t rawData = (tmpHigh &lt;&lt; 8) | tmpLow;
+  #ifdef MOTOROUT
+  MotorEvArgs motorOut(rawData);
+  // Debug:
+  // Serial.println(F(&quot;Serial motor in&quot;));
+  // Serial.print(F(&quot;Servo Num: &quot;));
+  // Serial.println(motorOut.ServoNum);
+  // Serial.print(F(&quot;Step Size: &quot;));
+  // Serial.println(motorOut.StepSize);
+  // Serial.print(F(&quot;Servo Position: &quot;));
+  // Serial.println(motorOut.Pos);
+  QACTIVE_POST((QMActive *)&amp;AO_Application, MOTOR_MOVE_ASOLUTE_SIG, motorOut.raw);
+  #endif
+  me-&gt;remainingBytes -= 2;
+}</code>
+   </operation>
+   <operation name="hasRemainingDeviceData" type="bool" visibility="0x00" properties="0x00">
+    <code>return me-&gt;rwByteCounter &lt; DEVICEDATALENGTH;</code>
+   </operation>
+   <statechart>
+    <initial target="../1">
+     <action>QActive_armX((QActive *)me, 0U,
+  SERIALRECVINVERVAL,
+  SERIALRECVINVERVAL);
+
+me-&gt;remainingBytes = 0;
+
+spoutln(RSINIT, RSSTATEMACHINE, RSSERIALIN);</action>
+     <initial_glyph conn="12,6,5,3,20">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="ApiMode">
+     <entry>spoutln(RSENTER, RSSTATE, RSAPIMODE);</entry>
+     <tran trig="Q_TIMEOUT">
+      <action>// process unfinished command
+if (me-&gt;remainingBytes != 0) {
+  // Debug: Serial.print(&quot;Process unfinished cmd: &quot;); Serial.println(me-&gt;remainingBytes);
+  SerialIn_processRemainingBytes(me);
+}
+else if (Serial.available() &gt; 0) {
+  int serin = Serial.read();
+  //Debug: Serial.println(serin, HEX);
+
+  if (serin &gt; -1) {
+    SerialInEvArgs input(serin);
+    // Debug: Serial.print(F(&quot;Serial Byte: Cmd: 0x&quot;));
+    // Debug: Serial.println(input.getCmd(), HEX);
+    // Debug: Serial.print(F(&quot;Data &quot;));
+    // Debug: Serial.println(input.Data, BIN);
+
+    if (input.getCmd() == SOFTDKB) {
+      // Debug: Serial.println(F(&quot; SOFTDKB&quot;));
+      // Command 1: SoftDKb. The same bit is set as from the shift registers of the hardware DKb.
+      processSoftDKb((QMActive*)&amp;AO_Application, input);
+    }
+    else if (input.getCmd() == ABSMOVE) {
+      // Command 2: Absolute motion for the motors. Each motor requires 16bit/2 bytes.
+      me-&gt;remainingBytes = (serin &gt;&gt; 3);
+      // Debug: Serial.print(F(&quot;Num bytes: &quot;)); Serial.println(me-&gt;remainingBytes);
+      // It is possible that not all bytes are in the serial-in buffer.
+      SerialIn_processRemainingBytes(me);
+    }
+    else if (input.getCmd() == EXT) {
+      processExtCommand((QMActive*)&amp;AO_Application, input);
+    }
+    else if (input.getCmd() == TXT) {
+      QACTIVE_POST((QMActive*)me, ENTER_TEXTMODE_SIG, 0L);
+    }
+  }
+}</action>
+      <tran_glyph conn="32,10,3,-1,12">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="PUT_DEVICEDATA" target="../../2">
+      <action>me-&gt;rwByteCounter = 0;</action>
+      <tran_glyph conn="33,16,2,0,16">
+       <action box="-14,0,16,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="GET_DEVICEDATA" target="../../3">
+      <action>me-&gt;rwByteCounter = 0;
+//Debug: Serial.println(DEVICEDATALENGTH); Serial.println(sizeof(DeviceDataHeader));</action>
+      <tran_glyph conn="46,16,2,0,16">
+       <action box="0,1,16,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="ENTER_TEXTMODE" target="../../4">
+      <action>memset(me-&gt;txtCmdLineInput, 0, 22);
+me-&gt;txtCmdLineInputPos = 0;</action>
+      <tran_glyph conn="48,11,1,3,23,16,2">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="32,4,16,12">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state name="PutDeviceData">
+     <entry>spoutln(RSENTER, RSSTATE, RSPUTDEVICEDATA);</entry>
+     <tran trig="Q_TIMEOUT">
+      <choice>
+       <guard brief="remaining bytes">SerialIn_hasRemainingDeviceData(me)</guard>
+       <action>if (me-&gt;rwByteCounter == 0) {
+  if (Serial.available() &gt;= (int)sizeof(DeviceDataHeader)) {
+    DeviceDataHeader header;
+    header.model = Serial.read();
+    header.schema = Serial.read();
+    header.name[0] = Serial.read();
+    header.name[1] = Serial.read();
+    header.name[2] = Serial.read();
+    header.name[3] = Serial.read();
+    header.name[4] = Serial.read();
+    header.name[5] = Serial.read();
+    header.name[6] = Serial.read();
+    header.name[7] = Serial.read();
+    header.name[8] = Serial.read();
+    header.name[9] = Serial.read();
+    header.name[10] = '\0';
+
+    writeData(0, header);
+    me-&gt;rwByteCounter += sizeof(DeviceDataHeader);
+  }
+}
+else {
+  while (Serial.available() &gt; 3) {
+    Float32_t fnum;
+    fnum.b[0] = Serial.read();
+    fnum.b[1] = Serial.read();
+    fnum.b[2] = Serial.read();
+    fnum.b[3] = Serial.read();
+
+    writeData(me-&gt;rwByteCounter, fnum);
+    // Debug: Serial.println(fnum.fval, 5); // (replace 'while' with 'if')
+    me-&gt;rwByteCounter += sizeof(Float32_t);
+  }
+}</action>
+       <choice_glyph conn="29,38,4,-1,4">
+        <action box="-13,2,12,2"/>
+       </choice_glyph>
+      </choice>
+      <choice target="../../../1">
+       <guard brief="else"/>
+       <action>servoLib.end();
+impl.Calibration = false;
+servoLib.begin();
+delay(20);
+
+// Clear buffer
+do {
+} while (Serial.read() &gt; 0);
+
+QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, CALIBRATION_MODE_SIG, 0L);</action>
+       <choice_glyph conn="29,38,5,3,-13,-24,16">
+        <action box="-6,-2,10,2"/>
+       </choice_glyph>
+      </choice>
+      <tran_glyph conn="40,38,1,-1,-11">
+       <action box="-9,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="18,32,22,12">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state name="GetDeviceData">
+     <entry>spoutln(RSENTER, RSSTATE, RSGETDEVICEDATA);</entry>
+     <tran trig="Q_TIMEOUT">
+      <choice>
+       <guard brief="remaining bytes">SerialIn_hasRemainingDeviceData(me)</guard>
+       <action>if (me-&gt;rwByteCounter == 0) {
+  DeviceDataHeader header;
+  EEPROM.get(0, header);
+  Serial.println(header.model);
+  Serial.println(header.schema);
+  Serial.println(header.name);
+  me-&gt;rwByteCounter += sizeof(DeviceDataHeader);
+}
+else {
+  Float32_t calibVal;
+  EEPROM.get(me-&gt;rwByteCounter, calibVal);
+  Serial.println(calibVal.fval, 5);
+  me-&gt;rwByteCounter += sizeof(Float32_t);
+}</action>
+       <choice_glyph conn="53,38,4,-1,4">
+        <action box="0,1,12,2"/>
+       </choice_glyph>
+      </choice>
+      <choice target="../../../1">
+       <guard brief="else"/>
+       <choice_glyph conn="53,38,5,1,13,-9,-16,-15,-2">
+        <action box="1,-2,10,2"/>
+       </choice_glyph>
+      </choice>
+      <tran_glyph conn="43,38,3,-1,10">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="43,32,22,12">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state name="TextMode">
+     <entry>spoutln(RSENTER, RSSTATE, RSTEXTMODE);</entry>
+     <tran trig="Q_TIMEOUT">
+      <action>if (Serial.available() &gt; 0) {
+  int serin = Serial.read();
+
+  if (isAlphaNumeric(serin) || serin == ' ' || serin == '.') {
+    if (me-&gt;txtCmdLineInputPos &lt; 22) {
+      me-&gt;txtCmdLineInput[me-&gt;txtCmdLineInputPos] = serin;
+      me-&gt;txtCmdLineInputPos++;
+    }
+    Serial.print((char)serin);
+  }
+  else if (serin == 0b1101 || serin == 0b1010) {
+    // YAT sends 0b1101 and 0b1010, PuTTY sends 0b1101 and powershell sends 0b1010
+    //Debug: Serial.println(&quot;Enter pressed&quot;);
+
+    Serial.println(); //eol of repeated command
+
+    if (me-&gt;txtCmdLineInput[0] == 'x') {
+      // cmd
+      uint8_t cmd = strtol(&amp;me-&gt;txtCmdLineInput[1], 0, 16);
+      // Debug: Serial.println(cmd);
+
+      SerialInEvArgs input(cmd);
+      if (input.getCmd() == SOFTDKB) {
+        processSoftDKb((QMActive*)&amp;AO_Application, input);
+      }
+      else if (input.getCmd() == EXT) {
+        processExtCommand((QMActive*)&amp;AO_Application, input);
+      }
+      else {
+        Serial.println(F(&quot;nok&quot;));
+      }
+    }
+    else if (me-&gt;txtCmdLineInput[0] == 'd') {
+      // direct, raw
+      processDirectCommand(me-&gt;txtCmdLineInput);
+    }
+
+    memset(me-&gt;txtCmdLineInput, 0, 22);
+    me-&gt;txtCmdLineInputPos = 0;
+
+  }
+}</action>
+      <tran_glyph conn="73,24,3,-1,14">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="73,17,22,19">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="100,53"/>
+   </statechart>
+  </class>
+  <class name="Application" superclass="qpn::QActive">
+   <attribute name="speed" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="currentPreSet" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="preSetTimer" type="uint16_t" visibility="0x02" properties="0x00"/>
+   <operation name="isCurrentPreSet" type="bool" visibility="0x02" properties="0x00">
+    <code>Serial.println(F(&quot;PreSet isCurrentPreSet&quot;));
+
+ProgramChangeEvArgs args(Q_PAR(me));
+return me-&gt;currentPreSet == args.ProgNo;</code>
+   </operation>
+   <operation name="isDeviceDataValid" type="bool" visibility="0x02" properties="0x00">
+    <code>spoutln(RSCHECK, RSEEPROM);
+
+uint8_t model;
+EEPROM.get(0, model);
+uint8_t schema;
+EEPROM.get(1, schema);
+
+if (model != MODELTYPE || schema != DATASCHEMA) {
+  spoutln(RSNOK);
+  return false;
+}
+spoutln(RSOK);
+return true;</code>
+   </operation>
+   <statechart>
+    <initial target="../1">
+     <action>QActive_armX((QActive *)me, 0U,
+  PRESETTIMERINTERVAL,
+  PRESETTIMERINTERVAL);
+
+spoutln(RSINIT, RSSTATEMACHINE, RSAPPLICATION);</action>
+     <initial_glyph conn="23,6,5,3,11">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="Simulation">
+     <entry>spoutln(RSENTER, RSSTATE, RSSIMULATION);</entry>
+     <initial target="../5">
+      <action>me-&gt;speed = 4;</action>
+      <initial_glyph conn="43,6,4,0,4">
+       <action box="0,-2,10,2"/>
+      </initial_glyph>
+     </initial>
+     <tran trig="POSITIONSTREAM">
+      <action>QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, POSITIONSTREAM_SIG, Q_PAR(me));</action>
+      <tran_glyph conn="34,70,3,-1,16">
+       <action box="0,-2,15,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="ManualMotion">
+      <entry>spoutln(RSENTER, RSSTATE, RSMANUALMOTION);
+
+#ifdef DKBOUT
+QACTIVE_POST((QMActive *)&amp;AO_DKbOut, MANUAL_MOTION_MODE_SIG, 0L);
+#endif</entry>
+      <tran trig="MOTOR_MOVE_RELATIVE">
+       <action>// Debug: Serial.print(F(&quot;ManualMotion Motor Button Pressed&quot;));
+
+MotorMoveRelativeEvArgs args(Q_PAR(me));
+uint8_t step = (me-&gt;speed / 3) + 1;
+uint8_t dir = args.getDirection() == FORWARDS ? MOTOR_STEP_FORWARD_SIG : MOTOR_STEP_BACKWARD_SIG;
+//Debug: Serial.print(&quot;Servo Num: &quot;); Serial.println(args.ServoNum);
+
+#ifdef MOTOROUT
+  MotorEvArgs m(args.ServoNum, me-&gt;speed, step);
+  QACTIVE_POST((QMActive *)&amp;AO_MotorsOut, dir, m.raw);
+#endif</action>
+       <tran_glyph conn="38,33,3,-1,18">
+        <action box="0,-2,21,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="PRESET_MODE" target="../../3">
+       <action>spout(RSCMDPRESET);</action>
+       <tran_glyph conn="66,32,1,3,16">
+        <action box="0,-2,16,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="REMOTE_MODE" target="../../4">
+       <action>spout(RSCMDREMOTE);</action>
+       <tran_glyph conn="60,39,2,0,13">
+        <action box="0,1,17,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="PROGRAM_CHANGE">
+       <action>ProgramChangeEvArgs args(Q_PAR(me));
+me-&gt;speed = args.ProgNo;
+
+spout(RSSTEPSIZE);
+Serial.println(me-&gt;speed);</action>
+       <tran_glyph conn="38,36,3,-1,18">
+        <action box="0,-2,18,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="38,26,28,13">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="PreSet">
+      <entry>spoutln(RSENTER, RSSTATE, RSPRESET);
+
+#ifdef DKBOUT
+QACTIVE_POST((QMActive *)&amp;AO_DKbOut, PRESET_MODE_SIG, 0L);
+#endif</entry>
+      <initial target="../3">
+       <initial_glyph conn="95,23,4,0,4">
+        <action box="0,-2,10,2"/>
+       </initial_glyph>
+      </initial>
+      <tran trig="REMOTE_MODE" target="../../4">
+       <action>spout(RSCMDREMOTE);</action>
+       <tran_glyph conn="88,63,2,1,1,-16">
+        <action box="-5,1,15,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="MANUAL_MOTION_MODE" target="../../2">
+       <action>spout(RSCMDMANUALMOTION);</action>
+       <tran_glyph conn="82,35,3,1,-16">
+        <action box="-14,0,19,2"/>
+       </tran_glyph>
+      </tran>
+      <state name="Wait">
+       <entry>spoutln(RSENTER, RSSTATE, RSPRESET, RSWAIT);
+
+me-&gt;preSetTimer = 0;</entry>
+       <tran trig="PROGRAM_CHANGE" target="../../4">
+        <action>ProgramChangeEvArgs args(Q_PAR(me));
+me-&gt;currentPreSet = args.ProgNo;
+me-&gt;preSetTimer = 0;</action>
+        <tran_glyph conn="89,33,2,0,6">
+         <action box="0,0,17,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="84,27,24,6">
+        <entry box="1,2,6,2"/>
+       </state_glyph>
+      </state>
+      <state name="Run">
+       <entry>spoutln(RSENTER, RSSTATE, RSPRESET, RSRUN);</entry>
+       <tran trig="PROGRAM_CHANGE">
+        <choice target="../../../3">
+         <guard brief="else"/>
+         <choice_glyph conn="96,48,5,2,10,-15">
+          <action box="1,0,10,2"/>
+         </choice_glyph>
+        </choice>
+        <choice>
+         <guard brief="current PreSet">Application_isCurrentPreSet(me)</guard>
+         <choice_glyph conn="96,48,4,-1,5">
+          <action box="-11,1,13,3"/>
+         </choice_glyph>
+        </choice>
+        <tran_glyph conn="84,48,3,-1,12">
+         <action box="0,-3,17,3"/>
+        </tran_glyph>
+       </tran>
+       <tran trig="Q_TIMEOUT">
+        <action>#ifdef MOTOROUT
+
+if (me-&gt;currentPreSet == 1) {
+  prog1((QMActive*)&amp;AO_MotorsOut, me-&gt;preSetTimer);
+}
+else if (me-&gt;currentPreSet == 2) {
+  prog2((QMActive*)&amp;AO_MotorsOut, me-&gt;preSetTimer);
+}
+else if (me-&gt;currentPreSet == 3) {
+ prog3((QMActive*)&amp;AO_MotorsOut, me-&gt;preSetTimer);
+}
+else if (me-&gt;currentPreSet == 4) {
+  prog4((QMActive*)&amp;AO_MotorsOut, me-&gt;preSetTimer);
+}
+else if (me-&gt;currentPreSet == 5) {
+  prog5((QMActive*)&amp;AO_MotorsOut, me-&gt;preSetTimer);
+}
+else if (me-&gt;currentPreSet == 6) {
+  prog6((QMActive*)&amp;AO_MotorsOut, me-&gt;preSetTimer);
+}
+else if (me-&gt;currentPreSet == 7) {
+  prog7((QMActive*)&amp;AO_MotorsOut, me-&gt;preSetTimer);
+}
+else if (me-&gt;currentPreSet == 8) {
+  prog8((QMActive*)&amp;AO_MotorsOut, me-&gt;preSetTimer);
+}
+
+#endif</action>
+        <tran_glyph conn="84,56,3,-1,15">
+         <action box="0,-2,10,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="84,39,24,19">
+        <entry box="1,2,6,2"/>
+       </state_glyph>
+      </state>
+      <state_glyph node="82,18,28,45">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="Remote">
+      <entry>spoutln(RSENTER, RSSTATE, RSREMOTE);
+
+#ifdef DKBOUT
+QACTIVE_POST((QMActive *)&amp;AO_DKbOut, REMOTE_MODE_SIG, 0L);
+#endif</entry>
+      <tran trig="CALIBRATION_MODE" target="../../../2">
+       <action>spout(RSCMDCALIBRATION);</action>
+       <tran_glyph conn="49,64,3,1,-21">
+        <action box="-16,-2,18,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="MOTOR_MOVE_ASOLUTE">
+       <action>// Debug: Serial.println(&quot;Remote Motor Move Absolute&quot;);
+
+//MotorEvArgs args(rawData);
+#ifdef MOTOROUT
+  QACTIVE_POST((QMActive *)&amp;AO_MotorsOut, MOTOR_MOVE_ASOLUTE_SIG, Q_PAR(me));
+#endif</action>
+       <tran_glyph conn="49,63,3,-1,20">
+        <action box="0,-2,22,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="PRESET_MODE" target="../../3">
+       <action>spout(RSCMDPRESET);</action>
+       <tran_glyph conn="67,52,0,3,-7,15">
+        <action box="0,-2,14,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="MANUAL_MOTION_MODE" target="../../2">
+       <action>spout(RSCMDMANUALMOTION);</action>
+       <tran_glyph conn="56,52,0,2,-13">
+        <action box="-19,-3,23,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="49,52,23,14">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="Init">
+      <entry>spoutln(RSENTER, RSSTATE, RSINIT);</entry>
+      <tran trig="Q_TIMEOUT">
+       <action>// Sends the appliation a signal
+spout(RSDOT);</action>
+       <choice>
+        <guard brief="Valid Device Data">Application_isDeviceDataValid(me)</guard>
+        <choice target="../../../../2">
+         <guard brief="DKb connected">isDKbEnabled()</guard>
+         <action>spout(RSCMDMANUALMOTION);</action>
+         <choice_glyph conn="57,15,5,0,7,11">
+          <action box="7,3,14,2"/>
+         </choice_glyph>
+        </choice>
+        <choice target="../../../../4">
+         <guard brief="else"/>
+         <action>spout(RSCMDREMOTE);</action>
+         <choice_glyph conn="57,15,4,3,9,-21,32,13">
+          <action box="-5,3,10,2"/>
+         </choice_glyph>
+        </choice>
+        <choice_glyph conn="49,15,5,-1,8">
+         <action box="1,-3,12,2"/>
+        </choice_glyph>
+       </choice>
+       <choice target="../../../../2">
+        <guard brief="else"/>
+        <action>spout(RSCMDCALIBRATION);</action>
+        <choice_glyph conn="49,15,4,1,7,-17,37,-4">
+         <action box="-5,3,10,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="38,15,3,-1,11">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="38,10,34,8">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="34,2,78,72">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state name="Calibration">
+     <entry>spoutln(RSENTER, RSSTATE, RSCALIBRATION);
+
+me-&gt;speed = 1;
+
+#ifdef DKBOUT
+QACTIVE_POST((QMActive*)&amp;AO_DKbOut, CALIBRATION_MODE_SIG, 0L);
+#endif
+
+#ifdef MOTOROUT
+
+servoLib.end();
+impl.Calibration = true;
+servoLib.begin();
+delay(20);
+
+QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, CALIBRATION_MODE_SIG, 0L);
+
+#endif</entry>
+     <tran trig="MOTOR_MOVE_RELATIVE">
+      <action>// Debug: Serial.println(&quot;Calibration Motor Button Pressed&quot;);
+
+MotorMoveRelativeEvArgs args(Q_PAR(me));
+uint8_t step = (me-&gt;speed / 3) + 1;
+uint8_t dir = args.getDirection() == FORWARDS ? MOTOR_STEP_FORWARD_SIG : MOTOR_STEP_BACKWARD_SIG;
+// Debug: Serial.print(&quot;Servo Num: &quot;); Serial.println(args.ServoNum);
+
+#ifdef MOTOROUT
+  MotorEvArgs m(args.ServoNum, me-&gt;speed, step);
+  QACTIVE_POST((QMActive *)&amp;AO_MotorsOut, dir, m.raw);
+#endif</action>
+      <tran_glyph conn="2,56,3,-1,20">
+       <action box="0,-2,22,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="PROGRAM_CHANGE">
+      <action>ProgramChangeEvArgs args(Q_PAR(me));
+me-&gt;speed = args.ProgNo;
+
+spout(RSSTEPSIZE);
+Serial.println(me-&gt;speed);</action>
+      <tran_glyph conn="2,59,3,-1,20">
+       <action box="0,-2,18,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="GET_DEVICEDATA">
+      <action>QACTIVE_POST((QMActive*)&amp;AO_SerialIn, GET_DEVICEDATA_SIG, 0L);</action>
+      <tran_glyph conn="2,65,3,-1,20">
+       <action box="0,-2,16,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="PUT_DEVICEDATA">
+      <action>QACTIVE_POST((QMActive*)&amp;AO_SerialIn, PUT_DEVICEDATA_SIG, 0L);</action>
+      <tran_glyph conn="2,62,3,-1,20">
+       <action box="0,-2,15,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="POSITIONSTREAM">
+      <action>QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, POSITIONSTREAM_SIG, Q_PAR(me));</action>
+      <tran_glyph conn="2,70,3,-1,20">
+       <action box="0,-2,15,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="2,48,26,26">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="113,86"/>
+   </statechart>
+  </class>
+ </package>
+ <directory name=".">
+  <directory name="device">
+   <file name="no3.h">
+    <text>/* no3.h
+ * Copyright (C) 2020 by Stefan Grimm
+ */
+
+#ifndef __NO3_H
+#define __NO3_H
+
+#include &quot;device.h&quot;
+
+enum ServoNumber {
+  UPLNG=0,
+  LOLNG,
+  GALNG,
+  UPRTN,
+  LORTN,
+  GARTN
+};
+
+bool isDKbEnabled();
+void getDeviceData(float** params, float** offsets);
+void getCalibrationDeviceData(float** params, float** offsets);
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb);
+void printDKbInData(const DKbInEvArgs&amp; s);
+void prog1(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog2(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog3(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog4(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog5(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog6(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog7(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog8(QMActive* recv, uint16_t&amp; preSetTimer);
+
+bool isDKbEnabled() {
+  return false;
+}
+
+void getDeviceData(float** params, float** offsets) {
+      uint8_t model = EEPROM.read(0);
+      uint8_t schema = EEPROM.read(1);
+      // Debug: Serial.print(model);
+      // Debug: Serial.print(&quot; &quot;);
+      // Debug: Serial.println(schema);
+
+      if (model == MODELTYPE &amp;&amp; schema == DATASCHEMA) {
+        int addr = sizeof(DeviceDataHeader);
+        Float32_t calibVal;
+        // LLNG
+        EEPROM.get(addr, calibVal); params[0][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[0][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[0][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[0][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // RLNG
+        EEPROM.get(addr, calibVal); params[1][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // GLNG
+        EEPROM.get(addr, calibVal); params[2][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[2][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[2][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[2][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // LRTN
+        EEPROM.get(addr, calibVal); params[3][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[3][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[3][2] = calibVal.fval; addr += sizeof(Float32_t);
+        // RRTN
+        EEPROM.get(addr, calibVal); params[4][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[4][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[4][2] = calibVal.fval; addr += sizeof(Float32_t);
+        // GRTN
+        EEPROM.get(addr, calibVal); params[5][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[5][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[5][2] = calibVal.fval; addr += sizeof(Float32_t);
+
+        // LLNG
+        EEPROM.get(addr, calibVal); offsets[0][0] = calibVal.fval; addr += sizeof(Float32_t);
+         // RLNG
+        EEPROM.get(addr, calibVal); offsets[1][0] = calibVal.fval; addr += sizeof(Float32_t);
+        // GLNG
+        EEPROM.get(addr, calibVal); offsets[2][0] = calibVal.fval; addr += sizeof(Float32_t);
+        // LLNG
+        EEPROM.get(addr, calibVal); offsets[3][0] = calibVal.fval; addr += sizeof(Float32_t);
+        // RLNG
+        EEPROM.get(addr, calibVal); offsets[4][0] = calibVal.fval; addr += sizeof(Float32_t);
+        // GLNG
+        EEPROM.get(addr, calibVal); offsets[5][0] = calibVal.fval; addr += sizeof(Float32_t);
+      }
+      else {
+        getCalibrationDeviceData(params, offsets);
+      }
+}
+
+void getCalibrationDeviceData(float** params, float** offsets) {
+      // LLLNG
+      params[0][0] = 100;
+      params[0][1] = 2;
+      params[0][2] = 0;
+      params[0][3] = 0;
+      offsets[0][0] = 0;
+      // RLLNG
+      params[1][0] = 100;
+      params[1][1] = 2;
+      params[1][2] = 0;
+      params[1][3] = 0;
+      offsets[1][0] = 0;
+      // GALNG
+      params[2][0] = 100;
+      params[2][1] = 2;
+      params[2][2] = 0;
+      params[2][3] = 0;
+      offsets[2][0] = 0;
+      // LLRTN
+      params[3][0] = 100;
+      params[3][1] = 2;
+      params[3][2] = 0;
+      offsets[3][0] = 0;
+      // RLRTN
+      params[4][0] = 100;
+      params[4][1] = 2;
+      params[4][2] = 0;
+      offsets[4][0] = 0;
+      // GARTN
+      params[5][0] = 100;
+      params[5][1] = 2;
+      params[5][2] = 0;
+      offsets[5][0] = 0;
+}
+
+void printDKbInData(const DKbInEvArgs&amp; s);
+
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb)
+{
+  if (dkb.GAL) {
+    MotorMoveRelativeEvArgs args(GARTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAT) {
+    MotorMoveRelativeEvArgs args(GALNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAB) {
+    MotorMoveRelativeEvArgs args(GALNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAR) {
+    MotorMoveRelativeEvArgs args(GARTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.FP7) {
+    ProgramChangeEvArgs args(7);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP6) {
+    ProgramChangeEvArgs args(6);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP5) {
+    ProgramChangeEvArgs args(5);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP8) {
+    ProgramChangeEvArgs args(8);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.RLB) {
+    MotorMoveRelativeEvArgs args(LOLNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLR) {
+    MotorMoveRelativeEvArgs args(LORTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLL) {
+    MotorMoveRelativeEvArgs args(LORTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLT) {
+    MotorMoveRelativeEvArgs args(LOLNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.FP4) {
+    ProgramChangeEvArgs args(4);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP3) {
+    ProgramChangeEvArgs args(3);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP2) {
+    ProgramChangeEvArgs args(2);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP1) {
+    ProgramChangeEvArgs args(1);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FRM) {
+    QACTIVE_POST(recv, REMOTE_MODE_SIG, 0L);
+  }
+  if (dkb.FPS) {
+    QACTIVE_POST(recv, PRESET_MODE_SIG, 0L);
+  }
+  if (dkb.FMM) {
+    QACTIVE_POST(recv, MANUAL_MOTION_MODE_SIG, 0L);
+  }
+  if (dkb.FCA) {
+    QACTIVE_POST(recv, CALIBRATION_MODE_SIG, 0L);
+  }
+  if (dkb.LLB) {
+    MotorMoveRelativeEvArgs args(UPLNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLR) {
+    MotorMoveRelativeEvArgs args(UPRTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLL) {
+    MotorMoveRelativeEvArgs args(UPRTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLT) {
+    MotorMoveRelativeEvArgs args(UPLNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  printDKbInData(dkb);
+}
+
+void prog1(QMActive* recv, uint16_t&amp; preSetTimer) {
+  //  Position 1
+  static const uint8_t PROGMEM STEPSZ = 2;
+
+  MotorEvArgs llng(UPLNG, 128, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+  MotorEvArgs rlng(LOLNG, 128, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+  MotorEvArgs glng(GALNG, 128, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+  MotorEvArgs rrtn(LORTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+  MotorEvArgs grtn(GARTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+}
+
+void prog2(QMActive* recv, uint16_t&amp; preSetTimer) {
+  //  Position 2
+  static const uint8_t PROGMEM STEPSZ = 2;
+
+  MotorEvArgs llng(UPLNG, 0, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+  MotorEvArgs rlng(LOLNG, 40, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+  MotorEvArgs glng(GALNG, 0, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  MotorEvArgs lrtn(UPRTN, 255, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+  MotorEvArgs rrtn(LORTN, 79, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+  MotorEvArgs grtn(GARTN, 135, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+}
+
+void prog3(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Position 1 &lt;-&gt; 2
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(UPLNG, 64, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, 84, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(UPRTN, 191, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(LORTN, 103, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+
+    float targetLlng = 64 - 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetRlng =  84 - 44 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetLrtn = 191 + 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetRrtn = 103 - 24 * sin((preSetTimer - 3000) / 3000.0 * PI);
+
+    MotorEvArgs llng(UPLNG, targetLlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, targetRlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs lrtn(UPRTN, targetLrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(LORTN, targetRrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+  }
+
+  if (preSetTimer == 8960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog4(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Free-breath Gating
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(UPLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(LORTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+
+    float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
+
+    MotorEvArgs lllng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+    MotorEvArgs rllng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+    MotorEvArgs galng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+  }
+
+  if (preSetTimer == 7960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog5(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Breath-hold Gating
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(UPLNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(LORTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000 &amp;&amp; preSetTimer &lt; 28000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+    float target = 60 + 50 * sin((preSetTimer - 3000) / 2500.0 * PI);
+    MotorEvArgs llng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+  else if (preSetTimer &gt; 28000 &amp;&amp; preSetTimer &lt; 38000) {
+    static const uint8_t PROGMEM STEPSZ = 4;
+    float target = 200 + 50 * cos((preSetTimer - 28000) / 40000.0 * PI);
+    MotorEvArgs llng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+  else if (preSetTimer == 38000) {
+    static const uint8_t PROGMEM STEPSZ = 4;
+    MotorEvArgs llng(UPLNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+
+  if (preSetTimer == 40000) {
+    preSetTimer = 6720;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog6(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Free-breath Gating, Position 1 &lt;-&gt; 2
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(UPLNG, 64, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, 84, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, 64, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(UPRTN, 191, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(LORTN, 103, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GARTN, 131, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+
+    float targetLGlng = 64 - 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetRlng =  84 - 44 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetLrtn = 191 + 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetRrtn = 103 - 24 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetGrtn = 131 +  4 * sin((preSetTimer - 3000) / 3000.0 * PI);
+
+    MotorEvArgs llng(UPLNG, targetLGlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, targetRlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, targetLGlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(UPRTN, targetLrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(LORTN, targetRrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GARTN, targetGrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+
+  if (preSetTimer == 8960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog7(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Free-breath Gating loosing signal
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(UPLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rlng(LOLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs rrtn(LORTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs glng(GALNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs grtn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+    float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
+
+    MotorEvArgs llng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+
+  if (preSetTimer == 25000) {
+    static const uint8_t PROGMEM STEPSZ = 3;
+    MotorEvArgs grtn(GARTN, 255, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer == 35000) {
+    static const uint8_t PROGMEM STEPSZ = 3;
+    MotorEvArgs grtn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+
+  if (preSetTimer == 37960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Free-breath Gating base line shift
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(UPLNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rlng(LOLNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs rrtn(LORTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs glng(GALNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs grtn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+    float baseline = 130 + 30 * sin((preSetTimer - 3000) / 30000.0 * PI);
+    float target = baseline + 50 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    MotorEvArgs llng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+
+  if (preSetTimer == 62960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void printDKbInData(const DKbInEvArgs&amp; s) {
+  if (s.FMM) { spoutln(RSMODE, RSMANUAL); }
+  if (s.FPS) { spoutln(RSMODE, RSPRESET); }
+  if (s.FRM) { spoutln(RSMODE, RSREMOTE); }
+  if (s.FP2) { spoutln(RSPROGRAM, RSN2); }
+  if (s.FP1) { spoutln(RSPROGRAM, RSN1); }
+  if (s.FCA) { spoutln(RSMODE, RSCALIBRATION); }
+  if (s.FP3) { spoutln(RSPROGRAM, RSN3); }
+  if (s.FP4) { spoutln(RSPROGRAM, RSN4); }
+  if (s.LLL) { spoutln(RSUPPER, RSLEFT); }
+  if (s.LLT) { spoutln(RSUPPER, RSTOP); }
+  if (s.LLR) { spoutln(RSUPPER, RSRIGHT); }
+  if (s.LLB) { spoutln(RSUPPER, RSBOTTOM); }
+  if (s.RLT) { spoutln(RSLOWER, RSTOP); }
+  if (s.RLL) { spoutln(RSLOWER, RSLEFT); }
+  if (s.RLB) { spoutln(RSLOWER, RSBOTTOM); }
+  if (s.RLR) { spoutln(RSLOWER, RSRIGHT); }
+  if (s.FP8) { spoutln(RSPROGRAM, RSN8); }
+  if (s.GAT) { spoutln(RSGATING, RSTOP); }
+  if (s.GAR) { spoutln(RSGATING, RSRIGHT); }
+  if (s.GAL) { spoutln(RSGATING, RSLEFT); }
+  if (s.FP5) { spoutln(RSPROGRAM, RSN5); }
+  if (s.FP6) { spoutln(RSPROGRAM, RSN6); }
+  if (s.FP7) { spoutln(RSPROGRAM, RSN7); }
+  if (s.GAB) { spoutln(RSGATING, RSBOTTOM); }
+}
+
+#endif</text>
+   </file>
+   <file name="no2.h">
+    <text>/* no2.h
+ * Copyright (C) 2020 by Stefan Grimm
+ */
+
+#ifndef __NO2_H
+#define __NO2_H
+
+#include &quot;device.h&quot;
+
+enum ServoNumber {
+  LLNG=0,
+  RLNG,
+  GLNG,
+  LRTN,
+  RRTN,
+  GRTN
+};
+
+bool isDKbEnabled();
+void getDeviceData(float** params, float** offsets);
+void getCalibrationDeviceData(float** params, float** offsets);
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb);
+void printDKbInData(const DKbInEvArgs&amp; s);
+void prog1(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog2(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog3(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog4(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog5(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog6(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog7(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog8(QMActive* recv, uint16_t&amp; preSetTimer);
+
+bool isDKbEnabled() {
+  return false;
+}
+
+void getCalibrationDeviceData(float** params, float** offsets);
+
+void getDeviceData(float** params, float** offsets) {
+
+      uint8_t model = EEPROM.read(0);
+      uint8_t schema = EEPROM.read(1);
+      // Debug: Serial.print(model);
+      // Debug: Serial.print(&quot; &quot;);
+      // Debug: Serial.println(schema);
+
+      if (model == MODELTYPE &amp;&amp; schema == DATASCHEMA) {
+        int addr = sizeof(DeviceDataHeader);
+        Float32_t calibVal;
+        // LLNG
+        EEPROM.get(addr, calibVal); params[0][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[0][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[0][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[0][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // RLNG
+        EEPROM.get(addr, calibVal); params[1][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // GLNG
+        EEPROM.get(addr, calibVal); params[2][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[2][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[2][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[2][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // LRTN
+        EEPROM.get(addr, calibVal); params[3][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[3][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[3][2] = calibVal.fval; addr += sizeof(Float32_t);
+        // RRTN
+        EEPROM.get(addr, calibVal); params[4][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[4][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[4][2] = calibVal.fval; addr += sizeof(Float32_t);
+        // GRTN
+        EEPROM.get(addr, calibVal); params[5][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[5][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[5][2] = calibVal.fval; addr += sizeof(Float32_t);
+
+        // LLNG
+        EEPROM.get(addr, calibVal); offsets[0][0] = calibVal.fval; addr += sizeof(Float32_t);
+         // RLNG
+        EEPROM.get(addr, calibVal); offsets[1][0] = calibVal.fval; addr += sizeof(Float32_t);
+        // GLNG
+        EEPROM.get(addr, calibVal); offsets[2][0] = calibVal.fval; addr += sizeof(Float32_t);
+        // LLNG
+        EEPROM.get(addr, calibVal); offsets[3][0] = calibVal.fval; addr += sizeof(Float32_t);
+        // RLNG
+        EEPROM.get(addr, calibVal); offsets[4][0] = calibVal.fval; addr += sizeof(Float32_t);
+        // GLNG
+        EEPROM.get(addr, calibVal); offsets[5][0] = calibVal.fval; addr += sizeof(Float32_t);
+      }
+      else {
+        getCalibrationDeviceData(params, offsets);
+      }
+}
+
+void getCalibrationDeviceData(float** params, float** offsets) {
+ // LLLNG
+      params[0][0] = 100;
+      params[0][1] = 2;
+      params[0][2] = 0;
+      params[0][3] = 0;
+      offsets[0][0] = 0;
+      // RLLNG
+      params[1][0] = 100;
+      params[1][1] = 2;
+      params[1][2] = 0;
+      params[1][3] = 0;
+      offsets[1][0] = 0;
+      // GALNG
+      params[2][0] = 100;
+      params[2][1] = 2;
+      params[2][2] = 0;
+      params[2][3] = 0;
+      offsets[2][0] = 0;
+      // LLRTN
+      params[3][0] = 100;
+      params[3][1] = 2;
+      params[3][2] = 0;
+      offsets[3][0] = 0;
+      // RLRTN
+      params[4][0] = 100;
+      params[4][1] = 2;
+      params[4][2] = 0;
+      offsets[4][0] = 0;
+      // GARTN
+      params[5][0] = 100;
+      params[5][1] = 2;
+      params[5][2] = 0;
+      offsets[5][0] = 0;
+}
+
+void printDKbInData(const DKbInEvArgs&amp; s);
+
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb)
+{
+  if (dkb.GAL) {
+    MotorMoveRelativeEvArgs args(GRTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAT) {
+    MotorMoveRelativeEvArgs args(GLNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAB) {
+    MotorMoveRelativeEvArgs args(GLNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAR) {
+    MotorMoveRelativeEvArgs args(GRTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.FP7) {
+    ProgramChangeEvArgs args(7);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP6) {
+    ProgramChangeEvArgs args(6);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP5) {
+    ProgramChangeEvArgs args(5);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP8) {
+    ProgramChangeEvArgs args(8);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.RLB) {
+    MotorMoveRelativeEvArgs args(RLNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLR) {
+    MotorMoveRelativeEvArgs args(RRTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLL) {
+    MotorMoveRelativeEvArgs args(RRTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLT) {
+    MotorMoveRelativeEvArgs args(RLNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.FP4) {
+    ProgramChangeEvArgs args(4);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP3) {
+    ProgramChangeEvArgs args(3);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP2) {
+    ProgramChangeEvArgs args(2);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP1) {
+    ProgramChangeEvArgs args(1);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FRM) {
+    QACTIVE_POST(recv, REMOTE_MODE_SIG, 0L);
+  }
+  if (dkb.FPS) {
+    QACTIVE_POST(recv, PRESET_MODE_SIG, 0L);
+  }
+  if (dkb.FMM) {
+    QACTIVE_POST(recv, MANUAL_MOTION_MODE_SIG, 0L);
+  }
+  if (dkb.FCA) {
+    QACTIVE_POST(recv, CALIBRATION_MODE_SIG, 0L);
+  }
+  if (dkb.LLB) {
+    MotorMoveRelativeEvArgs args(LLNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLR) {
+    MotorMoveRelativeEvArgs args(LRTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLL) {
+    MotorMoveRelativeEvArgs args(LRTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLT) {
+    MotorMoveRelativeEvArgs args(LLNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  printDKbInData(dkb);
+}
+
+void prog1(QMActive* recv, uint16_t&amp; preSetTimer) {
+  //  Position 1
+  static const uint8_t PROGMEM STEPSZ = 2;
+
+  MotorEvArgs llng(LLNG, 128, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+  MotorEvArgs rlng(RLNG, 128, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+  MotorEvArgs glng(GLNG, 128, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  MotorEvArgs lrtn(LRTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+  MotorEvArgs rrtn(RRTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+  MotorEvArgs grtn(GRTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+}
+
+void prog2(QMActive* recv, uint16_t&amp; preSetTimer) {
+  //  Position 2
+  static const uint8_t PROGMEM STEPSZ = 2;
+
+  MotorEvArgs llng(LLNG, 0, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+  MotorEvArgs rlng(RLNG, 40, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+  MotorEvArgs glng(GLNG, 0, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  MotorEvArgs lrtn(LRTN, 255, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+  MotorEvArgs rrtn(RRTN, 79, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+  MotorEvArgs grtn(GRTN, 135, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+}
+
+void prog3(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Position 1 &lt;-&gt; 2
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(LLNG, 64, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, 84, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(LRTN, 191, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(RRTN, 103, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+
+    float targetLlng = 64 - 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetRlng =  84 - 44 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetLrtn = 191 + 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetRrtn = 103 - 24 * sin((preSetTimer - 3000) / 3000.0 * PI);
+
+    MotorEvArgs llng(LLNG, targetLlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, targetRlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs lrtn(LRTN, targetLrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(RRTN, targetRrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+  }
+
+  if (preSetTimer == 8960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog4(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Free-breath Gating
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(LLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(LRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(RRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+
+    float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
+
+    MotorEvArgs lllng(LLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+    MotorEvArgs rllng(RLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+    MotorEvArgs galng(GLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+  }
+
+  if (preSetTimer == 7960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog5(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Breath-hold Gating
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(LLNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(LRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(RRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000 &amp;&amp; preSetTimer &lt; 28000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+    float target = 60 + 50 * sin((preSetTimer - 3000) / 2500.0 * PI);
+    MotorEvArgs llng(LLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+  else if (preSetTimer &gt; 28000 &amp;&amp; preSetTimer &lt; 38000) {
+    static const uint8_t PROGMEM STEPSZ = 4;
+    float target = 200 + 50 * cos((preSetTimer - 28000) / 40000.0 * PI);
+    MotorEvArgs llng(LLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+  else if (preSetTimer == 38000) {
+    static const uint8_t PROGMEM STEPSZ = 4;
+    MotorEvArgs llng(LLNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+
+  if (preSetTimer == 40000) {
+    preSetTimer = 6720;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog6(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Free-breath Gating, Position 1 &lt;-&gt; 2
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(LLNG, 64, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, 84, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, 64, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(LRTN, 191, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(RRTN, 103, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GRTN, 131, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+
+    float targetLGlng = 64 - 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetRlng =  84 - 44 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetLrtn = 191 + 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetRrtn = 103 - 24 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetGrtn = 131 +  4 * sin((preSetTimer - 3000) / 3000.0 * PI);
+
+    MotorEvArgs llng(LLNG, targetLGlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, targetRlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, targetLGlng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs lrtn(LRTN, targetLrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rrtn(RRTN, targetRrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs grtn(GRTN, targetGrtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+
+  if (preSetTimer == 8960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog7(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Free-breath Gating loosing signal
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(LLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs lrtn(LRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rlng(RLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs rrtn(RRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs glng(GLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs grtn(GRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+    float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
+
+    MotorEvArgs llng(LLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+
+  if (preSetTimer == 25000) {
+    static const uint8_t PROGMEM STEPSZ = 3;
+    MotorEvArgs grtn(GRTN, 255, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer == 35000) {
+    static const uint8_t PROGMEM STEPSZ = 3;
+    MotorEvArgs grtn(GRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+
+  if (preSetTimer == 37960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
+  // Free-breath Gating base line shift
+
+  if (preSetTimer == 0) {
+    static const uint8_t PROGMEM STEPSZ = 2;
+    MotorEvArgs llng(LLNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs lrtn(LRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
+    MotorEvArgs rlng(RLNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs rrtn(RRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs glng(GLNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs grtn(GRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  }
+  else if (preSetTimer &gt;= 3000) {
+    static const uint8_t PROGMEM STEPSZ = 8;
+    float baseline = 130 + 30 * sin((preSetTimer - 3000) / 30000.0 * PI);
+    float target = baseline + 50 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    MotorEvArgs llng(LLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
+    MotorEvArgs glng(GLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+  }
+
+  if (preSetTimer == 62960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+
+void printDKbInData(const DKbInEvArgs&amp; s) {
+  if (s.FMM) { spoutln(RSMODE, RSMANUAL); }
+  if (s.FPS) { spoutln(RSMODE, RSPRESET); }
+  if (s.FRM) { spoutln(RSMODE, RSREMOTE); }
+  if (s.FP2) { spoutln(RSPROGRAM, RSN2); }
+  if (s.FP1) { spoutln(RSPROGRAM, RSN1); }
+  if (s.FCA) { spoutln(RSMODE, RSCALIBRATION); }
+  if (s.FP3) { spoutln(RSPROGRAM, RSN3); }
+  if (s.FP4) { spoutln(RSPROGRAM, RSN4); }
+  if (s.LLL) { spoutln(RSLEFT, RSLEFT); }
+  if (s.LLT) { spoutln(RSLEFT, RSTOP); }
+  if (s.LLR) { spoutln(RSLEFT, RSRIGHT); }
+  if (s.LLB) { spoutln(RSLEFT, RSBOTTOM); }
+  if (s.RLT) { spoutln(RSRIGHT, RSTOP); }
+  if (s.RLL) { spoutln(RSRIGHT, RSLEFT); }
+  if (s.RLB) { spoutln(RSRIGHT, RSBOTTOM); }
+  if (s.RLR) { spoutln(RSRIGHT, RSRIGHT); }
+  if (s.FP8) { spoutln(RSPROGRAM, RSN8); }
+  if (s.GAT) { spoutln(RSGATING, RSTOP); }
+  if (s.GAR) { spoutln(RSGATING, RSRIGHT); }
+  if (s.GAL) { spoutln(RSGATING, RSLEFT); }
+  if (s.FP5) { spoutln(RSPROGRAM, RSN5); }
+  if (s.FP6) { spoutln(RSPROGRAM, RSN6); }
+  if (s.FP7) { spoutln(RSPROGRAM, RSN7); }
+  if (s.GAB) { spoutln(RSGATING, RSBOTTOM); }
+}
+
+#endif</text>
+   </file>
+   <file name="gris5a.h">
+    <text>/* gris5a.h
+ * Copyright (C) 2020 by Stefan Grimm
+ */
+
+#ifndef __GRIS5A_H
+#define __GRIS5A_H
+
+#include &quot;device.h&quot;
+
+enum ServoNumber {
+  LURTN=0,
+  LULNG,
+  LLRTN,
+  LLLNG,
+  RLLNG,
+  RLRTN,
+  RULNG,
+  RURTN,
+  GALNG,
+  GARTN
+};
+
+bool isDKbEnabled();
+void getDeviceData(float** params, float** offsets);
+void getCalibrationDeviceData(float** params, float** offsets);
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb);
+void printDKbInData(const DKbInEvArgs&amp; s);
+void prog1(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog2(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog3(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog4(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog5(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog6(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog7(QMActive* recv, uint16_t&amp; preSetTimer);
+void prog8(QMActive* recv, uint16_t&amp; preSetTimer);
+
+bool isDKbEnabled() {
+  #ifdef DKBIN
+  return true;
+  #else
+  return false;
+  #endif
+}
+
+void getCalibrationDeviceData(float** params, float** offsets);
+
+void getDeviceData(float** params, float** offsets) {
+
+#if MODELTYPE == 1
+      uint8_t model = EEPROM.read(0);
+      uint8_t schema = EEPROM.read(1);
+
+      // Debug: Serial.print(model);
+      // Debug: Serial.print(&quot; &quot;);
+      // Debug: Serial.println(schema);
+      if (model == MODELTYPE &amp;&amp; schema == DATASCHEMA) {
+        int addr = sizeof(DeviceDataHeader);
+        Float32_t calibVal;
+        // LURTN
+        EEPROM.get(addr, calibVal); params[0][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[0][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // LULNG
+        EEPROM.get(addr, calibVal); params[1][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // LLRTN
+        EEPROM.get(addr, calibVal); params[2][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[2][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // LLLNG
+        EEPROM.get(addr, calibVal); params[3][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[3][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // RLLNG
+        EEPROM.get(addr, calibVal); params[4][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[4][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // RLRTN
+        EEPROM.get(addr, calibVal); params[5][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[5][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // RULNG
+        EEPROM.get(addr, calibVal); params[6][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[6][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // RURTN
+        EEPROM.get(addr, calibVal); params[7][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[7][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // GALNG
+        EEPROM.get(addr, calibVal); params[8][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[8][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // GARTN
+        EEPROM.get(addr, calibVal); params[9][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[9][1] = calibVal.fval; addr += sizeof(Float32_t);
+
+        EEPROM.get(addr, calibVal); offsets[0][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[1][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[2][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[3][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[4][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[5][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[6][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[7][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[8][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[9][0] = calibVal.fval;
+      }
+      else {
+        getCalibrationDeviceData(params, offsets);
+      }
+
+#elif MODELTYPE == 2 || MODELTYPE == 3
+
+      uint8_t model = EEPROM.read(0);
+      uint8_t schema = EEPROM.read(1);
+      // Debug: Serial.print(model);
+      // Debug: Serial.print(&quot; &quot;);
+      // Debug: Serial.println(schema);
+
+      if (model == MODELTYPE &amp;&amp; schema == DATASCHEMA) {
+        int addr = sizeof(DeviceDataHeader);
+        Float32_t calibVal;
+        // LURTN
+        EEPROM.get(addr, calibVal); params[0][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[0][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // LULNG
+        EEPROM.get(addr, calibVal); params[1][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[1][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // LLRTN
+        EEPROM.get(addr, calibVal); params[2][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[2][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // LLLNG
+        EEPROM.get(addr, calibVal); params[3][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[3][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[3][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[3][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // RLLNG
+        EEPROM.get(addr, calibVal); params[4][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[4][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[4][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[4][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // RLRTN
+        EEPROM.get(addr, calibVal); params[5][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[5][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // RULNG
+        EEPROM.get(addr, calibVal); params[6][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[6][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[6][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[6][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // RURTN
+        EEPROM.get(addr, calibVal); params[7][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[7][1] = calibVal.fval; addr += sizeof(Float32_t);
+        // GALNG
+        EEPROM.get(addr, calibVal); params[8][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[8][1] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[8][2] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[8][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // GARTN
+        EEPROM.get(addr, calibVal); params[9][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); params[9][1] = calibVal.fval; addr += sizeof(Float32_t);
+
+        EEPROM.get(addr, calibVal); offsets[0][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[1][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[2][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[3][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[4][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[5][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[6][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[7][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[8][0] = calibVal.fval; addr += sizeof(Float32_t);
+        EEPROM.get(addr, calibVal); offsets[9][0] = calibVal.fval;
+      }
+      else {
+        getCalibrationDeviceData(params, offsets);
+      }
+#else
+#error Invalid model type
+#endif
+}
+
+void getCalibrationDeviceData(float** params, float** offsets) {
+#if MODELTYPE == 1
+
+      // LURTN
+      params[0][0] = 100;
+      params[0][1] = 2;
+      offsets[0][0] = 0;
+      // LULNG
+      params[1][0] = 100;
+      params[1][1] = 2;
+      offsets[1][0] = 0;
+      // LLRTN
+      params[2][0] = 100;
+      params[2][1] = 2;
+      offsets[2][0] = 0;
+      // LLLNG
+      params[3][0] = 100;
+      params[3][1] = 2;
+      offsets[3][0] = 0;
+      // RLLNG
+      params[4][0] = 100;
+      params[4][1] = 2;
+      offsets[4][0] = 0;
+      // RLRTN
+      params[5][0] = 100;
+      params[5][1] = 2;
+      offsets[5][0] = 0;
+      // RULNG
+      params[6][0] = 100;
+      params[6][1] = 2;
+      offsets[6][0] = 0;
+      // RURTN
+      params[7][0] = 100;
+      params[7][1] = 2;
+      offsets[7][0] = 0;
+      // GALNG
+      params[8][0] = 100;
+      params[8][1] = 2;
+      offsets[8][0] = 0;
+      // GARTN
+      params[9][0] = 100;
+      params[9][1] = 2;
+      offsets[9][0] = 0;
+
+#elif MODELTYPE == 2 || MODELTYPE == 3
+
+      // LURTN
+      params[0][0] = 100;
+      params[0][1] = 2;
+      offsets[0][0] = 0;
+      // LULNG
+      params[1][0] = 100;
+      params[1][1] = 2;
+      params[1][2] = 0;
+      params[1][3] = 0;
+      offsets[1][0] = 0;
+      // LLRTN
+      params[2][0] = 100;
+      params[2][1] = 2;
+      offsets[2][0] = 0;
+      // LLLNG
+      params[3][0] = 100;
+      params[3][1] = 2;
+      params[3][2] = 0;
+      params[3][3] = 0;
+      offsets[3][0] = 0;
+      // RLLNG
+      params[4][0] = 100;
+      params[4][1] = 2;
+      params[4][2] = 0;
+      params[4][3] = 0;
+      offsets[4][0] = 0;
+      // RLRTN
+      params[5][0] = 100;
+      params[5][1] = 2;
+      offsets[5][0] = 0;
+      // RULNG
+      params[6][0] = 100;
+      params[6][1] = 2;
+      params[6][2] = 0;
+      params[6][3] = 0;
+      offsets[6][0] = 0;
+      // RURTN
+      params[7][0] = 100;
+      params[7][1] = 2;
+      offsets[7][0] = 0;
+      // GALNG
+      params[8][0] = 100;
+      params[8][1] = 2;
+      params[8][2] = 0;
+      params[8][3] = 0;
+      offsets[8][0] = 0;
+      // GARTN
+      params[9][0] = 100;
+      params[9][1] = 2;
+      offsets[9][0] = 0;
+
+#else
+#error Invalid model type
+#endif
+}
+
+void printDKbInData(const DKbInEvArgs&amp; s);
+
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb)
+{
+  // Debug: Serial.println(dkb.raw, BIN);
+  if (dkb.GAL) {
+    MotorMoveRelativeEvArgs args(GARTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAT) {
+    MotorMoveRelativeEvArgs args(GALNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAB) {
+    MotorMoveRelativeEvArgs args(GALNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.GAR) {
+    MotorMoveRelativeEvArgs args(GARTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.FP7) {
+    ProgramChangeEvArgs args(7);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP6) {
+    ProgramChangeEvArgs args(6);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP5) {
+    ProgramChangeEvArgs args(5);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP8) {
+    ProgramChangeEvArgs args(8);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.RLB) {
+    MotorMoveRelativeEvArgs args(RLLNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLR) {
+    MotorMoveRelativeEvArgs args(RLRTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLL) {
+    MotorMoveRelativeEvArgs args(RLRTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RLT) {
+    MotorMoveRelativeEvArgs args(RLLNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RUR) {
+    MotorMoveRelativeEvArgs args(RURTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RUL) {
+    MotorMoveRelativeEvArgs args(RURTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RUT) {
+    MotorMoveRelativeEvArgs args(RULNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.RUB) {
+    MotorMoveRelativeEvArgs args(RULNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.FP4) {
+    ProgramChangeEvArgs args(4);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP3) {
+    ProgramChangeEvArgs args(3);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP2) {
+    ProgramChangeEvArgs args(2);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FP1) {
+    ProgramChangeEvArgs args(1);
+    QACTIVE_POST(recv, PROGRAM_CHANGE_SIG, args.raw);
+  }
+  if (dkb.FRM) {
+    QACTIVE_POST(recv, REMOTE_MODE_SIG, 0L);
+  }
+  if (dkb.FPS) {
+    QACTIVE_POST(recv, PRESET_MODE_SIG, 0L);
+  }
+  if (dkb.FMM) {
+    QACTIVE_POST(recv, MANUAL_MOTION_MODE_SIG, 0L);
+  }
+  if (dkb.FCA) {
+    QACTIVE_POST(recv, CALIBRATION_MODE_SIG, 0L);
+  }
+  if (dkb.LLB) {
+    MotorMoveRelativeEvArgs args(LLLNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLR) {
+    MotorMoveRelativeEvArgs args(LLRTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLL) {
+    MotorMoveRelativeEvArgs args(LLRTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LLT) {
+    MotorMoveRelativeEvArgs args(LLLNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LUR) {
+    MotorMoveRelativeEvArgs args(LURTN, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LUL) {
+    MotorMoveRelativeEvArgs args(LURTN, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LUT) {
+    MotorMoveRelativeEvArgs args(LULNG, FORWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  if (dkb.LUB) {
+    MotorMoveRelativeEvArgs args(LULNG, BACKWARDS);
+    QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
+  }
+  printDKbInData(dkb);
+}
+
+void prog1(QMActive* recv, uint16_t&amp; preSetTimer) {
+    // Marker Position 1
+
+    static const uint8_t PROGMEM STEPSZ = 2;
+    if (preSetTimer == 0) {
+      MotorEvArgs lulng(LULNG, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+
+      MotorEvArgs galng(GALNG, 0, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer == 3000) {
+      MotorEvArgs lulng(LULNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+    }
+
+    if (preSetTimer &lt;= 3000) {
+      preSetTimer += PRESETTIMERINCR;
+    }
+}
+
+void prog2(QMActive* recv, uint16_t&amp; preSetTimer) {
+    // Marker Position 2
+
+    static const uint8_t PROGMEM STEPSZ = 2;
+    if (preSetTimer == 0) {
+      MotorEvArgs lulng(LULNG, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 100, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 70, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 70, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+
+      MotorEvArgs galng(GALNG, 0, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer == 3000) {
+      MotorEvArgs lulng(LULNG, 167, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 167, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 117, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 117, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 87, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 137, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 137, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 87, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+    }
+
+    if (preSetTimer &lt;= 3000) {
+      preSetTimer += PRESETTIMERINCR;
+    }
+}
+
+void prog3(QMActive* recv, uint16_t&amp; preSetTimer) {
+    // Marker Position 1 &lt;-&gt; 2
+
+    if (preSetTimer == 0) {
+      static const uint8_t PROGMEM STEPSZ = 2;
+      MotorEvArgs lulng(LULNG, 147, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 147, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 122, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 122, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 107, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 132, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 132, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 107, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+
+      MotorEvArgs galng(GALNG, 0, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer &gt;= 3000) {
+      static const uint8_t PROGMEM STEPSZ = 8;
+      float targetDeltaSmall = 10 * sin((preSetTimer - 3000) / 3000.0 * PI);
+      float targetDeltaLarge = 40 * sin((preSetTimer - 3000) / 3000.0 * PI);
+
+      MotorEvArgs lulng(LULNG, 147 - targetDeltaLarge, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 147 + targetDeltaLarge, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 122 - targetDeltaSmall, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 122 - targetDeltaSmall, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 107 + targetDeltaLarge, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 132 + targetDeltaSmall, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 132 + targetDeltaSmall, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 107 - targetDeltaLarge, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+    }
+
+    if (preSetTimer == 8960) {
+      preSetTimer = 3000;
+    }
+    else {
+      preSetTimer += PRESETTIMERINCR;
+    }
+}
+
+void prog4(QMActive* recv, uint16_t&amp; preSetTimer) {
+    // Free-breath Gating
+
+    if (preSetTimer == 0) {
+      static const uint8_t PROGMEM STEPSZ = 2;
+      MotorEvArgs lulng(LULNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+      MotorEvArgs galng(GALNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer &gt;= 3000) {
+      static const uint8_t PROGMEM STEPSZ = 8;
+      float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
+
+      MotorEvArgs lulng(LULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs rulng(RULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs lllng(LLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs rllng(RLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs galng(GALNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    }
+
+    if (preSetTimer == 7960) {
+      preSetTimer = 3000;
+    }
+    else {
+      preSetTimer += PRESETTIMERINCR;
+    }
+}
+
+void prog5(QMActive* recv, uint16_t&amp; preSetTimer) {
+    // Breath-hold Gating
+
+    if (preSetTimer == 0) {
+      static const uint8_t PROGMEM STEPSZ = 2;
+      MotorEvArgs lulng(LULNG, 60, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 60, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 60, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 60, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+      MotorEvArgs galng(GALNG, 60, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer &gt;= 3000 &amp;&amp; preSetTimer &lt; 28000) {
+      static const uint8_t PROGMEM STEPSZ = 8;
+      float target = 60 + 50 * sin((preSetTimer - 3000) / 2500.0 * PI);
+
+      MotorEvArgs lulng(LULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs rulng(RULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs lllng(LLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs rllng(RLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs galng(GALNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    }
+    else if (preSetTimer &gt; 28000 &amp;&amp; preSetTimer &lt; 38000) {
+      static const uint8_t PROGMEM STEPSZ = 4;
+      float target = 200 + 50 * cos((preSetTimer - 28000) / 40000.0 * PI);
+      MotorEvArgs lulng(LULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs rulng(RULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs lllng(LLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs rllng(RLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs galng(GALNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    }
+    else if (preSetTimer == 38000) {
+      static const uint8_t PROGMEM STEPSZ = 4;
+      MotorEvArgs lulng(LULNG, 10, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs rulng(RULNG, 10, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs lllng(LLLNG, 10, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs rllng(RLLNG, 10, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs galng(GALNG, 10, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    }
+
+    if (preSetTimer == 40000) {
+      preSetTimer = 6720;
+    }
+    else {
+      preSetTimer += PRESETTIMERINCR;
+    }
+}
+
+void prog6(QMActive* recv, uint16_t&amp; preSetTimer) {
+    // Free-breath Gating, Marker Position 1 &lt;-&gt; 2
+
+    if (preSetTimer == 0) {
+      static const uint8_t PROGMEM STEPSZ = 2;
+      MotorEvArgs lulng(LULNG, 147, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 147, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 122, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 122, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 107, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 132, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 132, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 107, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+
+      MotorEvArgs galng(GALNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer &gt;= 3000) {
+
+      static const uint8_t PROGMEM STEPSZ = 8;
+      float targetDeltaSmall = 10 * sin((preSetTimer - 3000) / 3000.0 * PI);
+      float targetDeltaLarge = 40 * sin((preSetTimer - 3000) / 3000.0 * PI);
+      float targetGating = 127 + 80 * sin((preSetTimer - 3000) / 3000.0 * PI);
+
+      MotorEvArgs lulng(LULNG, 147 - targetDeltaLarge, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 147 + targetDeltaLarge, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 122 - targetDeltaSmall, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 122 - targetDeltaSmall, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 107 + targetDeltaLarge, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 132 + targetDeltaSmall, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 132 + targetDeltaSmall, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 107 - targetDeltaLarge, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+
+      MotorEvArgs galng(GALNG, targetGating, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    }
+
+    if (preSetTimer == 8960) {
+      preSetTimer = 3000;
+    }
+    else {
+      preSetTimer += PRESETTIMERINCR;
+    }
+}
+
+void prog7(QMActive* recv, uint16_t&amp; preSetTimer) {
+    // Free-breath Gating loosing signal
+
+    if (preSetTimer == 0) {
+      static const uint8_t PROGMEM STEPSZ = 2;
+      MotorEvArgs lulng(LULNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+      MotorEvArgs galng(GALNG, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer &gt;= 3000) {
+      static const uint8_t PROGMEM STEPSZ = 8;
+      float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
+
+      MotorEvArgs lulng(LULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs rulng(RULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs lllng(LLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs rllng(RLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs galng(GALNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    }
+
+    if (preSetTimer == 25000) {
+      static const uint8_t PROGMEM STEPSZ = 3;
+
+      MotorEvArgs gartn(GARTN, 255, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer == 35000) {
+      static const uint8_t PROGMEM STEPSZ = 3;
+
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+
+    if (preSetTimer == 37960) {
+      preSetTimer = 3000;
+    }
+    else {
+      preSetTimer += PRESETTIMERINCR;
+    }
+}
+
+void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
+    // Free-breath Gating base line shift
+
+    if (preSetTimer == 0) {
+      static const uint8_t PROGMEM STEPSZ = 2;
+      MotorEvArgs lulng(LULNG, 130, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs lurtn(LURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lurtn.raw);
+      MotorEvArgs rulng(RULNG, 130, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs rurtn(RURTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rurtn.raw);
+      MotorEvArgs lllng(LLLNG, 130, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs llrtn(LLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llrtn.raw);
+      MotorEvArgs rllng(RLLNG, 130, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs rlrtn(RLRTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlrtn.raw);
+      MotorEvArgs galng(GALNG, 130, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+      MotorEvArgs gartn(GARTN, 127, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
+    }
+    else if (preSetTimer &gt;= 3000) {
+      static const uint8_t PROGMEM STEPSZ = 8;
+      float baseline = 130 + 30 * sin((preSetTimer - 3000) / 30000.0 * PI);
+      float target = baseline + 50 * sin((preSetTimer - 3000) / 3000.0 * PI);
+
+      MotorEvArgs lulng(LULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lulng.raw);
+      MotorEvArgs rulng(RULNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rulng.raw);
+      MotorEvArgs lllng(LLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
+      MotorEvArgs rllng(RLLNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+      MotorEvArgs galng(GALNG, target, STEPSZ);
+      QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    }
+
+    if (preSetTimer == 62960) {
+      preSetTimer = 3000;
+    }
+    else {
+      preSetTimer += PRESETTIMERINCR;
+    }
+}
+
+void printDKbInData(const DKbInEvArgs&amp; s) {
+  if (s.FMM) { spoutln(RSMODE, RSMANUALMOTION); }
+  if (s.FPS) { spoutln(RSMODE, RSPRESET); }
+  if (s.FRM) { spoutln(RSMODE, RSREMOTE); }
+  if (s.FP2) { spoutln(RSPROGRAM, RSN2); }
+  if (s.FP1) { spoutln(RSPROGRAM, RSN1); }
+  if (s.FCA) { spoutln(RSMODE, RSCALIBRATION); }
+  if (s.FP3) { spoutln(RSPROGRAM, RSN3); }
+  if (s.FP4) { spoutln(RSPROGRAM, RSN4); }
+  if (s.LUT) { spoutln(RSLEFT, RSUPPER, RSTOP); }
+  if (s.LUR) { spoutln(RSLEFT, RSUPPER, RSRIGHT); }
+  if (s.LUL) { spoutln(RSLEFT, RSUPPER, RSLEFT); }
+  if (s.LLL) { spoutln(RSLEFT, RSLOWER, RSLEFT); }
+  if (s.LUB) { spoutln(RSLEFT, RSUPPER, RSBOTTOM); }
+  if (s.LLT) { spoutln(RSLEFT, RSLOWER, RSTOP); }
+  if (s.LLR) { spoutln(RSLEFT, RSLOWER, RSRIGHT); }
+  if (s.LLB) { spoutln(RSLEFT, RSLOWER, RSBOTTOM); }
+  if (s.RUT) { spoutln(RSRIGHT, RSUPPER, RSTOP); }
+  if (s.RUR) { spoutln(RSRIGHT, RSUPPER, RSRIGHT); }
+  if (s.RUL) { spoutln(RSRIGHT, RSUPPER, RSLEFT); }
+  if (s.RUB) { spoutln(RSRIGHT, RSUPPER, RSBOTTOM); }
+  if (s.RLT) { spoutln(RSRIGHT, RSLOWER, RSTOP); }
+  if (s.RLL) { spoutln(RSRIGHT, RSLOWER, RSLEFT); }
+  if (s.RLB) { spoutln(RSRIGHT, RSLOWER, RSBOTTOM); }
+  if (s.RLR) { spoutln(RSRIGHT, RSLOWER, RSRIGHT); }
+  if (s.FP8) { spoutln(RSPROGRAM, RSN8); }
+  if (s.GAT) { spoutln(RSGATING, RSTOP); }
+  if (s.GAR) { spoutln(RSGATING, RSRIGHT); }
+  if (s.GAL) { spoutln(RSGATING, RSLEFT); }
+  if (s.FP5) { spoutln(RSPROGRAM, RSN5); }
+  if (s.FP6) { spoutln(RSPROGRAM, RSN6); }
+  if (s.FP7) { spoutln(RSPROGRAM, RSN7); }
+  if (s.GAB) { spoutln(RSGATING, RSBOTTOM); }
+}
+
+#endif</text>
+   </file>
+   <file name="device.h">
+    <text>/* device.h
+ * Copyright (C) 2020 by Stefan Grimm
+ */
+
+#ifndef __DEVICE_H
+#define __DEVICE_H
+
+#include &lt;C:\Users\Stefan Grimm\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.2\libraries\EEPROM\src\EEPROM.h&gt;
+#include &lt;qpn.h&gt;
+#include &quot;../events.h&quot;
+#include &quot;../constants.h&quot;
+#include &quot;../FreeMemory.h&quot;
+
+union Float32_t {
+   byte b[4];
+   float fval;
+};
+
+struct DeviceDataHeader {
+  uint8_t model;
+  uint8_t schema;
+  char    name[11];
+};
+
+void processSoftDKb(QMActive* recv, const SerialInEvArgs&amp; softdkb);
+void processExtCommand(QMActive* recv, const SerialInEvArgs&amp; input);
+void writeData(const uint16_t&amp; addr, const DeviceDataHeader&amp; header);
+void writeData(const uint16_t&amp; addr, const Float32_t&amp; value);
+void resetFunc();
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb);
+
+void processSoftDKb(QMActive* recv, const SerialInEvArgs&amp; softdkb) {
+  int bitToSet = softdkb.Data;
+  uint32_t dkbRaw = 0;
+  bitSet(dkbRaw, bitToSet);
+  DKbInEvArgs dkb(dkbRaw);
+  processDKb(recv, dkb);
+}
+
+void processExtCommand(QMActive* recv, const SerialInEvArgs&amp; input) {
+  switch (input.getCmdExt()) {
+    case SYNC:
+      spout(RSSYNCED);
+      break;
+    case GET_FREEMEM:
+      spout(RSCMDFREEMEM);
+      // Debug: int* p = new int[10];
+      // if (p == 0) { Serial.print(999); )
+      Serial.print(freeMemory());
+      spout(RSPIPE);
+      break;
+    case GET_MODEL:
+      spout(RSCMDMODEL);
+      Serial.print(MODELTYPE);
+      spout(RSPIPE);
+      break;
+    case GET_VERSION:
+      spout(RSCMDVERSION);
+      Serial.print(MAJORVERSION);
+      spout(RSDOT);
+      Serial.print(MINORVERSION);
+      spout(RSDOT);
+      Serial.print(IFVERSION);
+      spout(RSDOT);
+      Serial.print(BUILDVERSION);
+      spout(RSPIPE);
+      break;
+    case GET_DEVICEDATA:
+      QACTIVE_POST(recv, GET_DEVICEDATA_SIG, 0L);
+      break;
+    case PUT_DEVICEDATA:
+      QACTIVE_POST(recv, PUT_DEVICEDATA_SIG, 0L);
+      break;
+    case START_POSITIONSTREAM:
+      // Debug: Serial.println(F(&quot;Start position stream&quot;));
+      QACTIVE_POST(recv, POSITIONSTREAM_SIG, 1L);
+      break;
+    case STOP_POSITIONSTREAM:
+      // Debug: Serial.println(F(&quot;Stop position stream&quot;));
+      QACTIVE_POST(recv, POSITIONSTREAM_SIG, 0L);
+      break;
+    case RESET:
+      resetFunc();
+      break;
+  }
+}
+
+void writeData(const uint16_t&amp; addr, const DeviceDataHeader&amp; header) {
+  EEPROM.put(addr, header);
+}
+
+void writeData(const uint16_t&amp; addr, const Float32_t&amp; value) {
+  EEPROM.put(addr, value.fval);
+}
+
+void processDirectCommand(const char* cmdLine) {
+  // cmd
+  char* next;
+  uint8_t cmd = strtol(&amp;cmdLine[1], &amp;next, 16);
+  // Debug: Serial.println(cmd);
+  if (cmd == 0x10) {
+
+    if (isAlphaNumeric(*(++next))) {
+
+      uint16_t addr = strtol(next, &amp;next, 10);
+      //Debug: Serial.println(addr);
+
+      uint8_t valtype = strtol((++next), &amp;next, 10);
+      //Debug: Serial.println(valtype);
+
+      if (valtype == 1) {
+        uint8_t val;
+        EEPROM.get(addr, val);
+        Serial.println(val);
+        return;
+      }
+      if (valtype == 2) {
+        uint16_t val;
+        EEPROM.get(addr, val);
+        Serial.println(val);
+        return;
+      }
+      if (valtype == 4) {
+        float val;
+        EEPROM.get(addr, val);
+        Serial.println(val);
+        return;
+      }
+      if (valtype == 5) {
+        char val[11];
+        EEPROM.get(addr, val);
+        val[10] = '\0';
+        Serial.println(val);
+        return;
+      }
+      spoutln(RSNOK);
+    }
+  }
+  else if (cmd == 0x11) {
+
+    if (isAlphaNumeric(*(++next))) {
+
+      uint16_t addr = strtol(next, &amp;next, 10);
+      //Debug: Serial.println(addr);
+
+      uint8_t valtype = strtol((++next), &amp;next, 10);
+      //Debug: Serial.println(valtype);
+
+      if (valtype == 1) {
+        EEPROM.put(addr, (uint8_t)strtol((++next), 0, 10));
+        spoutln(RSOK);
+        return;
+      }
+      if (valtype == 2) {
+        EEPROM.put(addr, (uint16_t)strtol((++next), 0, 10));
+        spoutln(RSOK);
+        return;
+      }
+      if (valtype == 4) {
+        EEPROM.put(addr, (float)atof(++next));
+        spoutln(RSOK);
+        return;
+      }
+      if (valtype == 5) {
+        EEPROM.put(addr, (const char*)(++next));
+        spoutln(RSOK);
+        return;
+      }
+      spoutln(RSNOK);
+    }
+  }
+}
+
+#include &lt;avr/wdt.h&gt;
+void resetFunc() {
+  cli();                 // Clear interrupts
+  wdt_enable(WDTO_15MS); // Set the Watchdog to 15ms
+  while(1);              // Enter an infinite loop
+}
+
+#endif</text>
+   </file>
+  </directory>
+  <file name="mophapp.ino">
+   <text>/* mophapp.qm
+ * Copyright (C) 2018-2020 by Stefan Grimm
+ */
+
+#include &lt;qpn.h&gt;
+#include &lt;Arduino.h&gt;
+
+#define MAJORVERSION 1
+#define MINORVERSION 0
+#define IFVERSION    1
+#define BUILDVERSION 2
+
+//#define Q_PARAM_SIZE 2
+
+#include &quot;models.h&quot;
+
+#ifdef MOTOROUT
+#include &quot;_Adafruit_PWMServoDriver.h&quot;
+#include &quot;prfServo2.h&quot;
+
+class ServoShieldPCA9685Linear : public prfServo2ImplBase&lt;uint16_t, float&gt; {
+  public:
+  ServoShieldPCA9685Linear(Adafruit_PWMServoDriver&amp; pwm) : _pwm(pwm) {
+    Calibration = false;
+  }
+
+  bool Calibration;
+
+  void begin() {
+    _pwm.begin();
+    _pwm.setPWMFreq(60);
+    // Set pwm signal to off.
+    // The servo shield does not like signal when it is powered. 1.5 Amperes are flowing.
+    // setPWMOn() has interestingly the same effect.
+    _pwm.setPWMOff();
+  }
+
+  void get(float** params, float** offsets) const {
+    if (Calibration) {
+      getCalibrationDeviceData(params, offsets);
+    }
+    else {
+      getDeviceData(params, offsets);
+    }
+  }
+
+  void write(uint8_t num, uint16_t servoVal) {
+    _pwm.setPWM(num, 0, servoVal);
+  }
+
+  private:
+  Adafruit_PWMServoDriver&amp; _pwm;
+};
+
+Adafruit_PWMServoDriver pwm;
+ServoShieldPCA9685Linear impl(pwm);
+prfServo2&lt;TORD, uint8_t, uint16_t, float&gt; servoLib(&amp;impl, PARAM, OFFSET);
+
+#endif
+
+//============================================================================
+// declare all AO classes...
+$declare(AOs::Application)
+#ifdef DKBIN
+$declare(AOs::DKbIn)
+#endif
+#ifdef SERIALIN
+$declare(AOs::SerialIn)
+#endif
+#ifdef DKBOUT
+$declare(AOs::DKbOut)
+#endif
+#ifdef MOTOROUT
+$declare(AOs::MotorsOut)
+#endif
+
+
+// AO instances and event queue buffers for them...
+Application AO_Application;
+static QEvt l_ApplicationQSto[10*2];
+#ifdef DKBIN
+DKbIn AO_DKbIn;
+static QEvt l_DKbInQSto[1];
+#endif
+#ifdef SERIALIN
+SerialIn AO_SerialIn;
+static QEvt l_SerialInQSto[1];
+#endif
+#ifdef DKBOUT
+DKbOut AO_DKbOut;
+static QEvt l_DKbOutQSto[1];
+#endif
+#ifdef MOTOROUT
+MotorsOut AO_MotorsOut;
+static QEvt l_MotorsOutQSto[NUMSERVOS*2];
+#endif
+
+//============================================================================
+// events used in this application...
+// events.h
+// constants.h
+//============================================================================
+
+//============================================================================
+// QF_active[] array defines all active object control blocks ----------------
+QActiveCB const Q_ROM QF_active[] = {
+  { (QActive*)0, (QEvt *)0, 0U}, // SGR: required...
+  { (QActive*)&amp;AO_Application, l_ApplicationQSto, Q_DIM(l_ApplicationQSto) },
+  #ifdef DKBIN
+  { (QActive*)&amp;AO_DKbIn, l_DKbInQSto, Q_DIM(l_DKbInQSto) },
+  #endif
+  #ifdef SERIALIN
+  { (QActive*)&amp;AO_SerialIn, l_SerialInQSto, Q_DIM(l_SerialInQSto) },
+  #endif
+  #ifdef DKBOUT
+  { (QActive*)&amp;AO_DKbOut, l_DKbOutQSto, Q_DIM(l_DKbOutQSto) },
+  #endif
+  #ifdef MOTOROUT
+  { (QActive*)&amp;AO_MotorsOut, l_MotorsOutQSto, Q_DIM(l_MotorsOutQSto) }
+  #endif
+};
+
+
+//............................................................................
+void setup() {
+  // initialize the QF-nano framework
+  QF_init(Q_DIM(QF_active));
+
+  // initialize all AOs...
+  QActive_ctor(&amp;AO_Application.super, Q_STATE_CAST(&amp;Application_initial));
+  #ifdef DKBIN
+  QActive_ctor(&amp;AO_DKbIn.super, Q_STATE_CAST(&amp;DKbIn_initial));
+  #endif
+  #ifdef SERIALIN
+  QActive_ctor(&amp;AO_SerialIn.super, Q_STATE_CAST(&amp;SerialIn_initial));
+  #endif
+  #ifdef DKBOUT
+  QActive_ctor(&amp;AO_DKbOut.super, Q_STATE_CAST(&amp;DKbOut_initial));
+  #endif
+  #ifdef MOTOROUT
+  QActive_ctor(&amp;AO_MotorsOut.super, Q_STATE_CAST(&amp;MotorsOut_initial));
+  #endif
+
+  // initialize the hardware used in this sketch...
+  Serial.begin(9600);   // Standard baud rates: 9600, 38400, 115200 bps
+  Serial.print(F(&quot;Synced&quot;));
+  Serial.print(F(&quot;Start, QP-nano: &quot;));
+  Serial.println(F(QP_VERSION_STR));
+
+  // Send free memory
+  Serial.print(F(&quot;|K&quot;));
+  Serial.print(freeMemory());
+  Serial.print(F(&quot;|&quot;));
+}
+
+//............................................................................
+void loop() {
+  QF_run(); // run the QF-nano framework
+}
+
+//============================================================================
+// interrupts...
+ISR(TIMER2_COMPA_vect) {
+  QF_tickXISR(0); // process time events for tick rate 0
+}
+
+//============================================================================
+// QF callbacks...
+void QF_onStartup(void) {
+  // set Timer2 in CTC mode, 1/1024 prescaler, start the timer ticking...
+  TCCR2A = (1U &lt;&lt; WGM21) | (0U &lt;&lt; WGM20);
+  TCCR2B = (1U &lt;&lt; CS22 ) | (1U &lt;&lt; CS21) | (1U &lt;&lt; CS20); // 1/2^10
+  ASSR  &amp;= ~(1U &lt;&lt; AS2);
+  TIMSK2 = (1U &lt;&lt; OCIE2A); // enable TIMER2 compare Interrupt
+  TCNT2  = 0U;
+
+  // set the output-compare register based on the desired tick frequency
+  OCR2A  = (F_CPU / BSP_TICKS_PER_SEC / 1024U) - 1U;
+}
+//............................................................................
+void QV_onIdle(void) {   // called with interrupts DISABLED
+  // Put the CPU and peripherals to the low-power mode. You might
+  // need to customize the clock management for your application,
+  // see the datasheet for your particular AVR MCU.
+  SMCR = (0 &lt;&lt; SM0) | (1 &lt;&lt; SE); // idle mode, adjust to your project
+  QV_CPU_SLEEP();  // atomically go to sleep and enable interrupts
+}
+//............................................................................
+void Q_onAssert(char const Q_ROM* const file, int line) {
+  // implement the error-handling policy for your application!!!
+  QF_INT_DISABLE(); // disable all interrupts
+  QF_RESET();  // reset the CPU
+}
+
+//============================================================================
+// define all AO classes (state machine)...
+$define(AOs::Application)
+#ifdef DKBIN
+$define(AOs::DKbIn)
+#endif
+#ifdef SERIALIN
+$define(AOs::SerialIn)
+#endif
+#ifdef DKBOUT
+$define(AOs::DKbOut)
+#endif
+#ifdef MOTOROUT
+$define(AOs::MotorsOut)
+#endif
+</text>
+  </file>
+  <file name="FreeMemory.h">
+   <text>// Copied from:
+// https://learn.adafruit.com/memories-of-an-arduino/measuring-free-memory
+
+#ifndef __FREEMEMORY_H
+#define __FREEMEMORY_H
+
+#ifdef __arm__
+// should use uinstd.h to define sbrk but Due causes a conflict
+extern &quot;C&quot; char* sbrk(int incr);
+#else  // __ARM__
+extern char *__brkval;
+#endif  // __arm__
+
+int freeMemory() {
+  char top;
+#ifdef __arm__
+  return &amp;top - reinterpret_cast&lt;char*&gt;(sbrk(0));
+#elif defined(CORE_TEENSY) || (ARDUINO &gt; 103 &amp;&amp; ARDUINO != 151)
+  return 1 + (&amp;top - __brkval);
+#else  // __arm__
+  return 1 + (__brkval ? &amp;top - __brkval : &amp;top - __malloc_heap_start);
+#endif  // __arm__
+}
+
+#endif</text>
+  </file>
+  <file name="events.h">
+   <text>/* events.h
+ * Copyright (C) 2019-2020 by Stefan Grimm
+ */
+
+#ifndef __EVENTS_H
+#define __EVENTS_H
+
+enum Signals {
+  MANUAL_MOTION_MODE_SIG = Q_USER_SIG,
+  PRESET_MODE_SIG,
+  REMOTE_MODE_SIG,
+  CALIBRATION_MODE_SIG,
+  PROGRAM_CHANGE_SIG,
+  MOTOR_STEP_FORWARD_SIG,
+  MOTOR_STEP_BACKWARD_SIG,
+  MOTOR_MOVE_RELATIVE_SIG,
+  MOTOR_MOVE_ASOLUTE_SIG,
+  DKBIN_DISPATCH_SIG,
+  GET_DEVICEDATA_SIG,
+  PUT_DEVICEDATA_SIG,
+  POSITIONSTREAM_SIG,
+  ENTER_TEXTMODE_SIG
+};
+
+enum SerialInCommand {
+  SOFTDKB = 1,
+  ABSMOVE = 2,
+  EXT = 3,
+  TXT = 7
+};
+
+enum SerialInCommandExt {
+  SYNC = 1,
+  GET_FREEMEM = 2,
+  GET_MODEL = 3,
+  GET_VERSION = 4,
+  GET_DEVICEDATA = 5,
+  PUT_DEVICEDATA = 6,
+  START_POSITIONSTREAM = 7,
+  STOP_POSITIONSTREAM = 8,
+  RESET = 9
+};
+
+struct SerialInEvArgs {
+  SerialInEvArgs () : raw(0) {}
+  SerialInEvArgs (const SerialInEvArgs&amp; t) : raw(t.raw) {}
+  SerialInEvArgs (uint8_t rawValue) : raw(rawValue) {}
+
+  SerialInCommand getCmd() const { return (SerialInCommand)Cmd; }
+  SerialInCommandExt getCmdExt() const { return (SerialInCommandExt)Data; }
+
+  union {
+    struct {
+      uint8_t Cmd  : 3;
+      uint8_t Data : 5;
+    };
+    uint8_t raw;
+  };
+};
+
+struct DKbInEvArgs {
+  DKbInEvArgs () : raw(0) {}
+  DKbInEvArgs (const DKbInEvArgs&amp; t) : raw(t.raw) {}
+  DKbInEvArgs (uint32_t rawValue) : raw(rawValue) {}
+  union {
+    struct {
+      uint32_t GAL : 1;
+      uint32_t GAT : 1;
+      uint32_t GAB : 1;
+      uint32_t GAR : 1;
+      uint32_t FP7 : 1;
+      uint32_t FP6 : 1;
+      uint32_t FP5 : 1;
+      uint32_t FP8 : 1;
+      uint32_t RLB : 1;
+      uint32_t RLR : 1;
+      uint32_t RLL : 1;
+      uint32_t RLT : 1;
+      uint32_t RUR : 1;
+      uint32_t RUL : 1;
+      uint32_t RUT : 1;
+      uint32_t RUB : 1;
+      uint32_t FP4 : 1;
+      uint32_t FP3 : 1;
+      uint32_t FP2 : 1;
+      uint32_t FP1 : 1;
+      uint32_t FRM : 1;
+      uint32_t FPS : 1;
+      uint32_t FMM : 1;
+      uint32_t FCA : 1;
+      uint32_t LLB : 1;
+      uint32_t LLR : 1;
+      uint32_t LLL : 1;
+      uint32_t LLT : 1;
+      uint32_t LUR : 1;
+      uint32_t LUL : 1;
+      uint32_t LUT : 1;
+      uint32_t LUB : 1;
+    };
+    uint32_t raw;
+  };
+};
+
+enum Direction {
+  BACKWARDS = 0,
+  FORWARDS
+};
+
+struct MotorMoveRelativeEvArgs {
+  MotorMoveRelativeEvArgs () : raw(0) {}
+  MotorMoveRelativeEvArgs (const MotorMoveRelativeEvArgs&amp; t) : raw(t.raw) {}
+  MotorMoveRelativeEvArgs (uint8_t rawValue) : raw(rawValue) {}
+  MotorMoveRelativeEvArgs (uint8_t servoNum, Direction direction) : raw((direction &lt;&lt; 4) | servoNum) {}
+
+  Direction getDirection() { return (Direction)Dir; }
+
+  union {
+    struct {
+      uint8_t ServoNum : 4;
+      uint8_t Dir      : 1;
+      uint8_t Any      : 3;
+    };
+    uint8_t raw;
+  };
+};
+
+struct ProgramChangeEvArgs {
+  ProgramChangeEvArgs () : raw(0) {}
+  ProgramChangeEvArgs (const ProgramChangeEvArgs&amp; t) : raw(t.raw) {}
+  ProgramChangeEvArgs (uint8_t rawValue) : raw(rawValue) {}
+
+  union {
+    struct {
+      uint8_t ProgNo : 4;
+      uint8_t Any    : 4;
+    };
+    uint8_t raw;
+  };
+};
+
+#ifdef MOTOROUT
+struct MotorEvArgs {
+  MotorEvArgs () : raw(0) {}
+  MotorEvArgs (const MotorEvArgs&amp; t) : raw(t.raw) {}
+  MotorEvArgs (uint16_t rawValue) : raw(rawValue) {}
+  MotorEvArgs (uint8_t m, uint8_t pos, uint8_t step)
+    : raw((pos &lt;&lt; 8) | (step &lt;&lt; 4) | m) {}
+  union {
+    struct {
+      uint16_t ServoNum : 4;
+      uint16_t StepSize : 4;
+      uint16_t Pos   : 8;
+    };
+    uint16_t raw;
+  };
+};
+
+struct PositionStreamEvArgs {
+  PositionStreamEvArgs () : raw(0) {}
+  PositionStreamEvArgs (const PositionStreamEvArgs&amp; t) : raw(t.raw) {}
+  PositionStreamEvArgs (uint8_t rawValue) : raw(rawValue) {}
+  union {
+    struct {
+      uint8_t  Enabled : 1;
+      uint8_t  Future : 7;
+    };
+    uint8_t raw;
+  };
+};
+#endif
+
+#endif</text>
+  </file>
+  <file name="constants.h">
+   <text>/* constants.h
+ * Copyright (C) 2019-2020 by Stefan Grimm
+ */
+
+#ifndef __CONSTANTS_H
+#define __CONSTANTS_H
+
+#include &quot;prsserial.h&quot;
+
+enum Pins {
+  CLOCKPIN_IN = 4,  // yellow 1
+  LATCHPIN_IN = 3,  // green 1
+  DATAPIN_IN = 2,   // blue 1
+  CLOCKPIN_OUT = 7, // yellow 2
+  LATCHPIN_OUT = 6, // green 2
+  DATAPIN_OUT = 5   // blue 2
+};
+
+// Timeout definitions
+// Given BSP_TICKS_PER_SEC = 100:
+// Possible are 1 for 10 ms or 100 Hz, 2 for 20 ms or 50 Hz, 3 for 30 ms or 33.3 Hz
+enum Constants {
+  BSP_TICKS_PER_SEC = 100,          // Number of system clock ticks in one second, e.g. an interrupt every 10 ms
+  DKBREADINVERVAL = 10,             // Read control panel every 100 ms
+  SERIALRECVINVERVAL = 4,           // Read serial in buffer every 40 ms
+  MOTORSENDINTERVAL = 2,            // A move of a motor takes 20 ms. the term step is used in the source code
+  PRESETTIMERINTERVAL = 4,          // Discrete step size between the positions is 40 ms
+  USERPROGRAMCOUNTERINTERVAL = 100, // Discrete step size between positions is 1000 ms
+  MOTORSTARTUPDELAY = 20,           // Wait 200 ms between the initialization of the motors (all at once draws too much current)
+  PRESETTIMERINCR = 40              // Increment the preset timer by 40 ms on every PRESETTIMERINTERVAL
+};
+
+PRSDEFM(RSPIPE, &quot;|&quot;);
+PRSDEFM(RSDOT, &quot;.&quot;);
+PRSDEFM(RSSYNCED, &quot;Synced&quot;);
+PRSDEFM(RSCMDMANUALMOTION, &quot;|G|&quot;);
+PRSDEFM(RSCMDPRESET, &quot;|H|&quot;);
+PRSDEFM(RSCMDREMOTE, &quot;|I|&quot;);
+PRSDEFM(RSCMDCALIBRATION, &quot;|J|&quot;);
+PRSDEFM(RSCMDFREEMEM, &quot;|K&quot;);
+PRSDEFM(RSCMDMODEL, &quot;|L&quot;);
+PRSDEFM(RSCMDVERSION, &quot;|M&quot;);
+
+PRSDEFI(RSOK, &quot;Ok&quot;);
+PRSDEFI(RSNOK, &quot;Nok&quot;);
+PRSDEFI(RSENTER, &quot;Enter&quot;);
+PRSDEFI(RSWAIT, &quot;Wait&quot;);
+PRSDEFI(RSRUN, &quot;Run&quot;);
+PRSDEFI(RSACTIVE, &quot;Active&quot;);
+PRSDEFI(RSSTART, &quot;Start&quot;);
+PRSDEFI(RSSTOP, &quot;Stop&quot;);
+
+PRSDEFI(RSN1, &quot;1&quot;);
+PRSDEFI(RSN2, &quot;2&quot;);
+PRSDEFI(RSN3, &quot;3&quot;);
+PRSDEFI(RSN4, &quot;4&quot;);
+PRSDEFI(RSN5, &quot;5&quot;);
+PRSDEFI(RSN6, &quot;6&quot;);
+PRSDEFI(RSN7, &quot;7&quot;);
+PRSDEFI(RSN8, &quot;8&quot;);
+
+PRSDEFI(RSSTATEMACHINE, &quot;Statemachine&quot;);
+PRSDEFI(RSMODE, &quot;Mode&quot;);
+PRSDEFI(RSPROGRAM, &quot;Program&quot;);
+PRSDEFI(RSGATING, &quot;Gating&quot;);
+PRSDEFI(RSSTATE, &quot;State&quot;);
+PRSDEFI(RSMANUALMOTION, &quot;ManualMotion&quot;);
+PRSDEFI(RSPRESET, &quot;Preset&quot;);
+PRSDEFI(RSREMOTE, &quot;Remote&quot;);
+PRSDEFI(RSCALIBRATION, &quot;Calibration&quot;);
+PRSDEFI(RSAPIMODE, &quot;ApiMode&quot;);
+PRSDEFI(RSTEXTMODE, &quot;TextMode&quot;);
+PRSDEFI(RSGETDEVICEDATA, &quot;GetDeviceData&quot;);
+PRSDEFI(RSPUTDEVICEDATA, &quot;PutDeviceData&quot;);
+PRSDEFI(RSSIMULATION, &quot;Simulation&quot;);
+PRSDEFI(RSSTEPSIZE, &quot;StepSize&quot;);
+PRSDEFI(RSPOSITION, &quot;Position&quot;);
+PRSDEFI(RSSTREAM, &quot;Stream&quot;);
+PRSDEFI(RSINIT, &quot;Init&quot;);
+PRSDEFI(RSDKBIN, &quot;DKbIn&quot;);
+PRSDEFI(RSDKBOUT, &quot;DKbOut&quot;);
+PRSDEFI(RSSERIALIN, &quot;SerialIn&quot;);
+PRSDEFI(RSMOTOROUT, &quot;MotorOut&quot;);
+PRSDEFI(RSAPPLICATION, &quot;Application&quot;);
+PRSDEFI(RSCHECK, &quot;Check&quot;);
+PRSDEFI(RSEEPROM, &quot;Eeprom&quot;);
+
+PRSDEFI(RSTOP, &quot;Top&quot;);
+PRSDEFI(RSLEFT, &quot;Left&quot;);
+PRSDEFI(RSRIGHT, &quot;Right&quot;);
+PRSDEFI(RSBOTTOM, &quot;Bottom&quot;);
+PRSDEFI(RSUPPER, &quot;Upper&quot;);
+PRSDEFI(RSLOWER, &quot;Lower&quot;);
+
+
+#endif</text>
+  </file>
+  <file name="models.h">
+   <text>/* models.h
+ * Copyright (C) 2020 by Stefan Grimm
+ */
+
+#ifndef __MODELS_H
+#define __MODELS_H
+
+#if MODELTYPE == 1
+
+// GRIS5A
+// DKb: no
+// 5 x Lng Param Ord 1, Offset Ord 0
+// 5 x Rtn Param Ord 1, Offset Ord 0
+
+#define GRIS5A
+#define SERIALIN
+#define MOTOROUT
+#define TORD uint32_t
+
+const uint8_t NUMSERVOS  = 10;
+const uint8_t DATASCHEMA = 1;
+const TORD PARAM         = 0x00055555; //  01010101010101010101
+const TORD OFFSET        = 0x0;
+
+#include &quot;device/gris5a.h&quot;
+
+const uint8_t DEVICEDATALENGTH = (10 * 2 + 10 * 1) * sizeof(Float32_t) + sizeof(DeviceDataHeader);
+
+#elif MODELTYPE == 2
+
+// GRIS5A
+// DKb: no
+// 5 x Lng Param Ord 3, Offset Ord 0
+// 5 x Rtn Param Ord 1, Offset Ord 0
+
+#define GRIS5A
+#define SERIALIN
+#define MOTOROUT
+#define TORD uint32_t
+
+const uint8_t NUMSERVOS  = 10;
+const uint8_t DATASCHEMA = 1;
+const TORD PARAM         = 0x000777DD;
+const TORD OFFSET        = 0x0;
+
+#include &quot;device/gris5a.h&quot;
+
+const uint8_t DEVICEDATALENGTH = (5 * 4 + 5 * 2 + 10 * 1) * sizeof(Float32_t) + sizeof(DeviceDataHeader);
+
+#elif MODELTYPE == 3
+
+// GRIS5A
+// DKb: yes
+// 5 x Lng Param Ord 3, Offset Ord 0
+// 5 x Rtn Param Ord 1, Offset Ord 0
+
+#define GRIS5A
+#define SERIALIN
+#define MOTOROUT
+#define DKBIN
+#define DKBOUT
+#define TORD uint32_t
+
+const uint8_t NUMSERVOS  = 10;
+const uint8_t DATASCHEMA = 1;
+const TORD PARAM         = 0x0777DD;
+const TORD OFFSET        = 0x0777DD;
+
+#include &quot;device/gris5a.h&quot;
+
+const uint8_t DEVICEDATALENGTH = (5 * 4 + 5 * 2 + 10 * 1) * sizeof(Float32_t) + sizeof(DeviceDataHeader);
+
+#elif MODELTYPE == 4
+
+// No2
+// DKb: no
+// 3 x Lng Param Ord 3, Offset Ord 0
+// 3 x Rtn Param Ord 2, Offset Ord 0
+
+#define NO2
+#define SERIALIN
+#define MOTOROUT
+#define TORD uint16_t
+
+const uint8_t NUMSERVOS  = 6;
+const uint8_t DATASCHEMA = 1;
+const TORD PARAM         = 0b0000101010111111;
+const TORD OFFSET        = 0;
+
+#include &quot;device/no2.h&quot;
+
+const uint8_t DEVICEDATALENGTH = (3 * 4 + 3 * 3 + 6 * 1) * sizeof(Float32_t) + sizeof(DeviceDataHeader);
+
+#elif MODELTYPE == 5
+
+// No3
+// DKb: no
+// 3 x Lng Param Ord 3, Offset Ord 0
+// 3 x Rtn Param Ord 2, Offset Ord 0
+
+#define NO3
+#define SERIALIN
+#define MOTOROUT
+#define TORD uint16_t
+
+const uint8_t NUMSERVOS  = 6;
+const uint8_t DATASCHEMA = 1;
+const TORD PARAM         = 0b0000101010111111;
+const TORD OFFSET        = 0;
+
+#include &quot;device/no3.h&quot;
+
+const uint8_t DEVICEDATALENGTH = (3 * 4 + 3 * 3 + 6 * 1) * sizeof(Float32_t) + sizeof(DeviceDataHeader);
+
+#else
+#error Invalid model type
+#endif
+
+#endif</text>
+  </file>
+ </directory>
+</model>

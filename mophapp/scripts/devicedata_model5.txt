@@ -1,0 +1,60 @@
+# Device data for the Lung X-Ray Imaging Phantom (working title: No3)
+#
+#  ***Use caution when calibrating the phantom. Hitting the physical limits can permanently damage your servo.***
+#
+#  *Each servo motor needs to be calibrated individually.
+#   By default, the values are set to [150, 507] which in pulse length are [660, 2260] ms.*
+#
+# (C) Stefan Grimm, release to public domain.
+
+# Model
+5
+
+# Schema
+1
+
+# Name
+Lung m5
+
+# Param
+# 0 (Upper LNG)
+ 150
+ 1.4
+ 0
+ 0
+# 1 (Lower LNG)
+ 507
+-1.4
+ 0
+ 0
+# 2 (Gating LNG)
+ 150
+ 1.4
+ 0
+ 0
+# 3 (Upper RTN)
+ 150
+ 1.4
+ 0
+# 4 (Lower RTN)
+ 150
+ 1.4
+ 0
+# 5 (Gating RTN)
+ 150
+ 1.4
+ 0
+
+# Offset
+# 0 (Upper LNG)
+ 0
+# 1 (Lower LNG)
+ 0
+# 2 (Gating LNG)
+ 0
+# 3 (Upper RTN)
+ 0
+# 4 (Lower RTN)
+ 0
+# 5 (Gating RTN)
+ 0

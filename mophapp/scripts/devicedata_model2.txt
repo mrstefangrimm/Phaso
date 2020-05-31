@@ -1,0 +1,81 @@
+# Device data for the Marker X-Ray Imaging Phantom (working title: GRIS5A)
+#
+#  ***Use caution when calibrating the phantom. Hitting the physical limits can permanently damage your servo.***
+#
+#  *Each servo motor needs to be calibrated individually.
+#   By default, the values are set to [150, 507] which in pulse length are [660, 2260] ms.*
+#
+# (C) Stefan Grimm, release to public domain.
+
+# Model
+2
+
+# Schema
+1
+
+# Name
+Marker m2
+
+# Param
+# 0 (LURTN)
+ 150
+ 1.4
+# 1 (LULNG)
+ 507
+-1.4
+ 0
+ 0
+# 2 (LLRTN)
+ 150
+ 1.4
+# 3 (LLLNG)
+ 150
+ 1.4
+ 0
+ 0
+# 4 (RLLNG)
+ 507
+-1.4
+ 0
+ 0
+# 5 (RLRTN)
+ 150
+ 1.4
+# 6 (RULNG)
+ 150
+ 1.4
+ 0
+ 0
+# 7 (RURTN)
+ 150
+ 1.4
+# 8 (GALNG)
+ 507
+-1.4
+ 0
+ 0
+# 9 (GARTN)
+ 507
+-1.4
+
+# Offset
+# 0 (LURTN)
+ 0
+# 1 (LULNG)
+ 0
+# 2 (LLRTN)
+ 0
+# 3 (LLLNG)
+ 0
+# 4 (RLLNG)
+ 0
+# 5 (RLRTN)
+ 0
+# 6 (RULNG)
+ 0
+# 7 (RURTN)
+ 0
+# 8 (GALNG)
+ 0
+# 9 (GARTN)
+ 0
