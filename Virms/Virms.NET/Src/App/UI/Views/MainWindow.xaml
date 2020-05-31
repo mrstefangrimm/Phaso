@@ -1,0 +1,179 @@
+﻿<!-- MainWindow.xaml - ViphApp (C) motion phantom application.
+ * Copyright (C) 2018-2020 by Stefan Grimm
+ *
+ * This is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with the ViphApp software.  If not, see
+ *<http://www.gnu.org/licenses/> .
+ -->
+
+<Window x:Class="ViphApp.App.UI.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ViphApp.App.UI.Views"
+        xmlns:common="clr-namespace:ViphApp.Common.UI;assembly=ViphApp.Common"
+        xmlns:VM="clr-namespace:ViphApp.App.UI"
+        Background="#FF1F1F1F"
+        mc:Ignorable="d"
+        Title="Virtual Phantom Application" Width="800" Height="600">
+  <Window.Resources>
+    <common:NegateDoubleConverter x:Key="negConverter"/>
+    <BooleanToVisibilityConverter x:Key="boolConverter"/>
+  </Window.Resources>
+
+  <DockPanel Name="dockp">
+
+    <ScrollViewer DockPanel.Dock="Right" VerticalScrollBarVisibility="Auto">
+      <ScrollViewer.Style>
+        <Style TargetType="ScrollViewer">
+          <Setter Property="Visibility" Value="Collapsed" />
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=MainViewState}" Value="{x:Static VM:MainViewState.Normal}">
+              <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </ScrollViewer.Style>
+      <ContentControl Content="{Binding Control}"/>
+    </ScrollViewer>
+
+    <StackPanel DockPanel.Dock="Bottom">
+      <StackPanel.Style>
+        <Style TargetType="StackPanel">
+          <Setter Property="Visibility" Value="Collapsed" />
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=MainViewState}" Value="{x:Static VM:MainViewState.Normal}">
+              <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </StackPanel.Style>
+      <StackPanel>
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding Path=ComStatusViewState}" Value="{x:Static VM:ComStatusViewState.Details}">
+                <Setter Property="Visibility" Value="Visible" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
+        <local:ComStatusViewDetails />
+      </StackPanel>
+      <StackPanel>
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding Path=ComStatusViewState}" Value="{x:Static VM:ComStatusViewState.Minimized}">
+                <Setter Property="Visibility" Value="Visible" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
+        <local:ComStatusViewMinimized />
+      </StackPanel>     
+    </StackPanel>
+
+    <StackPanel DockPanel.Dock="Left">
+      <StackPanel.Style>
+        <Style TargetType="StackPanel">
+          <Setter Property="Visibility" Value="Collapsed" />
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=MainViewState}" Value="{x:Static VM:MainViewState.Normal}">
+              <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </StackPanel.Style>
+      <StackPanel>
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding Path=AppSettingsViewState}" Value="{x:Static VM:AppSettingsViewState.Details}">
+                <Setter Property="Visibility" Value="Visible" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
+        <local:AppSettingsViewDetails />
+      </StackPanel>
+      <StackPanel>
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding Path=AppSettingsViewState}" Value="{x:Static VM:AppSettingsViewState.Minimized}">
+                <Setter Property="Visibility" Value="Visible" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
+        <local:AppSettingsViewMinimized />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Width="{Binding ElementName=dockp, Path=ActualWidth}" Height="{Binding ElementName=dockp, Path=ActualHeight}">
+      <StackPanel.Style>
+        <Style TargetType="StackPanel">
+          <Setter Property="Visibility" Value="Collapsed" />
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=MainViewState}" Value="{x:Static VM:MainViewState.StatusViewMaximized}">
+              <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </StackPanel.Style>
+      <local:ComStatusViewMaximized />
+    </StackPanel>
+
+    <Grid>
+
+      <Grid.Style>
+        <Style TargetType="Grid">
+          <Setter Property="Visibility" Value="Collapsed" />
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=MainViewState}" Value="{x:Static VM:MainViewState.Normal}">
+              <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </Grid.Style>
+      
+      <Grid.RowDefinitions>
+        <RowDefinition Height="3*"></RowDefinition>
+        <RowDefinition Height="*"></RowDefinition>
+      </Grid.RowDefinitions>
+
+      <ContentControl Content="{Binding Phantom}"/>
+
+      <Grid Grid.Row="1" Name="GatingPlatformPanel" Background="Black">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="9*"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Polyline Name="GatingPlatformHistory" Grid.Column="0"  SizeChanged="_OnSizeChanged" Stroke="White" />
+        <Canvas Grid.Column="1">
+          <Line  Name="Pointer" X1="0" Y1="{Binding Control.GA.LNGExt, Converter={StaticResource negConverter}}" X2="20" Y2="{Binding Control.GA.LNGExt, Converter={StaticResource negConverter}}" Stroke="White" StrokeThickness="5" />
+          <Line  X1="5" Y1="0" X2="5" Y2="{Binding ElementName=GatingPlatformPanel, Path=ActualHeight}" Stroke="White" StrokeThickness="5"/>
+        </Canvas>
+      </Grid>
+
+    </Grid>
+
+  </DockPanel>
+</Window>
