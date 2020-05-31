@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MophDroid</string>
+    <string name="main_activity_name">MophDroid</string>
+    <string name="service_activity_name">Service</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="serial_port">Serial Port</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="preset_items">
+        <item>Preset 1</item>
+        <item>Preset 2</item>
+        <item>Preset 3</item>
+        <item>Preset 4</item>
+        <item>Preset 5</item>
+        <item>Preset 6</item>
+        <item>Preset 7</item>
+        <item>Preset 8</item>
+    </string-array>
+
+    <!-- Service Preference -->
+    <string name="phantom_header">Phantom Settings</string>
+
+    <!-- Phantom Type Preferences -->
+    <string name="phantom_type_header">Phantom Type</string>
+    <string name="phantom_type_title">Connected phantom type:</string>
+
+</resources>

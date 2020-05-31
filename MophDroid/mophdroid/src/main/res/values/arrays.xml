@@ -1,0 +1,12 @@
+<resources>
+    <!-- Phantom Type Preference -->
+    <string-array name="phantom_type_entries">
+        <item>GRIS5A Motion Phantom</item>
+        <item>No2 Motion Phantom</item>
+    </string-array>
+
+    <string-array name="phantom_type_values">
+        <item>GRIS5A</item>
+        <item>No2</item>
+    </string-array>
+</resources>
