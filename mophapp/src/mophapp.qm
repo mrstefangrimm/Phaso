@@ -638,13 +638,13 @@ else {
       me-&gt;txtCmdLineInput[me-&gt;txtCmdLineInputPos] = serin;
       me-&gt;txtCmdLineInputPos++;
     }
-    Serial.print((char)serin);
+    // Debug: Serial.print((char)serin);
   }
   else if (serin == 0b1101 || serin == 0b1010) {
     // YAT sends 0b1101 and 0b1010, PuTTY sends 0b1101 and powershell sends 0b1010
     //Debug: Serial.println(&quot;Enter pressed&quot;);
 
-    Serial.println(); //eol of repeated command
+    // Debug: Serial.println(); //eol of repeated command
 
     if (me-&gt;txtCmdLineInput[0] == 'x') {
       // cmd
@@ -3251,7 +3251,10 @@ void processDirectCommand(const char* cmdLine) {
         return;
       }
       if (valtype == 5) {
-        EEPROM.put(addr, (const char*)(++next));
+        char buf[11];
+        strncpy(buf, (const char*)++next, 10);
+        // Debug: Serial.println(buf);
+        EEPROM.put(addr, buf);
         spoutln(RSOK);
         return;
       }
