@@ -728,7 +728,9 @@ spoutln(RSINIT, RSSTATEMACHINE, RSAPPLICATION);</action>
       </initial_glyph>
      </initial>
      <tran trig="POSITIONSTREAM">
-      <action>QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, POSITIONSTREAM_SIG, Q_PAR(me));</action>
+      <action>#ifdef MOTOROUT
+QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, POSITIONSTREAM_SIG, Q_PAR(me));
+#endif</action>
       <tran_glyph conn="34,70,3,-1,16">
        <action box="0,-2,15,2"/>
       </tran_glyph>
@@ -1009,19 +1011,25 @@ Serial.println(me-&gt;speed);</action>
       </tran_glyph>
      </tran>
      <tran trig="GET_DEVICEDATA">
-      <action>QACTIVE_POST((QMActive*)&amp;AO_SerialIn, GET_DEVICEDATA_SIG, 0L);</action>
+      <action>#ifdef SERIALIN
+QACTIVE_POST((QMActive*)&amp;AO_SerialIn, GET_DEVICEDATA_SIG, 0L);
+#endif</action>
       <tran_glyph conn="2,65,3,-1,20">
        <action box="0,-2,16,2"/>
       </tran_glyph>
      </tran>
      <tran trig="PUT_DEVICEDATA">
-      <action>QACTIVE_POST((QMActive*)&amp;AO_SerialIn, PUT_DEVICEDATA_SIG, 0L);</action>
+      <action>#ifdef SERIALIN
+QACTIVE_POST((QMActive*)&amp;AO_SerialIn, PUT_DEVICEDATA_SIG, 0L);
+#endif</action>
       <tran_glyph conn="2,62,3,-1,20">
        <action box="0,-2,15,2"/>
       </tran_glyph>
      </tran>
      <tran trig="POSITIONSTREAM">
-      <action>QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, POSITIONSTREAM_SIG, Q_PAR(me));</action>
+      <action>#ifdef MOTOROUT
+QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, POSITIONSTREAM_SIG, Q_PAR(me));
+#endif</action>
       <tran_glyph conn="2,70,3,-1,20">
        <action box="0,-2,15,2"/>
       </tran_glyph>
@@ -2455,8 +2463,7 @@ void getCalibrationDeviceData(float** params, float** offsets) {
 
 void printDKbInData(const DKbInEvArgs&amp; s);
 
-void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb)
-{
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb) {
   // Debug: Serial.println(dkb.raw, BIN);
   if (dkb.GAL) {
     MotorMoveRelativeEvArgs args(GARTN, FORWARDS);
@@ -3653,7 +3660,6 @@ struct ProgramChangeEvArgs {
   };
 };
 
-#ifdef MOTOROUT
 struct MotorEvArgs {
   MotorEvArgs () : raw(0) {}
   MotorEvArgs (const MotorEvArgs&amp; t) : raw(t.raw) {}
@@ -3682,7 +3688,6 @@ struct PositionStreamEvArgs {
     uint8_t raw;
   };
 };
-#endif
 
 #endif</text>
   </file>
