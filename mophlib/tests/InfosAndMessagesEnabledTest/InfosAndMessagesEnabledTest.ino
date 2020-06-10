@@ -10,84 +10,82 @@ Released into the public domain.
 #include "prsserial.h"
 #include "prsserialtestdefiniton.h"
 
-test(spout_info_corner_cases) {
-  fpSerialPrint = &TestSerialPrint;
+PRSStreamWriter<StubStreamPolicy> prsw;
+
+test(pout_info_corner_cases) {
   
-  SerialPrintBufferStub = something;
-  spout(0);
-  assertEqual(something, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.pout(0);
+  assertEqual(something, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = empty;
-  spout(RSFULL_I);
-  assertEqual(full, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = empty;
+  prsw.pout(RSFULL_I);
+  assertEqual(full, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = something;
-  spout(RSEMPTY_I);
-  assertEqual(empty, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.pout(RSEMPTY_I);
+  assertEqual(empty, prsw.streamoutbufferstub);
 }
 
-test(spoutln_info_corner_cases) {
-  fpSerialPrintLn = &TestSerialPrintLn;
+test(poutln_info_corner_cases) {
   
-  SerialPrintBufferStub = something;
-  spoutln(0);
-  assertEqual(something, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.poutln(0);
+  assertEqual(something, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = empty;
-  spoutln(RSFULL_I);
-  assertEqual(full, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = empty;
+  prsw.poutln(RSFULL_I);
+  assertEqual(full, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = something;
-  spoutln(RSEMPTY_I);
-  assertEqual(empty, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.poutln(RSEMPTY_I);
+  assertEqual(empty, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = onetwothree;
-  spoutln(0, RSSOMETHING_I); // not allowed to leave the first argument empty
-  assertEqual(onetwothree, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = onetwothree;
+  prsw.poutln(0, RSSOMETHING_I); // not allowed to leave the first argument empty
+  assertEqual(onetwothree, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = something;
-  spoutln(RSSOMETHING_I, RSSOMETHING_I, RSSOMETHING_I, RSONETWOTHREE_I);
-  assertEqual("somethingsomethingsomething123", SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.poutln(RSSOMETHING_I, RSSOMETHING_I, RSSOMETHING_I, RSONETWOTHREE_I);
+  assertEqual("somethingsomethingsomething123", prsw.streamoutbufferstub);
 }
   
-test(spout_message_corner_cases) {
-  fpSerialPrint = &TestSerialPrint;
+test(pout_message_corner_cases) {
   
-  SerialPrintBufferStub = something;
-  spout(0);
-  assertEqual(something, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.pout(0);
+  assertEqual(something, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = empty;
-  spout(RSFULL_M);
-  assertEqual(full, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = empty;
+  prsw.pout(RSFULL_M);
+  assertEqual(full, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = something;
-  spout(RSEMPTY_M);
-  assertEqual(empty, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.pout(RSEMPTY_M);
+  assertEqual(empty, prsw.streamoutbufferstub);
 }
 
-test(spoutln_message_corner_cases) {
-  fpSerialPrintLn = &TestSerialPrintLn;
+test(poutln_message_corner_cases) {
   
-  SerialPrintBufferStub = something;
-  spoutln(0);
-  assertEqual(something, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.poutln(0);
+  assertEqual(something, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = empty;
-  spoutln(RSFULL_M);
-  assertEqual(full, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = empty;
+  prsw.poutln(RSFULL_M);
+  assertEqual(full, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = something;
-  spoutln(RSEMPTY_M);
-  assertEqual(empty, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.poutln(RSEMPTY_M);
+  assertEqual(empty, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = onetwothree;
-  spoutln(0, RSSOMETHING_M); // not allowed to leave the first argument empty
-  assertEqual(onetwothree, SerialPrintBufferStub);
+  prsw.streamoutbufferstub = onetwothree;
+  prsw.poutln(0, RSSOMETHING_M); // not allowed to leave the first argument empty
+  assertEqual(onetwothree, prsw.streamoutbufferstub);
 
-  SerialPrintBufferStub = something;
-  spoutln(RSONETWOTHREE_M, RSSOMETHING_M, RSSOMETHING_M, RSSOMETHING_M);
-  assertEqual("123somethingsomethingsomething", SerialPrintBufferStub);
+  prsw.streamoutbufferstub = something;
+  prsw.poutln(RSONETWOTHREE_M, RSSOMETHING_M, RSSOMETHING_M, RSSOMETHING_M);
+  assertEqual("123somethingsomethingsomething", prsw.streamoutbufferstub);
 }
 
 void setup() {

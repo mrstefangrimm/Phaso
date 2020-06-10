@@ -30,7 +30,7 @@ pinMode(LATCHPIN_IN, OUTPUT);
 pinMode(CLOCKPIN_IN, OUTPUT);
 pinMode(DATAPIN_IN,  INPUT);
 
-spoutln(RSINIT, RSSTATEMACHINE, RSDKBIN);</action>
+prsw.poutln(RSINIT, RSSTATEMACHINE, RSDKBIN);</action>
      <initial_glyph conn="9,5,5,0,14,5">
       <action box="0,-2,10,2"/>
      </initial_glyph>
@@ -62,7 +62,7 @@ if (dkbin != 0) {
 pinMode(LATCHPIN_OUT, OUTPUT);
 pinMode(DATAPIN_OUT,  OUTPUT);
 
-spoutln(RSINIT, RSSTATEMACHINE, RSDKBOUT);</action>
+prsw.poutln(RSINIT, RSSTATEMACHINE, RSDKBOUT);</action>
      <initial_glyph conn="9,3,5,0,11,3">
       <action box="0,-2,10,2"/>
      </initial_glyph>
@@ -179,7 +179,7 @@ me-&gt;initializeCounter = 0;
 me-&gt;sendPositionCounter = 1;
 me-&gt;isPositionStreamActive = false;
 
-spoutln(RSINIT, RSSTATEMACHINE, RSMOTOROUT);</action>
+prsw.poutln(RSINIT, RSSTATEMACHINE, RSMOTOROUT);</action>
      <initial_glyph conn="6,7,5,3,18">
       <action box="0,-2,10,2"/>
      </initial_glyph>
@@ -189,7 +189,7 @@ spoutln(RSINIT, RSSTATEMACHINE, RSMOTOROUT);</action>
 // servoLib.write for 16 motors takes 9 ms
 // Serial print takes 0.2 ms
 // Meassured with the oscilloscope and digitalWrite(HIGH/LOW)</documentation>
-     <entry>spoutln(RSENTER, RSSTATE, RSACTIVE);</entry>
+     <entry>prsw.poutln(RSENTER, RSSTATE, RSACTIVE);</entry>
      <tran trig="MOTOR_STEP_FORWARD">
       <action>uint32_t par = Q_PAR(me);
 MotorEvArgs data(par);
@@ -227,10 +227,10 @@ PositionStreamEvArgs data(par);
 
 me-&gt;isPositionStreamActive = data.Enabled;
 if (me-&gt;isPositionStreamActive) {
-  spoutln(RSSTART, RSPOSITION, RSSTREAM);
+  prsw.poutln(RSSTART, RSPOSITION, RSSTREAM);
 }
 else {
-  spoutln(RSSTOP, RSPOSITION, RSSTREAM);
+  prsw.poutln(RSSTOP, RSPOSITION, RSSTREAM);
 }
 </action>
       <tran_glyph conn="23,36,3,-1,18">
@@ -238,7 +238,7 @@ else {
       </tran_glyph>
      </tran>
      <state name="Simulation">
-      <entry>spoutln(RSENTER, RSSTATE, RSACTIVE, RSSIMULATION);</entry>
+      <entry>prsw.poutln(RSENTER, RSSTATE, RSACTIVE, RSSIMULATION);</entry>
       <tran trig="Q_TIMEOUT">
        <action>
 #ifdef SERIALIN
@@ -267,10 +267,10 @@ for (int n=0; n &lt; NUMSERVOS; n++) {
 if (!isMoving &amp;&amp; me-&gt;isPositionStreamActive) {
   if (me-&gt;sendPositionCounter % NUMSERVOS == 0) {
     uint8_t servo = 0xF &amp; ((me-&gt;sendPositionCounter / NUMSERVOS) - 1);
-    spout(RSPIPE);
-    Serial.print(servo, HEX);
-    Serial.print(me-&gt;servoPosition[servo]);
-    spout(RSPIPE);
+    prsw.pout(RSPIPE);
+    prsw.out(servo, HEX);
+    prsw.out(me-&gt;servoPosition[servo]);
+    prsw.pout(RSPIPE);
     if (me-&gt;sendPositionCounter == (NUMSERVOS * NUMSERVOS)) me-&gt;sendPositionCounter = 0;
   }
   me-&gt;sendPositionCounter++;
@@ -305,7 +305,7 @@ if (data.Pos &gt;= 0 &amp;&amp; data.Pos &lt;= 255) {
       </state_glyph>
      </state>
      <state name="Calibration">
-      <entry>spoutln(RSENTER, RSSTATE, RSACTIVE, RSCALIBRATION);
+      <entry>prsw.poutln(RSENTER, RSSTATE, RSACTIVE, RSCALIBRATION);
 
 for (int n = 0; n &lt; NUMSERVOS; n++) {
   servoLib.write(n, 150);
@@ -341,10 +341,10 @@ for (int n=0; n &lt; NUMSERVOS; n++) {
 if (!isMoving &amp;&amp; me-&gt;isPositionStreamActive) {
   if (me-&gt;sendPositionCounter % 10 == 0) {
     int servo = 0xF &amp; ((me-&gt;sendPositionCounter / 10) - 1);
-    spout(RSPIPE);
-    Serial.print(servo);
-    Serial.print(me-&gt;servoPosition[servo] * 2 + 100);
-    spout(RSPIPE);
+    prsw.pout(RSPIPE);
+    prsw.out(servo);
+    prsw.out(me-&gt;servoPosition[servo] * 2 + 100);
+    prsw.pout(RSPIPE);
     if (me-&gt;sendPositionCounter == (NUMSERVOS * 10)) me-&gt;sendPositionCounter = 0;
   }
   me-&gt;sendPositionCounter++;
@@ -363,7 +363,7 @@ if (!isMoving &amp;&amp; me-&gt;isPositionStreamActive) {
      </state_glyph>
     </state>
     <state name="Wait">
-     <entry>spoutln(RSENTER, RSSTATE, RSWAIT);</entry>
+     <entry>prsw.poutln(RSENTER, RSSTATE, RSWAIT);</entry>
      <tran trig="Q_TIMEOUT">
       <action>QActive_armX((QActive *)me, 0U,
   MOTORSTARTUPDELAY,
@@ -451,13 +451,13 @@ me-&gt;initializeCounter++;</action>
 
 me-&gt;remainingBytes = 0;
 
-spoutln(RSINIT, RSSTATEMACHINE, RSSERIALIN);</action>
+prsw.poutln(RSINIT, RSSTATEMACHINE, RSSERIALIN);</action>
      <initial_glyph conn="12,6,5,3,20">
       <action box="0,-2,10,2"/>
      </initial_glyph>
     </initial>
     <state name="ApiMode">
-     <entry>spoutln(RSENTER, RSSTATE, RSAPIMODE);</entry>
+     <entry>prsw.poutln(RSENTER, RSSTATE, RSAPIMODE);</entry>
      <tran trig="Q_TIMEOUT">
       <action>// process unfinished command
 if (me-&gt;remainingBytes != 0) {
@@ -524,7 +524,7 @@ me-&gt;txtCmdLineInputPos = 0;</action>
      </state_glyph>
     </state>
     <state name="PutDeviceData">
-     <entry>spoutln(RSENTER, RSSTATE, RSPUTDEVICEDATA);</entry>
+     <entry>prsw.poutln(RSENTER, RSSTATE, RSPUTDEVICEDATA);</entry>
      <tran trig="Q_TIMEOUT">
       <choice>
        <guard brief="remaining bytes">SerialIn_hasRemainingDeviceData(me)</guard>
@@ -591,22 +591,22 @@ QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, CALIBRATION_MODE_SIG, 0L);</action>
      </state_glyph>
     </state>
     <state name="GetDeviceData">
-     <entry>spoutln(RSENTER, RSSTATE, RSGETDEVICEDATA);</entry>
+     <entry>prsw.poutln(RSENTER, RSSTATE, RSGETDEVICEDATA);</entry>
      <tran trig="Q_TIMEOUT">
       <choice>
        <guard brief="remaining bytes">SerialIn_hasRemainingDeviceData(me)</guard>
        <action>if (me-&gt;rwByteCounter == 0) {
   DeviceDataHeader header;
   EEPROM.get(0, header);
-  Serial.println(header.model);
-  Serial.println(header.schema);
-  Serial.println(header.name);
+  prsw.outln(header.model);
+  prsw.outln(header.schema);
+  prsw.outln(header.name);
   me-&gt;rwByteCounter += sizeof(DeviceDataHeader);
 }
 else {
   Float32_t calibVal;
   EEPROM.get(me-&gt;rwByteCounter, calibVal);
-  Serial.println(calibVal.fval, 5);
+  prsw.outln(calibVal.fval, 5);
   me-&gt;rwByteCounter += sizeof(Float32_t);
 }</action>
        <choice_glyph conn="53,38,4,-1,4">
@@ -628,7 +628,7 @@ else {
      </state_glyph>
     </state>
     <state name="TextMode">
-     <entry>spoutln(RSENTER, RSSTATE, RSTEXTMODE);</entry>
+     <entry>prsw.poutln(RSENTER, RSSTATE, RSTEXTMODE);</entry>
      <tran trig="Q_TIMEOUT">
       <action>if (Serial.available() &gt; 0) {
   int serin = Serial.read();
@@ -642,8 +642,7 @@ else {
   }
   else if (serin == 0b1101 || serin == 0b1010) {
     // YAT sends 0b1101 and 0b1010, PuTTY sends 0b1101 and powershell sends 0b1010
-    //Debug: Serial.println(&quot;Enter pressed&quot;);
-
+    // Debug: Serial.println(&quot;Enter pressed&quot;);
     // Debug: Serial.println(); //eol of repeated command
 
     if (me-&gt;txtCmdLineInput[0] == 'x') {
@@ -659,7 +658,7 @@ else {
         processExtCommand((QMActive*)&amp;AO_Application, input);
       }
       else {
-        Serial.println(F(&quot;nok&quot;));
+        prsw.poutln(RSNOK);
       }
     }
     else if (me-&gt;txtCmdLineInput[0] == 'd') {
@@ -688,13 +687,13 @@ else {
    <attribute name="currentPreSet" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="preSetTimer" type="uint16_t" visibility="0x02" properties="0x00"/>
    <operation name="isCurrentPreSet" type="bool" visibility="0x02" properties="0x00">
-    <code>Serial.println(F(&quot;PreSet isCurrentPreSet&quot;));
+    <code>// Debug: Serial.println(F(&quot;PreSet isCurrentPreSet&quot;));
 
 ProgramChangeEvArgs args(Q_PAR(me));
 return me-&gt;currentPreSet == args.ProgNo;</code>
    </operation>
    <operation name="isDeviceDataValid" type="bool" visibility="0x02" properties="0x00">
-    <code>spoutln(RSCHECK, RSEEPROM);
+    <code>prsw.poutln(RSCHECK, RSEEPROM);
 
 uint8_t model;
 EEPROM.get(0, model);
@@ -702,10 +701,10 @@ uint8_t schema;
 EEPROM.get(1, schema);
 
 if (model != MODELTYPE || schema != DATASCHEMA) {
-  spoutln(RSNOK);
+  prsw.poutln(RSNOK);
   return false;
 }
-spoutln(RSOK);
+prsw.poutln(RSOK);
 return true;</code>
    </operation>
    <statechart>
@@ -714,13 +713,13 @@ return true;</code>
   PRESETTIMERINTERVAL,
   PRESETTIMERINTERVAL);
 
-spoutln(RSINIT, RSSTATEMACHINE, RSAPPLICATION);</action>
+prsw.poutln(RSINIT, RSSTATEMACHINE, RSAPPLICATION);</action>
      <initial_glyph conn="23,6,5,3,11">
       <action box="0,-2,10,2"/>
      </initial_glyph>
     </initial>
     <state name="Simulation">
-     <entry>spoutln(RSENTER, RSSTATE, RSSIMULATION);</entry>
+     <entry>prsw.poutln(RSENTER, RSSTATE, RSSIMULATION);</entry>
      <initial target="../5">
       <action>me-&gt;speed = 4;</action>
       <initial_glyph conn="43,6,4,0,4">
@@ -736,7 +735,7 @@ QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, POSITIONSTREAM_SIG, Q_PAR(me));
       </tran_glyph>
      </tran>
      <state name="ManualMotion">
-      <entry>spoutln(RSENTER, RSSTATE, RSMANUALMOTION);
+      <entry>prsw.poutln(RSENTER, RSSTATE, RSMANUALMOTION);
 
 #ifdef DKBOUT
 QACTIVE_POST((QMActive *)&amp;AO_DKbOut, MANUAL_MOTION_MODE_SIG, 0L);
@@ -758,13 +757,13 @@ uint8_t dir = args.getDirection() == FORWARDS ? MOTOR_STEP_FORWARD_SIG : MOTOR_S
        </tran_glyph>
       </tran>
       <tran trig="PRESET_MODE" target="../../3">
-       <action>spout(RSCMDPRESET);</action>
+       <action>prsw.pout(RSCMDPRESET);</action>
        <tran_glyph conn="66,32,1,3,16">
         <action box="0,-2,16,2"/>
        </tran_glyph>
       </tran>
       <tran trig="REMOTE_MODE" target="../../4">
-       <action>spout(RSCMDREMOTE);</action>
+       <action>prsw.pout(RSCMDREMOTE);</action>
        <tran_glyph conn="60,39,2,0,13">
         <action box="0,1,17,2"/>
        </tran_glyph>
@@ -773,8 +772,8 @@ uint8_t dir = args.getDirection() == FORWARDS ? MOTOR_STEP_FORWARD_SIG : MOTOR_S
        <action>ProgramChangeEvArgs args(Q_PAR(me));
 me-&gt;speed = args.ProgNo;
 
-spout(RSSTEPSIZE);
-Serial.println(me-&gt;speed);</action>
+prsw.pout(RSSTEPSIZE);
+prsw.outln(me-&gt;speed);</action>
        <tran_glyph conn="38,36,3,-1,18">
         <action box="0,-2,18,2"/>
        </tran_glyph>
@@ -784,7 +783,7 @@ Serial.println(me-&gt;speed);</action>
       </state_glyph>
      </state>
      <state name="PreSet">
-      <entry>spoutln(RSENTER, RSSTATE, RSPRESET);
+      <entry>prsw.poutln(RSENTER, RSSTATE, RSPRESET);
 
 #ifdef DKBOUT
 QACTIVE_POST((QMActive *)&amp;AO_DKbOut, PRESET_MODE_SIG, 0L);
@@ -795,19 +794,19 @@ QACTIVE_POST((QMActive *)&amp;AO_DKbOut, PRESET_MODE_SIG, 0L);
        </initial_glyph>
       </initial>
       <tran trig="REMOTE_MODE" target="../../4">
-       <action>spout(RSCMDREMOTE);</action>
+       <action>prsw.pout(RSCMDREMOTE);</action>
        <tran_glyph conn="88,63,2,1,1,-16">
         <action box="-5,1,15,2"/>
        </tran_glyph>
       </tran>
       <tran trig="MANUAL_MOTION_MODE" target="../../2">
-       <action>spout(RSCMDMANUALMOTION);</action>
+       <action>prsw.pout(RSCMDMANUALMOTION);</action>
        <tran_glyph conn="82,35,3,1,-16">
         <action box="-14,0,19,2"/>
        </tran_glyph>
       </tran>
       <state name="Wait">
-       <entry>spoutln(RSENTER, RSSTATE, RSPRESET, RSWAIT);
+       <entry>prsw.poutln(RSENTER, RSSTATE, RSPRESET, RSWAIT);
 
 me-&gt;preSetTimer = 0;</entry>
        <tran trig="PROGRAM_CHANGE" target="../../4">
@@ -823,7 +822,7 @@ me-&gt;preSetTimer = 0;</action>
        </state_glyph>
       </state>
       <state name="Run">
-       <entry>spoutln(RSENTER, RSSTATE, RSPRESET, RSRUN);</entry>
+       <entry>prsw.poutln(RSENTER, RSSTATE, RSPRESET, RSRUN);</entry>
        <tran trig="PROGRAM_CHANGE">
         <choice target="../../../3">
          <guard brief="else"/>
@@ -883,13 +882,13 @@ else if (me-&gt;currentPreSet == 8) {
       </state_glyph>
      </state>
      <state name="Remote">
-      <entry>spoutln(RSENTER, RSSTATE, RSREMOTE);
+      <entry>prsw.poutln(RSENTER, RSSTATE, RSREMOTE);
 
 #ifdef DKBOUT
 QACTIVE_POST((QMActive *)&amp;AO_DKbOut, REMOTE_MODE_SIG, 0L);
 #endif</entry>
       <tran trig="CALIBRATION_MODE" target="../../../2">
-       <action>spout(RSCMDCALIBRATION);</action>
+       <action>prsw.pout(RSCMDCALIBRATION);</action>
        <tran_glyph conn="49,64,3,1,-21">
         <action box="-16,-2,18,2"/>
        </tran_glyph>
@@ -906,13 +905,13 @@ QACTIVE_POST((QMActive *)&amp;AO_DKbOut, REMOTE_MODE_SIG, 0L);
        </tran_glyph>
       </tran>
       <tran trig="PRESET_MODE" target="../../3">
-       <action>spout(RSCMDPRESET);</action>
+       <action>prsw.pout(RSCMDPRESET);</action>
        <tran_glyph conn="67,52,0,3,-7,15">
         <action box="0,-2,14,2"/>
        </tran_glyph>
       </tran>
       <tran trig="MANUAL_MOTION_MODE" target="../../2">
-       <action>spout(RSCMDMANUALMOTION);</action>
+       <action>prsw.pout(RSCMDMANUALMOTION);</action>
        <tran_glyph conn="56,52,0,2,-13">
         <action box="-19,-3,23,2"/>
        </tran_glyph>
@@ -922,22 +921,22 @@ QACTIVE_POST((QMActive *)&amp;AO_DKbOut, REMOTE_MODE_SIG, 0L);
       </state_glyph>
      </state>
      <state name="Init">
-      <entry>spoutln(RSENTER, RSSTATE, RSINIT);</entry>
+      <entry>prsw.poutln(RSENTER, RSSTATE, RSINIT);</entry>
       <tran trig="Q_TIMEOUT">
        <action>// Sends the appliation a signal
-spout(RSDOT);</action>
+prsw.pout(RSDOT);</action>
        <choice>
         <guard brief="Valid Device Data">Application_isDeviceDataValid(me)</guard>
         <choice target="../../../../2">
          <guard brief="DKb connected">isDKbEnabled()</guard>
-         <action>spout(RSCMDMANUALMOTION);</action>
+         <action>prsw.pout(RSCMDMANUALMOTION);</action>
          <choice_glyph conn="57,15,5,0,7,11">
           <action box="7,3,14,2"/>
          </choice_glyph>
         </choice>
         <choice target="../../../../4">
          <guard brief="else"/>
-         <action>spout(RSCMDREMOTE);</action>
+         <action>prsw.pout(RSCMDREMOTE);</action>
          <choice_glyph conn="57,15,4,3,9,-21,32,13">
           <action box="-5,3,10,2"/>
          </choice_glyph>
@@ -948,7 +947,7 @@ spout(RSDOT);</action>
        </choice>
        <choice target="../../../../2">
         <guard brief="else"/>
-        <action>spout(RSCMDCALIBRATION);</action>
+        <action>prsw.pout(RSCMDCALIBRATION);</action>
         <choice_glyph conn="49,15,4,1,7,-17,37,-4">
          <action box="-5,3,10,2"/>
         </choice_glyph>
@@ -966,7 +965,7 @@ spout(RSDOT);</action>
      </state_glyph>
     </state>
     <state name="Calibration">
-     <entry>spoutln(RSENTER, RSSTATE, RSCALIBRATION);
+     <entry>prsw.poutln(RSENTER, RSSTATE, RSCALIBRATION);
 
 me-&gt;speed = 1;
 
@@ -1004,8 +1003,8 @@ uint8_t dir = args.getDirection() == FORWARDS ? MOTOR_STEP_FORWARD_SIG : MOTOR_S
       <action>ProgramChangeEvArgs args(Q_PAR(me));
 me-&gt;speed = args.ProgNo;
 
-spout(RSSTEPSIZE);
-Serial.println(me-&gt;speed);</action>
+prsw.pout(RSSTEPSIZE);
+prsw.outln(me-&gt;speed);</action>
       <tran_glyph conn="2,59,3,-1,20">
        <action box="0,-2,18,2"/>
       </tran_glyph>
@@ -1175,8 +1174,7 @@ void getCalibrationDeviceData(float** params, float** offsets) {
 
 void printDKbInData(const DKbInEvArgs&amp; s);
 
-void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb)
-{
+void processDKb(QMActive* recv, const DKbInEvArgs&amp; dkb) {
   if (dkb.GAL) {
     MotorMoveRelativeEvArgs args(GARTN, BACKWARDS);
     QACTIVE_POST(recv, MOTOR_MOVE_RELATIVE_SIG, args.raw);
@@ -1584,30 +1582,30 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
 }
 
 void printDKbInData(const DKbInEvArgs&amp; s) {
-  if (s.FMM) { spoutln(RSMODE, RSMANUAL); }
-  if (s.FPS) { spoutln(RSMODE, RSPRESET); }
-  if (s.FRM) { spoutln(RSMODE, RSREMOTE); }
-  if (s.FP2) { spoutln(RSPROGRAM, RSN2); }
-  if (s.FP1) { spoutln(RSPROGRAM, RSN1); }
-  if (s.FCA) { spoutln(RSMODE, RSCALIBRATION); }
-  if (s.FP3) { spoutln(RSPROGRAM, RSN3); }
-  if (s.FP4) { spoutln(RSPROGRAM, RSN4); }
-  if (s.LLL) { spoutln(RSUPPER, RSLEFT); }
-  if (s.LLT) { spoutln(RSUPPER, RSTOP); }
-  if (s.LLR) { spoutln(RSUPPER, RSRIGHT); }
-  if (s.LLB) { spoutln(RSUPPER, RSBOTTOM); }
-  if (s.RLT) { spoutln(RSLOWER, RSTOP); }
-  if (s.RLL) { spoutln(RSLOWER, RSLEFT); }
-  if (s.RLB) { spoutln(RSLOWER, RSBOTTOM); }
-  if (s.RLR) { spoutln(RSLOWER, RSRIGHT); }
-  if (s.FP8) { spoutln(RSPROGRAM, RSN8); }
-  if (s.GAT) { spoutln(RSGATING, RSTOP); }
-  if (s.GAR) { spoutln(RSGATING, RSRIGHT); }
-  if (s.GAL) { spoutln(RSGATING, RSLEFT); }
-  if (s.FP5) { spoutln(RSPROGRAM, RSN5); }
-  if (s.FP6) { spoutln(RSPROGRAM, RSN6); }
-  if (s.FP7) { spoutln(RSPROGRAM, RSN7); }
-  if (s.GAB) { spoutln(RSGATING, RSBOTTOM); }
+  if (s.FMM) { prsw.poutln(RSMODE, RSMANUAL); }
+  if (s.FPS) { prsw.poutln(RSMODE, RSPRESET); }
+  if (s.FRM) { prsw.poutln(RSMODE, RSREMOTE); }
+  if (s.FP2) { prsw.poutln(RSPROGRAM, RSN2); }
+  if (s.FP1) { prsw.poutln(RSPROGRAM, RSN1); }
+  if (s.FCA) { prsw.poutln(RSMODE, RSCALIBRATION); }
+  if (s.FP3) { prsw.poutln(RSPROGRAM, RSN3); }
+  if (s.FP4) { prsw.poutln(RSPROGRAM, RSN4); }
+  if (s.LLL) { prsw.poutln(RSUPPER, RSLEFT); }
+  if (s.LLT) { prsw.poutln(RSUPPER, RSTOP); }
+  if (s.LLR) { prsw.poutln(RSUPPER, RSRIGHT); }
+  if (s.LLB) { prsw.poutln(RSUPPER, RSBOTTOM); }
+  if (s.RLT) { prsw.poutln(RSLOWER, RSTOP); }
+  if (s.RLL) { prsw.poutln(RSLOWER, RSLEFT); }
+  if (s.RLB) { prsw.poutln(RSLOWER, RSBOTTOM); }
+  if (s.RLR) { prsw.poutln(RSLOWER, RSRIGHT); }
+  if (s.FP8) { prsw.poutln(RSPROGRAM, RSN8); }
+  if (s.GAT) { prsw.poutln(RSGATING, RSTOP); }
+  if (s.GAR) { prsw.poutln(RSGATING, RSRIGHT); }
+  if (s.GAL) { prsw.poutln(RSGATING, RSLEFT); }
+  if (s.FP5) { prsw.poutln(RSPROGRAM, RSN5); }
+  if (s.FP6) { prsw.poutln(RSPROGRAM, RSN6); }
+  if (s.FP7) { prsw.poutln(RSPROGRAM, RSN7); }
+  if (s.GAB) { prsw.poutln(RSGATING, RSBOTTOM); }
 }
 
 #endif</text>
@@ -2155,30 +2153,30 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
 }
 
 void printDKbInData(const DKbInEvArgs&amp; s) {
-  if (s.FMM) { spoutln(RSMODE, RSMANUAL); }
-  if (s.FPS) { spoutln(RSMODE, RSPRESET); }
-  if (s.FRM) { spoutln(RSMODE, RSREMOTE); }
-  if (s.FP2) { spoutln(RSPROGRAM, RSN2); }
-  if (s.FP1) { spoutln(RSPROGRAM, RSN1); }
-  if (s.FCA) { spoutln(RSMODE, RSCALIBRATION); }
-  if (s.FP3) { spoutln(RSPROGRAM, RSN3); }
-  if (s.FP4) { spoutln(RSPROGRAM, RSN4); }
-  if (s.LLL) { spoutln(RSLEFT, RSLEFT); }
-  if (s.LLT) { spoutln(RSLEFT, RSTOP); }
-  if (s.LLR) { spoutln(RSLEFT, RSRIGHT); }
-  if (s.LLB) { spoutln(RSLEFT, RSBOTTOM); }
-  if (s.RLT) { spoutln(RSRIGHT, RSTOP); }
-  if (s.RLL) { spoutln(RSRIGHT, RSLEFT); }
-  if (s.RLB) { spoutln(RSRIGHT, RSBOTTOM); }
-  if (s.RLR) { spoutln(RSRIGHT, RSRIGHT); }
-  if (s.FP8) { spoutln(RSPROGRAM, RSN8); }
-  if (s.GAT) { spoutln(RSGATING, RSTOP); }
-  if (s.GAR) { spoutln(RSGATING, RSRIGHT); }
-  if (s.GAL) { spoutln(RSGATING, RSLEFT); }
-  if (s.FP5) { spoutln(RSPROGRAM, RSN5); }
-  if (s.FP6) { spoutln(RSPROGRAM, RSN6); }
-  if (s.FP7) { spoutln(RSPROGRAM, RSN7); }
-  if (s.GAB) { spoutln(RSGATING, RSBOTTOM); }
+  if (s.FMM) { prsw.poutln(RSMODE, RSMANUAL); }
+  if (s.FPS) { prsw.poutln(RSMODE, RSPRESET); }
+  if (s.FRM) { prsw.poutln(RSMODE, RSREMOTE); }
+  if (s.FP2) { prsw.poutln(RSPROGRAM, RSN2); }
+  if (s.FP1) { prsw.poutln(RSPROGRAM, RSN1); }
+  if (s.FCA) { prsw.poutln(RSMODE, RSCALIBRATION); }
+  if (s.FP3) { prsw.poutln(RSPROGRAM, RSN3); }
+  if (s.FP4) { prsw.poutln(RSPROGRAM, RSN4); }
+  if (s.LLL) { prsw.poutln(RSLEFT, RSLEFT); }
+  if (s.LLT) { prsw.poutln(RSLEFT, RSTOP); }
+  if (s.LLR) { prsw.poutln(RSLEFT, RSRIGHT); }
+  if (s.LLB) { prsw.poutln(RSLEFT, RSBOTTOM); }
+  if (s.RLT) { prsw.poutln(RSRIGHT, RSTOP); }
+  if (s.RLL) { prsw.poutln(RSRIGHT, RSLEFT); }
+  if (s.RLB) { prsw.poutln(RSRIGHT, RSBOTTOM); }
+  if (s.RLR) { prsw.poutln(RSRIGHT, RSRIGHT); }
+  if (s.FP8) { prsw.poutln(RSPROGRAM, RSN8); }
+  if (s.GAT) { prsw.poutln(RSGATING, RSTOP); }
+  if (s.GAR) { prsw.poutln(RSGATING, RSRIGHT); }
+  if (s.GAL) { prsw.poutln(RSGATING, RSLEFT); }
+  if (s.FP5) { prsw.poutln(RSPROGRAM, RSN5); }
+  if (s.FP6) { prsw.poutln(RSPROGRAM, RSN6); }
+  if (s.FP7) { prsw.poutln(RSPROGRAM, RSN7); }
+  if (s.GAB) { prsw.poutln(RSGATING, RSBOTTOM); }
 }
 
 #endif</text>
@@ -3057,38 +3055,38 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
 }
 
 void printDKbInData(const DKbInEvArgs&amp; s) {
-  if (s.FMM) { spoutln(RSMODE, RSMANUALMOTION); }
-  if (s.FPS) { spoutln(RSMODE, RSPRESET); }
-  if (s.FRM) { spoutln(RSMODE, RSREMOTE); }
-  if (s.FP2) { spoutln(RSPROGRAM, RSN2); }
-  if (s.FP1) { spoutln(RSPROGRAM, RSN1); }
-  if (s.FCA) { spoutln(RSMODE, RSCALIBRATION); }
-  if (s.FP3) { spoutln(RSPROGRAM, RSN3); }
-  if (s.FP4) { spoutln(RSPROGRAM, RSN4); }
-  if (s.LUT) { spoutln(RSLEFT, RSUPPER, RSTOP); }
-  if (s.LUR) { spoutln(RSLEFT, RSUPPER, RSRIGHT); }
-  if (s.LUL) { spoutln(RSLEFT, RSUPPER, RSLEFT); }
-  if (s.LLL) { spoutln(RSLEFT, RSLOWER, RSLEFT); }
-  if (s.LUB) { spoutln(RSLEFT, RSUPPER, RSBOTTOM); }
-  if (s.LLT) { spoutln(RSLEFT, RSLOWER, RSTOP); }
-  if (s.LLR) { spoutln(RSLEFT, RSLOWER, RSRIGHT); }
-  if (s.LLB) { spoutln(RSLEFT, RSLOWER, RSBOTTOM); }
-  if (s.RUT) { spoutln(RSRIGHT, RSUPPER, RSTOP); }
-  if (s.RUR) { spoutln(RSRIGHT, RSUPPER, RSRIGHT); }
-  if (s.RUL) { spoutln(RSRIGHT, RSUPPER, RSLEFT); }
-  if (s.RUB) { spoutln(RSRIGHT, RSUPPER, RSBOTTOM); }
-  if (s.RLT) { spoutln(RSRIGHT, RSLOWER, RSTOP); }
-  if (s.RLL) { spoutln(RSRIGHT, RSLOWER, RSLEFT); }
-  if (s.RLB) { spoutln(RSRIGHT, RSLOWER, RSBOTTOM); }
-  if (s.RLR) { spoutln(RSRIGHT, RSLOWER, RSRIGHT); }
-  if (s.FP8) { spoutln(RSPROGRAM, RSN8); }
-  if (s.GAT) { spoutln(RSGATING, RSTOP); }
-  if (s.GAR) { spoutln(RSGATING, RSRIGHT); }
-  if (s.GAL) { spoutln(RSGATING, RSLEFT); }
-  if (s.FP5) { spoutln(RSPROGRAM, RSN5); }
-  if (s.FP6) { spoutln(RSPROGRAM, RSN6); }
-  if (s.FP7) { spoutln(RSPROGRAM, RSN7); }
-  if (s.GAB) { spoutln(RSGATING, RSBOTTOM); }
+  if (s.FMM) { prsw.poutln(RSMODE, RSMANUALMOTION); }
+  if (s.FPS) { prsw.poutln(RSMODE, RSPRESET); }
+  if (s.FRM) { prsw.poutln(RSMODE, RSREMOTE); }
+  if (s.FP2) { prsw.poutln(RSPROGRAM, RSN2); }
+  if (s.FP1) { prsw.poutln(RSPROGRAM, RSN1); }
+  if (s.FCA) { prsw.poutln(RSMODE, RSCALIBRATION); }
+  if (s.FP3) { prsw.poutln(RSPROGRAM, RSN3); }
+  if (s.FP4) { prsw.poutln(RSPROGRAM, RSN4); }
+  if (s.LUT) { prsw.poutln(RSLEFT, RSUPPER, RSTOP); }
+  if (s.LUR) { prsw.poutln(RSLEFT, RSUPPER, RSRIGHT); }
+  if (s.LUL) { prsw.poutln(RSLEFT, RSUPPER, RSLEFT); }
+  if (s.LLL) { prsw.poutln(RSLEFT, RSLOWER, RSLEFT); }
+  if (s.LUB) { prsw.poutln(RSLEFT, RSUPPER, RSBOTTOM); }
+  if (s.LLT) { prsw.poutln(RSLEFT, RSLOWER, RSTOP); }
+  if (s.LLR) { prsw.poutln(RSLEFT, RSLOWER, RSRIGHT); }
+  if (s.LLB) { prsw.poutln(RSLEFT, RSLOWER, RSBOTTOM); }
+  if (s.RUT) { prsw.poutln(RSRIGHT, RSUPPER, RSTOP); }
+  if (s.RUR) { prsw.poutln(RSRIGHT, RSUPPER, RSRIGHT); }
+  if (s.RUL) { prsw.poutln(RSRIGHT, RSUPPER, RSLEFT); }
+  if (s.RUB) { prsw.poutln(RSRIGHT, RSUPPER, RSBOTTOM); }
+  if (s.RLT) { prsw.poutln(RSRIGHT, RSLOWER, RSTOP); }
+  if (s.RLL) { prsw.poutln(RSRIGHT, RSLOWER, RSLEFT); }
+  if (s.RLB) { prsw.poutln(RSRIGHT, RSLOWER, RSBOTTOM); }
+  if (s.RLR) { prsw.poutln(RSRIGHT, RSLOWER, RSRIGHT); }
+  if (s.FP8) { prsw.poutln(RSPROGRAM, RSN8); }
+  if (s.GAT) { prsw.poutln(RSGATING, RSTOP); }
+  if (s.GAR) { prsw.poutln(RSGATING, RSRIGHT); }
+  if (s.GAL) { prsw.poutln(RSGATING, RSLEFT); }
+  if (s.FP5) { prsw.poutln(RSPROGRAM, RSN5); }
+  if (s.FP6) { prsw.poutln(RSPROGRAM, RSN6); }
+  if (s.FP7) { prsw.poutln(RSPROGRAM, RSN7); }
+  if (s.GAB) { prsw.poutln(RSGATING, RSBOTTOM); }
 }
 
 #endif</text>
@@ -3136,30 +3134,30 @@ void processSoftDKb(QMActive* recv, const SerialInEvArgs&amp; softdkb) {
 void processExtCommand(QMActive* recv, const SerialInEvArgs&amp; input) {
   switch (input.getCmdExt()) {
     case SYNC:
-      spout(RSSYNCED);
+      prsw.pout(RSSYNCED);
       break;
     case GET_FREEMEM:
-      spout(RSCMDFREEMEM);
+      prsw.pout(RSCMDFREEMEM);
       // Debug: int* p = new int[10];
       // if (p == 0) { Serial.print(999); )
-      Serial.print(freeMemory());
-      spout(RSPIPE);
+      prsw.out(freeMemory());
+      prsw.pout(RSPIPE);
       break;
     case GET_MODEL:
-      spout(RSCMDMODEL);
-      Serial.print(MODELTYPE);
-      spout(RSPIPE);
+      prsw.pout(RSCMDMODEL);
+      prsw.out(MODELTYPE);
+      prsw.pout(RSPIPE);
       break;
     case GET_VERSION:
-      spout(RSCMDVERSION);
-      Serial.print(MAJORVERSION);
-      spout(RSDOT);
-      Serial.print(MINORVERSION);
-      spout(RSDOT);
-      Serial.print(IFVERSION);
-      spout(RSDOT);
-      Serial.print(BUILDVERSION);
-      spout(RSPIPE);
+      prsw.pout(RSCMDVERSION);
+      prsw.out(MAJORVERSION);
+      prsw.pout(RSDOT);
+      prsw.out(MINORVERSION);
+      prsw.pout(RSDOT);
+      prsw.out(IFVERSION);
+      prsw.pout(RSDOT);
+      prsw.out(BUILDVERSION);
+      prsw.pout(RSPIPE);
       break;
     case GET_DEVICEDATA:
       QACTIVE_POST(recv, GET_DEVICEDATA_SIG, 0L);
@@ -3207,29 +3205,29 @@ void processDirectCommand(const char* cmdLine) {
       if (valtype == 1) {
         uint8_t val;
         EEPROM.get(addr, val);
-        Serial.println(val);
+        prsw.outln(val);
         return;
       }
       if (valtype == 2) {
         uint16_t val;
         EEPROM.get(addr, val);
-        Serial.println(val);
+        prsw.outln(val);
         return;
       }
       if (valtype == 4) {
         float val;
         EEPROM.get(addr, val);
-        Serial.println(val);
+        prsw.outln(val);
         return;
       }
       if (valtype == 5) {
         char val[11];
         EEPROM.get(addr, val);
         val[10] = '\0';
-        Serial.println(val);
+        prsw.outln(val);
         return;
       }
-      spoutln(RSNOK);
+      prsw.poutln(RSNOK);
     }
   }
   else if (cmd == 0x11) {
@@ -3244,17 +3242,17 @@ void processDirectCommand(const char* cmdLine) {
 
       if (valtype == 1) {
         EEPROM.put(addr, (uint8_t)strtol((++next), 0, 10));
-        spoutln(RSOK);
+        prsw.poutln(RSOK);
         return;
       }
       if (valtype == 2) {
         EEPROM.put(addr, (uint16_t)strtol((++next), 0, 10));
-        spoutln(RSOK);
+        prsw.poutln(RSOK);
         return;
       }
       if (valtype == 4) {
         EEPROM.put(addr, (float)atof(++next));
-        spoutln(RSOK);
+        prsw.poutln(RSOK);
         return;
       }
       if (valtype == 5) {
@@ -3262,10 +3260,10 @@ void processDirectCommand(const char* cmdLine) {
         strncpy(buf, (const char*)++next, 10);
         // Debug: Serial.println(buf);
         EEPROM.put(addr, buf);
-        spoutln(RSOK);
+        prsw.poutln(RSOK);
         return;
       }
-      spoutln(RSNOK);
+      prsw.poutln(RSNOK);
     }
   }
 }
@@ -3294,6 +3292,9 @@ void resetFunc() {
 #define BUILDVERSION 2
 
 //#define Q_PARAM_SIZE 2
+
+#include &quot;prsserial.h&quot;
+PRSStreamWriter&lt;SerialPrintPolicy&gt; prsw;
 
 #include &quot;models.h&quot;
 
@@ -3426,14 +3427,14 @@ void setup() {
 
   // initialize the hardware used in this sketch...
   Serial.begin(9600);   // Standard baud rates: 9600, 38400, 115200 bps
-  Serial.print(F(&quot;Synced&quot;));
-  Serial.print(F(&quot;Start, QP-nano: &quot;));
-  Serial.println(F(QP_VERSION_STR));
+  prsw.pout(RSSYNCED);
+  prsw.out(F(&quot;Start, QP-nano: &quot;));
+  prsw.outln(F(QP_VERSION_STR));
 
   // Send free memory
-  Serial.print(F(&quot;|K&quot;));
-  Serial.print(freeMemory());
-  Serial.print(F(&quot;|&quot;));
+  prsw.pout(RSCMDFREEMEM);
+  prsw.out(freeMemory());
+  prsw.pout(RSPIPE);
 }
 
 //............................................................................
