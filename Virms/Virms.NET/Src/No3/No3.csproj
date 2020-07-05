@@ -58,8 +58,11 @@
     <Compile Include="PluginBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServoNumber.cs" />
-    <Compile Include="UI\Models3D\StaticPLAStructure.xaml.cs">
-      <DependentUpon>StaticPLAStructure.xaml</DependentUpon>
+    <Compile Include="UI\Models3D\StaticPLAStructureBlue.xaml.cs">
+      <DependentUpon>StaticPLAStructureBlue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Models3D\StaticPLAStructureWhite.xaml.cs">
+      <DependentUpon>StaticPLAStructureWhite.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Models3D\ThoraxFrontPlate.xaml.cs">
       <DependentUpon>ThoraxFrontPlate.xaml</DependentUpon>
@@ -126,7 +129,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UI\Models3D\StaticPLAStructure.xaml">
+    <Page Include="UI\Models3D\StaticPLAStructureBlue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Models3D\StaticPLAStructureWhite.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
