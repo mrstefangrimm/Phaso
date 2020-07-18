@@ -1054,12 +1054,12 @@ QACTIVE_POST((QMActive*)&amp;AO_MotorsOut, POSITIONSTREAM_SIG, Q_PAR(me));
 #include &quot;device.h&quot;
 
 enum ServoNumber {
-  UPLNG=0,
-  LOLNG,
-  GALNG,
+  LORTN=0,
   UPRTN,
-  LORTN,
-  GARTN
+  GARTN,
+  LOLNG,
+  UPLNG,
+  GALNG
 };
 
 bool isDKbEnabled();
@@ -1090,45 +1090,44 @@ void getDeviceData(float** params, float** offsets) {
       if (model == MODELTYPE &amp;&amp; schema == DATASCHEMA) {
         int addr = sizeof(DeviceDataHeader);
         Float32_t calibVal;
-        // LLNG
+        // LoRTN
         EEPROM.get(addr, calibVal); params[0][0] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[0][1] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[0][2] = calibVal.fval; addr += sizeof(Float32_t);
-        EEPROM.get(addr, calibVal); params[0][3] = calibVal.fval; addr += sizeof(Float32_t);
-        // RLNG
+        // UpRTN
         EEPROM.get(addr, calibVal); params[1][0] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[1][1] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[1][2] = calibVal.fval; addr += sizeof(Float32_t);
-        EEPROM.get(addr, calibVal); params[1][3] = calibVal.fval; addr += sizeof(Float32_t);
-        // GLNG
+        // GaRTN
         EEPROM.get(addr, calibVal); params[2][0] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[2][1] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[2][2] = calibVal.fval; addr += sizeof(Float32_t);
-        EEPROM.get(addr, calibVal); params[2][3] = calibVal.fval; addr += sizeof(Float32_t);
-        // LRTN
+        // LoLNG
         EEPROM.get(addr, calibVal); params[3][0] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[3][1] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[3][2] = calibVal.fval; addr += sizeof(Float32_t);
-        // RRTN
+        EEPROM.get(addr, calibVal); params[3][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // UpLNG
         EEPROM.get(addr, calibVal); params[4][0] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[4][1] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[4][2] = calibVal.fval; addr += sizeof(Float32_t);
-        // GRTN
+        EEPROM.get(addr, calibVal); params[4][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // GaLNG
         EEPROM.get(addr, calibVal); params[5][0] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[5][1] = calibVal.fval; addr += sizeof(Float32_t);
         EEPROM.get(addr, calibVal); params[5][2] = calibVal.fval; addr += sizeof(Float32_t);
-
-        // LLNG
+        EEPROM.get(addr, calibVal); params[5][3] = calibVal.fval; addr += sizeof(Float32_t);
+        // LoRTN
         EEPROM.get(addr, calibVal); offsets[0][0] = calibVal.fval; addr += sizeof(Float32_t);
-         // RLNG
+         // UpRTN
         EEPROM.get(addr, calibVal); offsets[1][0] = calibVal.fval; addr += sizeof(Float32_t);
-        // GLNG
+        // GaRTN
         EEPROM.get(addr, calibVal); offsets[2][0] = calibVal.fval; addr += sizeof(Float32_t);
-        // LLNG
+        // LoLNG
         EEPROM.get(addr, calibVal); offsets[3][0] = calibVal.fval; addr += sizeof(Float32_t);
-        // RLNG
+        // UpLNG
         EEPROM.get(addr, calibVal); offsets[4][0] = calibVal.fval; addr += sizeof(Float32_t);
-        // GLNG
+        // GaLNG
         EEPROM.get(addr, calibVal); offsets[5][0] = calibVal.fval; addr += sizeof(Float32_t);
       }
       else {
@@ -1137,38 +1136,38 @@ void getDeviceData(float** params, float** offsets) {
 }
 
 void getCalibrationDeviceData(float** params, float** offsets) {
-      // LLLNG
+      // LoRTN
       params[0][0] = 100;
       params[0][1] = 2;
       params[0][2] = 0;
-      params[0][3] = 0;
       offsets[0][0] = 0;
-      // RLLNG
+      // UpRTN
       params[1][0] = 100;
       params[1][1] = 2;
       params[1][2] = 0;
-      params[1][3] = 0;
       offsets[1][0] = 0;
-      // GALNG
+      // GaRTN
       params[2][0] = 100;
       params[2][1] = 2;
       params[2][2] = 0;
-      params[2][3] = 0;
       offsets[2][0] = 0;
-      // LLRTN
+      // LoLNG
       params[3][0] = 100;
       params[3][1] = 2;
       params[3][2] = 0;
+      params[3][3] = 0;
       offsets[3][0] = 0;
-      // RLRTN
+      // UpLNG
       params[4][0] = 100;
       params[4][1] = 2;
       params[4][2] = 0;
+      params[4][3] = 0;
       offsets[4][0] = 0;
-      // GARTN
+      // GaLNG
       params[5][0] = 100;
       params[5][1] = 2;
       params[5][2] = 0;
+      params[5][3] = 0;
       offsets[5][0] = 0;
 }
 
@@ -1582,7 +1581,7 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
 }
 
 void printDKbInData(const DKbInEvArgs&amp; s) {
-  if (s.FMM) { prsw.poutln(RSMODE, RSMANUAL); }
+  if (s.FMM) { prsw.poutln(RSMODE, RSMANUALMOTION); }
   if (s.FPS) { prsw.poutln(RSMODE, RSPRESET); }
   if (s.FRM) { prsw.poutln(RSMODE, RSREMOTE); }
   if (s.FP2) { prsw.poutln(RSPROGRAM, RSN2); }
@@ -1694,11 +1693,11 @@ void getDeviceData(float** params, float** offsets) {
         EEPROM.get(addr, calibVal); offsets[1][0] = calibVal.fval; addr += sizeof(Float32_t);
         // GLNG
         EEPROM.get(addr, calibVal); offsets[2][0] = calibVal.fval; addr += sizeof(Float32_t);
-        // LLNG
+        // LRTN
         EEPROM.get(addr, calibVal); offsets[3][0] = calibVal.fval; addr += sizeof(Float32_t);
-        // RLNG
+        // RRTN
         EEPROM.get(addr, calibVal); offsets[4][0] = calibVal.fval; addr += sizeof(Float32_t);
-        // GLNG
+        // GRTN
         EEPROM.get(addr, calibVal); offsets[5][0] = calibVal.fval; addr += sizeof(Float32_t);
       }
       else {
@@ -3898,7 +3897,7 @@ const uint8_t DEVICEDATALENGTH = (3 * 4 + 3 * 3 + 6 * 1) * sizeof(Float32_t) + s
 
 const uint8_t NUMSERVOS  = 6;
 const uint8_t DATASCHEMA = 1;
-const TORD PARAM         = 0b0000101010111111;
+const TORD PARAM         = 0b0000111111101010;
 const TORD OFFSET        = 0;
 
 #include &quot;device/no3.h&quot;

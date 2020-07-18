@@ -17,44 +17,44 @@
 Lung m5
 
 # Param
-# 0 (Upper LNG)
+# 0 (Lower RTN)
  150
  1.4
  0
+# 1 (Upper RTN)
+ 150
+ 1.4
  0
-# 1 (Lower LNG)
+# 2 (Gating RTN)
+ 150
+ 1.4
+ 0
+# 3 (Lower LNG)
  507
 -1.4
  0
  0
-# 2 (Gating LNG)
+# 4 (Upper LNG)
  150
  1.4
  0
  0
-# 3 (Upper RTN)
- 150
- 1.4
+# 5 (Gating LNG)
+ 507
+-1.4
  0
-# 4 (Lower RTN)
- 150
- 1.4
- 0
-# 5 (Gating RTN)
- 150
- 1.4
  0
 
 # Offset
-# 0 (Upper LNG)
+# 0 (Lower RTN)
  0
-# 1 (Lower LNG)
+# 1 (Upper RTN)
  0
-# 2 (Gating LNG)
+# 2 (Gating RTN)
  0
-# 3 (Upper RTN)
+# 3 (Lower LNG)
  0
-# 4 (Lower RTN)
+# 4 (Upper LNG)
  0
-# 5 (Gating RTN)
+# 5 (Gating LNG)
  0

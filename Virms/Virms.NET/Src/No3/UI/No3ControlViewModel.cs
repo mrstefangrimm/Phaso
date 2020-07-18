@@ -167,8 +167,8 @@ namespace ViphApp.No3.UI {
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
         MotionSystemMotorPosition[] pos = new[] {
-          new MotionSystemMotorPosition { Channel = (byte)ServoNumber.LLNG, StepSize = 5, Value = lng },
-          new MotionSystemMotorPosition { Channel = (byte)ServoNumber.LRTN, StepSize = 5, Value = rtn }
+          new MotionSystemMotorPosition { Channel = (byte)ServoNumber.UPLNG, StepSize = 5, Value = lng },
+          new MotionSystemMotorPosition { Channel = (byte)ServoNumber.UPRTN, StepSize = 5, Value = rtn }
         };
         _mophApp.GoTo(pos);
       }
@@ -181,8 +181,8 @@ namespace ViphApp.No3.UI {
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
         MotionSystemMotorPosition[] pos = new[] {
-          new MotionSystemMotorPosition { Channel = (byte)ServoNumber.RLNG, StepSize = 5, Value = lng },
-          new MotionSystemMotorPosition { Channel = (byte)ServoNumber.RRTN, StepSize = 5, Value = rtn }
+          new MotionSystemMotorPosition { Channel = (byte)ServoNumber.LOLNG, StepSize = 5, Value = lng },
+          new MotionSystemMotorPosition { Channel = (byte)ServoNumber.LORTN, StepSize = 5, Value = rtn }
         };
         _mophApp.GoTo(pos);
       }

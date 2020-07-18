@@ -19,12 +19,11 @@
 namespace ViphApp.No3 {
 
   internal enum ServoNumber : byte {
-    LLNG = 0,
-    RLNG,
-    GALNG,
-    LRTN,
-    RRTN,
-    GARTN
+    LORTN = 0,
+    UPRTN,
+    GARTN,
+    LOLNG,
+    UPLNG,
+    GALNG
   }
-
 }
