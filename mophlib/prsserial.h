@@ -60,7 +60,7 @@ struct SerialPrintPolicy {
   void out(const char* ch) { Serial.print(ch);  }
   void outln(const char* ch) { Serial.println(ch); }
 
-  void outln(const float& number, uint8_t digits) { Serial.print(number, digits); }
+  void outln(const float& number, uint8_t digits) { Serial.println(number, digits); }
   template<typename T> void out(const T& val) { Serial.print(val);  }
   template<typename T> void outln(const T& val) { Serial.println(val);  }
   template<typename T> void out(const T& val, int base) { Serial.print(val, base);  }
