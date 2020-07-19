@@ -209,10 +209,10 @@ namespace ViphApp.No3.UI {
           break;
         case Cylinder.Upper:
           UP.LNGInt = pos.Lng;
-          LO.RTNInt = pos.Rtn;
+          UP.RTNInt = pos.Rtn;
           break;
         case Cylinder.Lower:
-          UP.LNGInt = pos.Lng;
+          LO.LNGInt = pos.Lng;
           LO.RTNInt = pos.Rtn;
           break;
         case Cylinder.Platform:

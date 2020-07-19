@@ -87,9 +87,9 @@ namespace ViphApp.No3 {
       //  Position 1
       const ushort STEPSZ = 2;
       CylinderPosition[] pos = new CylinderPosition[3];
-      pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = 128, Rtn = 127, StepSize = STEPSZ };
-      pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = 128, Rtn = 127, StepSize = STEPSZ };
-      pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = 128, Rtn = 127, StepSize = STEPSZ };
+      pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = 127, Rtn = 127, StepSize = STEPSZ };
+      pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = 127, Rtn = 127, StepSize = STEPSZ };
+      pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = 127, Rtn = 127, StepSize = STEPSZ };
       handler(pos);
     }
 
@@ -97,9 +97,9 @@ namespace ViphApp.No3 {
       // Position 2
       const ushort STEPSZ = 2;
       CylinderPosition[] pos = new CylinderPosition[3];
-      pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = 0, Rtn = 255, StepSize = STEPSZ };
-      pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = 40, Rtn = 79, StepSize = STEPSZ };
-      pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = 0, Rtn = 135, StepSize = STEPSZ };
+      pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = 207, Rtn = 207, StepSize = STEPSZ };
+      pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = 187, Rtn = 107, StepSize = STEPSZ };
+      pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = 127, Rtn = 127, StepSize = STEPSZ };
       handler(pos);
     }
 
@@ -109,21 +109,20 @@ namespace ViphApp.No3 {
       if (_preSetTimer == 0) {
         const ushort STEPSZ = 2;
         CylinderPosition[] pos = new CylinderPosition[3];
-        pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = 64, Rtn = 191, StepSize = STEPSZ };
-        pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = 84, Rtn = 103, StepSize = STEPSZ };
+        pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = 167, Rtn = 167, StepSize = STEPSZ };
+        pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = 157, Rtn = 117, StepSize = STEPSZ };
         pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = 127, Rtn = 127, StepSize = STEPSZ };
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
         const ushort STEPSZ = 8;
-        double targetLlng = 64 - 64 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
-        double targetRlng = 84 - 44 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
-        double targetLrtn = 191 + 64 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
-        double targetRrtn = 103 - 24 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
+        double targetUpper = 167 + 40 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
+        double targetLoLng = 157 + 30 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
+        double targetLoRtn = 117 - 10 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
 
         CylinderPosition[] pos = new CylinderPosition[2];
-        pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = (ushort)targetLlng, Rtn = (ushort)targetLrtn, StepSize = STEPSZ };
-        pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = (ushort)targetRlng, Rtn = (ushort)targetRrtn, StepSize = STEPSZ };
+        pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = (ushort)targetUpper, Rtn = (ushort)targetUpper, StepSize = STEPSZ };
+        pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = (ushort)targetLoLng, Rtn = (ushort)targetLoRtn, StepSize = STEPSZ };
         handler(pos);
       }
 
@@ -218,23 +217,23 @@ namespace ViphApp.No3 {
       if (_preSetTimer == 0) {
         const ushort STEPSZ = 2;
         CylinderPosition[] pos = new CylinderPosition[3];
-        pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = 64, Rtn = 191, StepSize = STEPSZ };
-        pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = 84, Rtn = 103, StepSize = STEPSZ };
-        pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = 64, Rtn = 131, StepSize = STEPSZ };
+        pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = 167, Rtn = 167, StepSize = STEPSZ };
+        pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = 157, Rtn = 117, StepSize = STEPSZ };
+        pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = 64, Rtn = 127, StepSize = STEPSZ };
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
         const ushort STEPSZ = 8;
-        double targetLGlng = 64 - 64 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
-        double targetRlng = 84 - 44 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
-        double targetLrtn = 191 + 64 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
-        double targetRrtn = 103 - 24 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
-        double targetGrtn = 131 + 4 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
+        double targetUpper = 167 + 40 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
+        double targetLoLng = 157 + 30 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
+        double targetLoRtn = 117 - 10 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
+        double targetGaLng = 64 + 64 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
+        double targetGaRtn = 127 + 4 * Math.Sin((_preSetTimer - 3000) / 3000.0 * Math.PI);
 
         CylinderPosition[] pos = new CylinderPosition[3];
-        pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = (ushort)targetLGlng, Rtn = (ushort)targetLrtn, StepSize = STEPSZ };
-        pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = (ushort)targetRlng, Rtn = (ushort)targetRrtn, StepSize = STEPSZ };
-        pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = (ushort)targetLGlng, Rtn = (ushort)targetGrtn, StepSize = STEPSZ };
+        pos[0] = new CylinderPosition() { Cy = Cylinder.Upper, Lng = (ushort)targetUpper, Rtn = (ushort)targetUpper, StepSize = STEPSZ };
+        pos[1] = new CylinderPosition() { Cy = Cylinder.Lower, Lng = (ushort)targetLoLng, Rtn = (ushort)targetLoRtn, StepSize = STEPSZ };
+        pos[2] = new CylinderPosition() { Cy = Cylinder.Platform, Lng = (ushort)targetGaLng, Rtn = (ushort)targetGaRtn, StepSize = STEPSZ };
         handler(pos);
       }            
       if (_preSetTimer == 8960) {

@@ -415,11 +415,12 @@ me-&gt;initializeCounter++;</action>
    </statechart>
   </class>
   <class name="SerialIn" superclass="qpn::QActive">
-   <attribute name="remainingBytes" type="uint8_t" visibility="0x00" properties="0x00"/>
-   <attribute name="rwByteCounter" type="uint16_t" visibility="0x00" properties="0x00"/>
+   <attribute name="remainingBytes" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="rwByteCounter" type="uint16_t" visibility="0x02" properties="0x00"/>
    <attribute name="txtCmdLineInput[22]" type="char" visibility="0x02" properties="0x00"/>
-   <attribute name="txtCmdLineInputPos" type="uint8_t" visibility="0x00" properties="0x00"/>
-   <operation name="processRemainingBytes" type="void" visibility="0x00" properties="0x00">
+   <attribute name="txtCmdLineInputPos" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="previousStateApiMode" type="bool" visibility="0x02" properties="0x00"/>
+   <operation name="processRemainingBytes" type="void" visibility="0x02" properties="0x00">
     <code>while (me-&gt;remainingBytes &gt; 1 &amp;&amp; Serial.available() &gt; 1) {
   uint8_t tmpLow = Serial.read();
   uint8_t tmpHigh = Serial.read();
@@ -440,9 +441,10 @@ me-&gt;initializeCounter++;</action>
   me-&gt;remainingBytes -= 2;
 }</code>
    </operation>
-   <operation name="hasRemainingDeviceData" type="bool" visibility="0x00" properties="0x00">
+   <operation name="hasRemainingDeviceData" type="bool" visibility="0x02" properties="0x00">
     <code>return me-&gt;rwByteCounter &lt; DEVICEDATALENGTH;</code>
    </operation>
+   <operation name="previousStateApiMode" type="bool" visibility="0x02" properties="0x00"/>
    <statechart>
     <initial target="../1">
      <action>QActive_armX((QActive *)me, 0U,
@@ -507,6 +509,7 @@ else if (Serial.available() &gt; 0) {
      </tran>
      <tran trig="GET_DEVICEDATA" target="../../3">
       <action>me-&gt;rwByteCounter = 0;
+me-&gt;previousStateApiMode = true;
 //Debug: Serial.println(DEVICEDATALENGTH); Serial.println(sizeof(DeviceDataHeader));</action>
       <tran_glyph conn="46,16,2,0,16">
        <action box="0,1,16,2"/>
@@ -609,21 +612,33 @@ else {
   prsw.outln(calibVal.fval, 5);
   me-&gt;rwByteCounter += sizeof(Float32_t);
 }</action>
-       <choice_glyph conn="53,38,4,-1,4">
-        <action box="0,1,12,2"/>
+       <choice_glyph conn="53,42,4,-1,6">
+        <action box="0,2,12,2"/>
        </choice_glyph>
       </choice>
-      <choice target="../../../1">
+      <choice>
        <guard brief="else"/>
-       <choice_glyph conn="53,38,5,1,13,-9,-16,-15,-2">
+       <choice target="../../../../1">
+        <guard brief="back to ApiMode">me-&gt;previousStateApiMode</guard>
+        <choice_glyph conn="61,42,4,1,-29,-13">
+         <action box="0,-4,13,2"/>
+        </choice_glyph>
+       </choice>
+       <choice target="../../../../4">
+        <guard brief="else"/>
+        <choice_glyph conn="61,42,5,3,12">
+         <action box="1,0,10,2"/>
+        </choice_glyph>
+       </choice>
+       <choice_glyph conn="53,42,5,-1,8">
         <action box="1,-2,10,2"/>
        </choice_glyph>
       </choice>
-      <tran_glyph conn="43,38,3,-1,10">
+      <tran_glyph conn="43,42,3,-1,10">
        <action box="0,-2,10,2"/>
       </tran_glyph>
      </tran>
-     <state_glyph node="43,32,22,12">
+     <state_glyph node="43,32,25,18">
       <entry box="1,2,6,2"/>
      </state_glyph>
     </state>
@@ -675,7 +690,15 @@ else {
        <action box="0,-2,10,2"/>
       </tran_glyph>
      </tran>
-     <state_glyph node="73,17,22,19">
+     <tran trig="GET_DEVICEDATA" target="../../3">
+      <action>me-&gt;rwByteCounter = 0;
+me-&gt;previousStateApiMode = false;
+//Debug: Serial.println(DEVICEDATALENGTH); Serial.println(sizeof(DeviceDataHeader));</action>
+      <tran_glyph conn="81,44,2,1,2,-13">
+       <action box="0,0,16,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="73,17,22,27">
       <entry box="1,2,6,2"/>
      </state_glyph>
     </state>
@@ -1273,36 +1296,36 @@ void prog1(QMActive* recv, uint16_t&amp; preSetTimer) {
   //  Position 1
   static const uint8_t PROGMEM STEPSZ = 2;
 
-  MotorEvArgs llng(UPLNG, 128, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-  MotorEvArgs rlng(LOLNG, 128, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-  MotorEvArgs glng(GALNG, 128, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-  MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-  MotorEvArgs rrtn(LORTN, 127, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-  MotorEvArgs grtn(GARTN, 127, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  MotorEvArgs uplng(UPLNG, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+  MotorEvArgs lolng(LOLNG, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+  MotorEvArgs galng(GALNG, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+  MotorEvArgs uprtn(UPRTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+  MotorEvArgs lortn(LORTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+  MotorEvArgs gartn(GARTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
 }
 
 void prog2(QMActive* recv, uint16_t&amp; preSetTimer) {
   //  Position 2
   static const uint8_t PROGMEM STEPSZ = 2;
 
-  MotorEvArgs llng(UPLNG, 0, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-  MotorEvArgs rlng(LOLNG, 40, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-  MotorEvArgs glng(GALNG, 0, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-  MotorEvArgs lrtn(UPRTN, 255, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-  MotorEvArgs rrtn(LORTN, 79, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-  MotorEvArgs grtn(GARTN, 135, STEPSZ);
-  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+  MotorEvArgs uplng(UPLNG, 207, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+  MotorEvArgs lolng(LOLNG, 187, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+  MotorEvArgs galng(GALNG, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+  MotorEvArgs uprtn(UPRTN, 207, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+  MotorEvArgs lortn(LORTN, 107, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+  MotorEvArgs gartn(GARTN, 127, STEPSZ);
+  QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
 }
 
 void prog3(QMActive* recv, uint16_t&amp; preSetTimer) {
@@ -1310,35 +1333,34 @@ void prog3(QMActive* recv, uint16_t&amp; preSetTimer) {
 
   if (preSetTimer == 0) {
     static const uint8_t PROGMEM STEPSZ = 2;
-    MotorEvArgs llng(UPLNG, 64, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, 84, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-    MotorEvArgs lrtn(UPRTN, 191, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-    MotorEvArgs rrtn(LORTN, 103, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-    MotorEvArgs grtn(GARTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs uplng(UPLNG, 167, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, 157, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    MotorEvArgs uprtn(UPRTN, 167, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+    MotorEvArgs lortn(LORTN, 117, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+    MotorEvArgs gartn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
     static const uint8_t PROGMEM STEPSZ = 8;
 
-    float targetLlng = 64 - 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
-    float targetRlng =  84 - 44 * sin((preSetTimer - 3000) / 3000.0 * PI);
-    float targetLrtn = 191 + 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
-    float targetRrtn = 103 - 24 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetUpper = 167 + 40 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetLoLng = 157 + 30 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetLoRtn = 117 - 10 * sin((preSetTimer - 3000) / 3000.0 * PI);
 
-    MotorEvArgs llng(UPLNG, targetLlng, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, targetRlng, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs lrtn(UPRTN, targetLrtn, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-    MotorEvArgs rrtn(LORTN, targetRrtn, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
+    MotorEvArgs uplng(UPLNG, targetUpper, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, targetLoLng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs uprtn(UPRTN, targetUpper, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+    MotorEvArgs lortn(LORTN, targetLoRtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
   }
 
   if (preSetTimer == 8960) {
@@ -1354,28 +1376,28 @@ void prog4(QMActive* recv, uint16_t&amp; preSetTimer) {
 
   if (preSetTimer == 0) {
     static const uint8_t PROGMEM STEPSZ = 2;
-    MotorEvArgs llng(UPLNG, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-    MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-    MotorEvArgs rrtn(LORTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-    MotorEvArgs grtn(GARTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs uplng(UPLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    MotorEvArgs uprtn(UPRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+    MotorEvArgs lortn(LORTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+    MotorEvArgs gartn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
     static const uint8_t PROGMEM STEPSZ = 8;
 
     float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
 
-    MotorEvArgs lllng(UPLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
-    MotorEvArgs rllng(LOLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+    MotorEvArgs uplng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
     MotorEvArgs galng(GALNG, target, STEPSZ);
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
   }
@@ -1393,47 +1415,50 @@ void prog5(QMActive* recv, uint16_t&amp; preSetTimer) {
 
   if (preSetTimer == 0) {
     static const uint8_t PROGMEM STEPSZ = 2;
-    MotorEvArgs llng(UPLNG, 60, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, 60, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, 60, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-    MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-    MotorEvArgs rrtn(LORTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-    MotorEvArgs grtn(GARTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs uplng(UPLNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, 60, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    MotorEvArgs uprtn(UPRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+    MotorEvArgs lortn(LORTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+    MotorEvArgs gartn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000 &amp;&amp; preSetTimer &lt; 28000) {
     static const uint8_t PROGMEM STEPSZ = 8;
     float target = 60 + 50 * sin((preSetTimer - 3000) / 2500.0 * PI);
-    MotorEvArgs llng(UPLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+
+    MotorEvArgs uplng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
   }
   else if (preSetTimer &gt; 28000 &amp;&amp; preSetTimer &lt; 38000) {
     static const uint8_t PROGMEM STEPSZ = 4;
     float target = 200 + 50 * cos((preSetTimer - 28000) / 40000.0 * PI);
-    MotorEvArgs llng(UPLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+
+    MotorEvArgs uplng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
   }
   else if (preSetTimer == 38000) {
     static const uint8_t PROGMEM STEPSZ = 4;
-    MotorEvArgs llng(UPLNG, 10, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, 10, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, 10, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+
+    MotorEvArgs uplng(UPLNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, 10, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
   }
 
   if (preSetTimer == 40000) {
@@ -1449,40 +1474,40 @@ void prog6(QMActive* recv, uint16_t&amp; preSetTimer) {
 
   if (preSetTimer == 0) {
     static const uint8_t PROGMEM STEPSZ = 2;
-    MotorEvArgs llng(UPLNG, 64, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, 84, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, 64, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-    MotorEvArgs lrtn(UPRTN, 191, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-    MotorEvArgs rrtn(LORTN, 103, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-    MotorEvArgs grtn(GARTN, 131, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs uplng(UPLNG, 167, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, 157, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, 64, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    MotorEvArgs uprtn(UPRTN, 167, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+    MotorEvArgs lortn(LORTN, 117, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+    MotorEvArgs gartn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
     static const uint8_t PROGMEM STEPSZ = 8;
 
-    float targetLGlng = 64 - 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
-    float targetRlng =  84 - 44 * sin((preSetTimer - 3000) / 3000.0 * PI);
-    float targetLrtn = 191 + 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
-    float targetRrtn = 103 - 24 * sin((preSetTimer - 3000) / 3000.0 * PI);
-    float targetGrtn = 131 +  4 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetUpper = 167 + 40 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetLoLng = 157 + 30 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetLoRtn = 117 - 10 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetGaLng = 64 + 64 * sin((preSetTimer - 3000) / 3000.0 * PI);
+    float targetGaRtn = 127 + 4 * sin((preSetTimer - 3000) / 3000.0 * PI);
 
-    MotorEvArgs llng(UPLNG, targetLGlng, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, targetRlng, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, targetLGlng, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-    MotorEvArgs lrtn(UPRTN, targetLrtn, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-    MotorEvArgs rrtn(LORTN, targetRrtn, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-    MotorEvArgs grtn(GARTN, targetGrtn, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs uplng(UPLNG, targetUpper, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, targetLoLng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, targetGaLng, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    MotorEvArgs uprtn(UPRTN, targetUpper, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+    MotorEvArgs lortn(LORTN, targetLoRtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+    MotorEvArgs gartn(GARTN, targetGaRtn, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
 
   if (preSetTimer == 8960) {
@@ -1498,40 +1523,40 @@ void prog7(QMActive* recv, uint16_t&amp; preSetTimer) {
 
   if (preSetTimer == 0) {
     static const uint8_t PROGMEM STEPSZ = 2;
-    MotorEvArgs llng(UPLNG, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-    MotorEvArgs rlng(LOLNG, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs rrtn(LORTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-    MotorEvArgs glng(GALNG, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-    MotorEvArgs grtn(GARTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs uplng(UPLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs uprtn(UPRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+    MotorEvArgs lolng(LOLNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs lortn(LORTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+    MotorEvArgs galng(GALNG, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    MotorEvArgs gartn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
     static const uint8_t PROGMEM STEPSZ = 8;
     float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
 
-    MotorEvArgs llng(UPLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs uplng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lortn(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+    MotorEvArgs galng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
   }
 
   if (preSetTimer == 25000) {
     static const uint8_t PROGMEM STEPSZ = 3;
-    MotorEvArgs grtn(GARTN, 255, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs gartn(GARTN, 255, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer == 35000) {
     static const uint8_t PROGMEM STEPSZ = 3;
-    MotorEvArgs grtn(GARTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs gartn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
 
   if (preSetTimer == 37960) {
@@ -1547,29 +1572,29 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
 
   if (preSetTimer == 0) {
     static const uint8_t PROGMEM STEPSZ = 2;
-    MotorEvArgs llng(UPLNG, 130, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs lrtn(UPRTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lrtn.raw);
-    MotorEvArgs rlng(LOLNG, 130, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs rrtn(LORTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rrtn.raw);
-    MotorEvArgs glng(GALNG, 130, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
-    MotorEvArgs grtn(GARTN, 127, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
+    MotorEvArgs uplng(UPLNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs uprtn(UPRTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
+    MotorEvArgs lolng(LOLNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs lortn(LORTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
+    MotorEvArgs galng(GALNG, 130, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
+    MotorEvArgs gartn(GARTN, 127, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
     static const uint8_t PROGMEM STEPSZ = 8;
     float baseline = 130 + 30 * sin((preSetTimer - 3000) / 30000.0 * PI);
     float target = baseline + 50 * sin((preSetTimer - 3000) / 3000.0 * PI);
-    MotorEvArgs llng(UPLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
-    MotorEvArgs rlng(LOLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
-    MotorEvArgs glng(GALNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, glng.raw);
+    MotorEvArgs uplng(UPLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
+    MotorEvArgs lolng(LOLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
+    MotorEvArgs galng(GALNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
   }
 
   if (preSetTimer == 62960) {
@@ -1943,10 +1968,10 @@ void prog4(QMActive* recv, uint16_t&amp; preSetTimer) {
 
     float target = 127 + 80 * sin((preSetTimer - 3000) / 2500.0 * PI);
 
-    MotorEvArgs lllng(LLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lllng.raw);
-    MotorEvArgs rllng(RLNG, target, STEPSZ);
-    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rllng.raw);
+    MotorEvArgs llng(LLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, llng.raw);
+    MotorEvArgs rlng(RLNG, target, STEPSZ);
+    QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, rlng.raw);
     MotorEvArgs galng(GLNG, target, STEPSZ);
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, galng.raw);
   }
@@ -3159,6 +3184,7 @@ void processExtCommand(QMActive* recv, const SerialInEvArgs&amp; input) {
       prsw.pout(RSPIPE);
       break;
     case GET_DEVICEDATA:
+      // Debug: Serial.println(F(&quot;Get devicedata&quot;));
       QACTIVE_POST(recv, GET_DEVICEDATA_SIG, 0L);
       break;
     case PUT_DEVICEDATA:
