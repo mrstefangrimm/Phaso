@@ -22,7 +22,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
+             xmlns:qc="clr-namespace:QuickConverter;assembly=QuickConverter"
              d:DesignHeight="600" d:DesignWidth="200">
+
+  <UserControl.Resources>
+    <Style x:Key="DarkListViewStyle" TargetType="{x:Type ListView}">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListView">
+            <Border Name="Border" 
+                    Background="Transparent">
+              <ScrollViewer>
+                <ItemsPresenter />
+              </ScrollViewer>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsEnabled" Value="false">
+                <Setter TargetName="Border" Property="Background" Value="Black" />
+              </Trigger>
+              <Trigger Property="IsGrouping" Value="true">
+                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
   
   <StackPanel
     Width="200"
@@ -36,21 +62,25 @@
             Command="{Binding Settings.DoShowSettingsDetails}">
       <Image Source="pack://application:,,,/ViphApp.Common;component/UI/Icons/ArrowLeft.png" />
     </Button>
-    <TextBlock Foreground="White" FontWeight="Bold">Phantom:</TextBlock>
+    <TextBlock Foreground="White" 
+               FontWeight="Bold">Phantom:</TextBlock>
     <ListView ItemsSource="{Binding Path=Settings.AvailablePhantoms}"
               SelectedItem="{Binding Path=Settings.SelectedPhantom}"
               SelectionMode="Single"
               Background="#FF1F1F1F"
-              IsSynchronizedWithCurrentItem="True">
-              <ListView.ItemTemplate>
-              <DataTemplate>
-                <StackPanel Orientation="Horizontal">
-                  <RadioButton Foreground="White" FontWeight="Bold"
-                               Content="{Binding Path=Name, FallbackValue=Some}"
-                               IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"/>
-                </StackPanel>
-              </DataTemplate>
-            </ListView.ItemTemplate>
+              IsEnabled="{qc:Binding '$P==False', P={Binding Status.IsConnected}}"
+              IsSynchronizedWithCurrentItem="True"
+              Style="{StaticResource DarkListViewStyle}">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal">
+            <RadioButton Foreground="White"
+                         FontWeight="Bold"
+                         Content="{Binding Path=Name, FallbackValue=Some}"
+                         IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"/>
+          </StackPanel>
+        </DataTemplate>
+      </ListView.ItemTemplate>
     </ListView>
   </StackPanel>
   

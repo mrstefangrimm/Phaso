@@ -59,12 +59,13 @@ namespace ViphApp.App.UI {
             if (!IsConnected) {
               SelectedSerialPort = "None";
               OnPropertyChanged("SelectedSerialPort");
-              OnPropertyChanged("IsConnected");
+              return;
             }
           }
           else {
             _mophApp.Disconnect();
           }
+          OnPropertyChanged("IsConnected");
         }
       }
     }

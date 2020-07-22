@@ -30,7 +30,7 @@ namespace ViphApp.App.UI {
     StatusViewMaximized,
     ControlViewMaximized
   }
-
+    
   public enum ComStatusViewState {
     Details,
     Minimized,
@@ -50,7 +50,7 @@ namespace ViphApp.App.UI {
     private MainViewState _mainViewState;
     private ComStatusViewState _comStatusViewState;
     private AppSettingsViewState _appSettingsViewState;
-       
+      
     public MainViewModel(Common.Com.MophAppProxy mophApp, ObservableCollection<IPluginPhantom> availablePhantoms) {
       _mophApp = mophApp;
       Status = new ComStatusViewModel(this, _mophApp);
@@ -90,8 +90,6 @@ namespace ViphApp.App.UI {
       }
     }
 
-    public ComStatusViewModel Status { get; private set; }
-
     public AppSettingsViewState AppSettingsViewState {
       get { return _appSettingsViewState; }
       set {
@@ -101,6 +99,8 @@ namespace ViphApp.App.UI {
         }
       }
     }
+
+    public ComStatusViewModel Status { get; private set; }   
 
     public AppSettingsViewModel Settings { get; private set; }
 
