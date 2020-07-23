@@ -444,7 +444,6 @@ me-&gt;initializeCounter++;</action>
    <operation name="hasRemainingDeviceData" type="bool" visibility="0x02" properties="0x00">
     <code>return me-&gt;rwByteCounter &lt; DEVICEDATALENGTH;</code>
    </operation>
-   <operation name="previousStateApiMode" type="bool" visibility="0x02" properties="0x00"/>
    <statechart>
     <initial target="../1">
      <action>QActive_armX((QActive *)me, 0U,
@@ -648,7 +647,7 @@ else {
       <action>if (Serial.available() &gt; 0) {
   int serin = Serial.read();
 
-  if (isAlphaNumeric(serin) || serin == ' ' || serin == '.') {
+  if (isAlphaNumeric(serin) || serin == ' ' || serin == '.' || serin == '-') {
     if (me-&gt;txtCmdLineInputPos &lt; 22) {
       me-&gt;txtCmdLineInput[me-&gt;txtCmdLineInputPos] = serin;
       me-&gt;txtCmdLineInputPos++;
@@ -3213,7 +3212,7 @@ void writeData(const uint16_t&amp; addr, const Float32_t&amp; value) {
 }
 
 void processDirectCommand(const char* cmdLine) {
-  // cmd
+  // Debug: Serial.println(cmdLine);
   char* next;
   uint8_t cmd = strtol(&amp;cmdLine[1], &amp;next, 16);
   // Debug: Serial.println(cmd);
@@ -3276,6 +3275,7 @@ void processDirectCommand(const char* cmdLine) {
         return;
       }
       if (valtype == 4) {
+        //Debug: Serial.println(next);
         EEPROM.put(addr, (float)atof(++next));
         prsw.poutln(RSOK);
         return;
