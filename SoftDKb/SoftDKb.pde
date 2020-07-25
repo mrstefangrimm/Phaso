@@ -37,9 +37,9 @@ void setup() {
   
   size(900, 800);
 
-  // Debug : printArray(PFont.list());
-  PFont font = createFont("Consolas", 16);
-  textFont(font, 24);
+  // Debug: printArray(PFont.list());
+  PFont font = createFont("Consolas", 20);
+  textFont(font, 20);
   
   setPhantom(0);
 
