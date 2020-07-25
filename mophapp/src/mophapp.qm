@@ -2176,7 +2176,7 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
 }
 
 void printDKbInData(const DKbInEvArgs&amp; s) {
-  if (s.FMM) { prsw.poutln(RSMODE, RSMANUAL); }
+  if (s.FMM) { prsw.poutln(RSMODE, RSMANUALMOTION); }
   if (s.FPS) { prsw.poutln(RSMODE, RSPRESET); }
   if (s.FRM) { prsw.poutln(RSMODE, RSREMOTE); }
   if (s.FP2) { prsw.poutln(RSPROGRAM, RSN2); }
