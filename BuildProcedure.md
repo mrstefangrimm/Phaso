@@ -34,18 +34,19 @@ Create a package folder
 
 1. In Visual Studio, open 'Virms.NET.sln' from '\Phaso\Virms\Virms.NET\Src'
 2. Set 'App' as startup project
-3. Set the build configuration to 'Release'
+3. Set the build configuration to 'Release' and 'x64'
 4. Build the solution
-5. Copy the 'Release' folder from '\Phaso\Virms\Virms.NET\Src\App\bin' to the package folder and rename it to Virms.NET
+5. Copy the 'Release' folder from '\Phaso\Virms\Virms.NET\Src\App\bin\x64' to the package folder and rename it to Virms.NET
 6. Delete the files '*.pdb' and '*.xml'
 
 ## 3. Build SoftDKb
 
 1. In processing, open 'SoftDKb.pde' from '\Phaso\SoftDKb'
-2. Go to File, Export Application... (use the defaults)
-3. Press 'Export'
-4. Copy the 'application.windows64' folder from '\Phaso\SoftDKb' to to the package folder and rename it to 'SoftDKb'
-5. Delete the folder 'source'
+2. Go to File, Export Application...
+3. Exclude 'Embed Java'
+4. Press 'Export'
+5. Copy the 'application.windows64' folder from '\Phaso\SoftDKb' to to the package folder and rename it to 'SoftDKb'
+6. Delete the folder 'source'
 
 ## 4. Build MophDroid
 
