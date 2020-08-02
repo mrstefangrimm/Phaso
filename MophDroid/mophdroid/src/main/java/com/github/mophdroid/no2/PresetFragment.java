@@ -9,21 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.github.mophdroid.*;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class PresetFragment extends Fragment implements ISerialObserver {
 
     private enum State {
-        Standing, Running
+        Stopped, Running
     }
 
     private Spinner mPreset;
@@ -38,10 +32,11 @@ public class PresetFragment extends Fragment implements ISerialObserver {
     private State mState;
     private int mSelected;
 
-    private int[] gallery = { R.drawable.no2_preset1, R.drawable.no2_preset3 };
-    private ImageSwitcher mImageSwitcher;
-    private Timer mAnimationTimer;
-    int position = 0;
+    // 2020-07-25 Comment out this test to create an animation
+    // private int[] gallery = { R.drawable.no2_preset1, R.drawable.no2_preset3 };
+    // private ImageSwitcher mImageSwitcher;
+    // private Timer mAnimationTimer;
+    // int position = 0;
 
     public static PresetFragment newInstance() {
         return new PresetFragment();
@@ -99,12 +94,12 @@ public class PresetFragment extends Fragment implements ISerialObserver {
         mGatingLng = root.findViewById(R.id.txtGatingtLng);
         mGatingRtn = root.findViewById(R.id.txtGatingRtn);
         mStatus = root.findViewById(R.id.txtStatus);
-        mImageSwitcher = root.findViewById(R.id.imgAniFrontView);
+        // mImageSwitcher = root.findViewById(R.id.imgAniFrontView);
 
         root.findViewById(R.id.btnStart).setOnClickListener(
                 v -> {
                     // stop by selecting the mode
-                    select(mSelected, State.Standing);
+                    select(mSelected, State.Stopped);
                     // start by selecting the mode
                     select(mSelected, State.Running);
                     mStatus.setText("Running");
@@ -112,10 +107,10 @@ public class PresetFragment extends Fragment implements ISerialObserver {
 
         root.findViewById(R.id.btnStop).setOnClickListener(
                 v -> {
-                   mStatus.setText("Standing");
+                   mStatus.setText("Stopped");
                     if (mState == State.Running) {
                         // stop by selecting some different mode
-                        select((mSelected % 8) + 1, State.Standing);
+                        select((mSelected % 8) + 1, State.Stopped);
                     }
                 });
 
@@ -141,11 +136,11 @@ public class PresetFragment extends Fragment implements ISerialObserver {
                     }
                 });
 
-        mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
-            public View makeView() {
-                return new ImageView(container.getContext());
-            }
-        });
+        // mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+        //    public View makeView() {
+        //        return new ImageView(container.getContext());
+        //    }
+        // });
 
         return root;
     }
@@ -187,12 +182,12 @@ public class PresetFragment extends Fragment implements ISerialObserver {
         if (tabPos == 2) {
             ISerialObservable act = (ISerialObservable) getActivity();
             act.serialWrite(new byte[] { (byte)0xA9 });
-            mState = State.Standing;
-            mStatus.setText("Standing");
+            mState = State.Stopped;
+            mStatus.setText("Stopped");
 
+            /*
             mAnimationTimer = new Timer();
             mAnimationTimer.scheduleAtFixedRate(new TimerTask() {
-
                 public void run() {
                     // avoid exception: "Only the original thread that created a view hierarchy can touch its views"
                     activity.runOnUiThread(new Runnable() {
@@ -206,8 +201,8 @@ public class PresetFragment extends Fragment implements ISerialObserver {
                         }
                     });
                 }
-
             }, 0, 1000);
+            */
         }
     }
 }

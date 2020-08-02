@@ -72,7 +72,7 @@ public class StatusInfoFragment extends Fragment implements ISerialObserver {
         root.findViewById(R.id.btnFreeMem).setOnClickListener(
                 v -> {
                     ISerialObservable act = (ISerialObservable) getActivity();
-                    act.serialWrite(new byte[]{0x3});
+                    act.serialWrite(new byte[]{0x13});
                 });
         return root;
     }
@@ -119,7 +119,12 @@ public class StatusInfoFragment extends Fragment implements ISerialObserver {
     public void statusInfo(StatusInfo status) {
         switch (status) {
             default: break;
-            case SYNCED: mSynced.setText("Synced"); break;
+            case SYNCED: {
+                mSynced.setText("Synced");
+                // Start position stream
+                ISerialObservable act = (ISerialObservable) getActivity();
+                act.serialWrite(new byte[]{0x3B});
+            } break;
             case NOT_SYNCED: mSynced.setText("Not Synced"); break;
         }
     }

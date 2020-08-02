@@ -22,7 +22,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Set;
 
-
 public class MainActivity extends AppCompatActivity implements ISerialObservable {
 
     private UsbService mUsbService;
@@ -136,7 +135,9 @@ public class MainActivity extends AppCompatActivity implements ISerialObservable
     public void resync() {
         mHandler.clear();
         if (mUsbService != null) {
-            mUsbService.write(new byte[]{0x4});
+            // Stop position stream and send sync
+            mUsbService.write(new byte[]{0x43});
+            mUsbService.write(new byte[]{0x0B});
         }
     }
 
@@ -185,40 +186,32 @@ public class MainActivity extends AppCompatActivity implements ISerialObservable
                 case UsbService.MESSAGE_FROM_SERIAL_PORT:
                     String data = (String)msg.obj;
                     if (!mSynced) {
-                        /*
-                        fireRawOutput("*" + data.length() + "*" + data + "*");
-                        mRawString += data;
-                        if (mRawString.contains("Synced")) {
-                            mSynced = true;
-                            fireRawOutput(">" + data.length() + "*" + data + "<");
-                            int pos = data.indexOf("Synced");
-                            mRawString = data.substring(pos+6, mRawString.length());
-                            fireStatusInfo(StatusInfo.SYNCED);
-                        }
-                        */
+                        fireLogOutput(data);
 
                         for (char val : data.toCharArray()) {
-                            fireLogOutput(new String(new char[]{val}));
-
-                            if (mReadingPos == 6) {
-                                for (int n = 0; n < 6; n++) {
-                                    mRecvBuffer[n] = mRecvBuffer[n + 1];
-                                }
-                                mRecvBuffer[6] = val;
-                                if (mRecvBuffer[0] == (int) 'S' && mRecvBuffer[1] == (int) 'y' && mRecvBuffer[2] == (int) 'n' &&
-                                        mRecvBuffer[3] == (int) 'c' && mRecvBuffer[4] == (int) 'e' && mRecvBuffer[5] == (int) 'd') {
-                                    fireStatusInfo(StatusInfo.SYNCED);
-                                    mSynced = true;
-                                }
-                            } else {
-                                mRecvBuffer[mReadingPos] = val;
+                            mRecvBuffer[mReadingPos] = val;
+                            if (mReadingPos < mRecvBuffer.length - 1) {
                                 mReadingPos++;
-                                /*
-                                if (mReadingPos == 1) {
-                                    comPort.write(0x4);
-                                    sendBuffer = "0x4";
+                            }
+                            else {
+                                for (int n=1; n <  mRecvBuffer.length - 1; n++) {
+                                    mRecvBuffer[n-1] = mRecvBuffer[n];
                                 }
-                                */
+                            }
+
+                            if (mReadingPos == 9) {
+                                if (mRecvBuffer[0] == 'S' &&
+                                        mRecvBuffer[1] == 'y' &&
+                                        mRecvBuffer[2] == 'n' &&
+                                        mRecvBuffer[3] == 'c' &&
+                                        mRecvBuffer[4] == 'e' &&
+                                        mRecvBuffer[5] == 'd') {
+                                    mSynced = true;
+                                    mReceiving = false;
+                                    mReadingPos = 0;
+                                    fireStatusInfo(StatusInfo.SYNCED);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -233,22 +226,29 @@ public class MainActivity extends AppCompatActivity implements ISerialObservable
                                 mReceiving = !mReceiving;
                                 if (mReceiving) {
                                     mReadingPos = 0;
-                                    //String sss = new String(mRecvBuffer,0, mReadingPos);
-                                    ///fireLogOutput(sss);
                                 }
                                 else if (mRecvBuffer[0] == 'G') { fireStatusInfo(StatusInfo.MANUAL_MOTION_MODE); }
                                 else if (mRecvBuffer[0] == 'H') { fireStatusInfo(StatusInfo.PRESET_MODE); }
                                 else if (mRecvBuffer[0] == 'I') { fireStatusInfo(StatusInfo.REMOTE_MODE); }
                                 else if (mRecvBuffer[0] == 'J') { fireStatusInfo(StatusInfo.CALIBRATION_MODE); }
                                 else if (mRecvBuffer[0] == 'K') { fireFreeMemory(getReceivedNumber()); }
+                                else if (mRecvBuffer[0] == 'L') {
+                                    // TODO: Implement get model
+                                    fireLogOutput("Model : " + getReceivedNumber());
+                                }
+                                else if (mRecvBuffer[0] == 'M') {
+                                    // TODO: Implement get version
+                                    fireLogOutput("Version : " + mRecvBuffer);
+                                }
+                                else if (mRecvBuffer[0] == 'N') {
+                                    // Get device data is not supported
+                                }
                                 else {
                                     int motor = mRecvBuffer[0] - '0';
                                     if (mRecvBuffer[0] >= 'A' && mRecvBuffer[0] <= 'F') {
                                         motor = 10 + (mRecvBuffer[0] - 'A');
                                     }
-                                    //if (motor >= 0 && motor < NUMSERVOS) {
-                                      fireServoPosition(motor, getReceivedNumber());
-                                    //}
+                                    fireServoPosition(motor, getReceivedNumber());
                                 }
                             }
                             else if (mReceiving) {
@@ -256,10 +256,8 @@ public class MainActivity extends AppCompatActivity implements ISerialObservable
                                 mReadingPos++;
                                 if (mReadingPos >= 10) mReadingPos = 0;
                             }
-
                         }
                     }
-
                     break;
                 case UsbService.CTS_CHANGE:
                     Toast.makeText(mActivity.get(), "CTS_CHANGE",Toast.LENGTH_LONG).show();

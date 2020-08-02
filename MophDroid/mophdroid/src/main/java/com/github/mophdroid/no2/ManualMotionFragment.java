@@ -63,7 +63,6 @@ public class ManualMotionFragment extends Fragment implements ISerialObserver {
         root.findViewById(R.id.btnLeft).setOnClickListener(
                 v -> {
                     ISerialObservable act = (ISerialObservable) getActivity();
-                    act.serialWrite(new byte[]{ (byte)0xD1 });
                     if (mCbLeft.isChecked()) {
                         act.serialWrite(new byte[]{ (byte)0xD1 });
                     }

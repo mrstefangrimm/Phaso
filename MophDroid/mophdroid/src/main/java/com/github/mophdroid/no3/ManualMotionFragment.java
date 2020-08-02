@@ -1,4 +1,4 @@
-package com.github.mophdroid.gris5a;
+package com.github.mophdroid.no3;
 
 import androidx.lifecycle.ViewModel;
 
@@ -17,20 +17,14 @@ import com.github.mophdroid.*;
 
 public class ManualMotionFragment extends Fragment implements ISerialObserver {
 
-    private TextView mLeftUpperLng;
-    private TextView mLeftUpperRtn;
-    private TextView mLeftLowerLng;
-    private TextView mLeftLowerRtn;
-    private TextView mRightUpperLng;
-    private TextView mRightUpperRtn;
-    private TextView mRightLowerLng;
-    private TextView mRightLowerRtn;
+    private TextView mUpperLng;
+    private TextView mUpperRtn;
+    private TextView mLowerLng;
+    private TextView mLowerRtn;
     private TextView mGatingLng;
     private TextView mGatingRtn;
-    private ToggleButton mCbLeftUpper;
-    private ToggleButton mCbRightUpper;
-    private ToggleButton mCbLeftLower;
-    private ToggleButton mCbRightLower;
+    private ToggleButton mCbUpper;
+    private ToggleButton mCbLower;
     private ToggleButton mCbGating;
 
     // https://developer.android.com/topic/libraries/architecture/viewmodel#java
@@ -55,37 +49,25 @@ public class ManualMotionFragment extends Fragment implements ISerialObserver {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.gris5a_manual_motion_fragment, container, false);
-        mLeftUpperLng = root.findViewById(R.id.txtLeftUpperLng);
-        mLeftUpperRtn = root.findViewById(R.id.txtLeftUpperRtn);
-        mRightUpperLng = root.findViewById(R.id.txtRightUpperLng);
-        mRightUpperRtn = root.findViewById(R.id.txtRightUpperRtn);
-        mLeftLowerLng = root.findViewById(R.id.txtLeftLowerLng);
-        mLeftLowerRtn = root.findViewById(R.id.txtLeftLowerRtn);
-        mRightLowerLng = root.findViewById(R.id.txtRightLowerLng);
-        mRightLowerRtn = root.findViewById(R.id.txtRightLowerRtn);
-        mGatingLng = root.findViewById(R.id.txtGatingtLng);
+        View root = inflater.inflate(R.layout.no3_manual_motion_fragment, container, false);
+        mUpperLng = root.findViewById(R.id.txtUpperLng);
+        mUpperRtn = root.findViewById(R.id.txtUpperRtn);
+        mLowerLng = root.findViewById(R.id.txtLowerLng);
+        mLowerRtn = root.findViewById(R.id.txtLowerRtn);
+        mGatingLng = root.findViewById(R.id.txtGatingLng);
         mGatingRtn = root.findViewById(R.id.txtGatingRtn);
-        mCbLeftUpper = root.findViewById(R.id.cbLeftUpper);
-        mCbRightUpper = root.findViewById(R.id.cbRightUpper);
-        mCbLeftLower = root.findViewById(R.id.cbLeftLower);
-        mCbRightLower = root.findViewById(R.id.cbRightLower);
+        mCbUpper = root.findViewById(R.id.cbUpper);
+        mCbLower = root.findViewById(R.id.cbLower);
         mCbGating = root.findViewById(R.id.cbGating);
 
         root.findViewById(R.id.btnLeft).setOnClickListener(
                 v -> {
                     ISerialObservable act = (ISerialObservable) getActivity();
-                    if (mCbLeftLower.isChecked()) {
+                    if (mCbUpper.isChecked()) {
                         act.serialWrite(new byte[]{ (byte)0xD1 });
                     }
-                    if (mCbRightLower.isChecked()) {
+                    if (mCbLower.isChecked()) {
                         act.serialWrite(new byte[]{ 0x51 });
-                    }
-                    if (mCbLeftUpper.isChecked()) {
-                        act.serialWrite(new byte[]{ (byte)0xE9 });
-                    }
-                    if (mCbRightUpper.isChecked()) {
-                        act.serialWrite(new byte[]{ 0x69 });
                     }
                     if (mCbGating.isChecked()) {
                         act.serialWrite(new byte[]{ 0x01 });
@@ -94,17 +76,11 @@ public class ManualMotionFragment extends Fragment implements ISerialObserver {
         root.findViewById(R.id.btnRight).setOnClickListener(
                 v -> {
                     ISerialObservable act = (ISerialObservable) getActivity();
-                    if (mCbLeftLower.isChecked()) {
+                    if (mCbUpper.isChecked()) {
                         act.serialWrite(new byte[]{ (byte)0xC9 });
                     }
-                    if (mCbRightLower.isChecked()) {
+                    if (mCbLower.isChecked()) {
                         act.serialWrite(new byte[]{ 0x49 });
-                    }
-                    if (mCbLeftUpper.isChecked()) {
-                        act.serialWrite(new byte[]{ (byte)0xE1 });
-                    }
-                    if (mCbRightUpper.isChecked()) {
-                        act.serialWrite(new byte[]{ 0x61 });
                     }
                     if (mCbGating.isChecked()) {
                         act.serialWrite(new byte[]{ 0x19 });
@@ -113,17 +89,11 @@ public class ManualMotionFragment extends Fragment implements ISerialObserver {
         root.findViewById(R.id.btnUp).setOnClickListener(
                 v -> {
                     ISerialObservable act = (ISerialObservable) getActivity();
-                    if (mCbLeftLower.isChecked()) {
+                    if (mCbUpper.isChecked()) {
                         act.serialWrite(new byte[]{ (byte)0xD9 });
                     }
-                    if (mCbRightLower.isChecked()) {
+                    if (mCbLower.isChecked()) {
                         act.serialWrite(new byte[]{ 0x59 });
-                    }
-                    if (mCbLeftUpper.isChecked()) {
-                        act.serialWrite(new byte[]{ (byte)0xF1 });
-                    }
-                    if (mCbRightUpper.isChecked()) {
-                        act.serialWrite(new byte[]{ 0x71 });
                     }
                     if (mCbGating.isChecked()) {
                         act.serialWrite(new byte[]{ 0x09 });
@@ -132,17 +102,11 @@ public class ManualMotionFragment extends Fragment implements ISerialObserver {
         root.findViewById(R.id.btnDown).setOnClickListener(
                 v -> {
                     ISerialObservable act = (ISerialObservable) getActivity();
-                    if (mCbLeftLower.isChecked()) {
+                    if (mCbUpper.isChecked()) {
                         act.serialWrite(new byte[]{ (byte)0xC1 });
                     }
-                    if (mCbRightLower.isChecked()) {
+                    if (mCbLower.isChecked()) {
                         act.serialWrite(new byte[]{ 0x41 });
-                    }
-                    if (mCbLeftUpper.isChecked()) {
-                        act.serialWrite(new byte[]{ (byte)0xF9 });
-                    }
-                    if (mCbRightUpper.isChecked()) {
-                        act.serialWrite(new byte[]{ 0x79 });
                     }
                     if (mCbGating.isChecked()) {
                         act.serialWrite(new byte[]{ 0x11 });
@@ -194,16 +158,12 @@ public class ManualMotionFragment extends Fragment implements ISerialObserver {
     public void servoPosition(int servoNum, int pos) {
         switch (servoNum) {
             default: break;
-            case 0: mLeftUpperRtn.setText(new Integer(pos).toString()); break;
-            case 1: mLeftUpperLng.setText(new Integer(pos).toString()); break;
-            case 2: mLeftLowerRtn.setText(new Integer(pos).toString()); break;
-            case 3: mLeftLowerLng.setText(new Integer(pos).toString()); break;
-            case 4: mRightLowerLng.setText(new Integer(pos).toString()); break;
-            case 5: mRightLowerRtn.setText(new Integer(pos).toString()); break;
-            case 6: mRightUpperLng.setText(new Integer(pos).toString()); break;
-            case 7: mRightUpperRtn.setText(new Integer(pos).toString()); break;
-            case 8: mGatingLng.setText(new Integer(pos).toString()); break;
-            case 9: mGatingRtn.setText(new Integer(pos).toString()); break;
+            case 0: mLowerRtn.setText(new Integer(pos).toString()); break;
+            case 1: mUpperRtn.setText(new Integer(pos).toString()); break;
+            case 2: mGatingRtn.setText(new Integer(pos).toString()); break;
+            case 3: mLowerLng.setText(new Integer(pos).toString()); break;
+            case 4: mUpperLng.setText(new Integer(pos).toString()); break;
+            case 5: mGatingLng.setText(new Integer(pos).toString()); break;
         }
     }
 

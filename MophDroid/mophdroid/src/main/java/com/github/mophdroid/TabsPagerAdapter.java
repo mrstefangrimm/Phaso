@@ -23,21 +23,24 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String type = prefs.getString("phantomType", "No2");
+        String type = prefs.getString("phantomType", "GRIS5A");
 
         switch (position) {
             default:
                 return null;
             case 0:
                 if (type.equals("No2")) return com.github.mophdroid.no2.StatusInfoFragment.newInstance();
+                else if (type.equals("No3")) return com.github.mophdroid.no3.StatusInfoFragment.newInstance();
                 else if (type.equals("GRIS5A")) return com.github.mophdroid.gris5a.StatusInfoFragment.newInstance();
                 else return null;
             case 1:
                 if (type.equals("No2")) return com.github.mophdroid.no2.ManualMotionFragment.newInstance();
+                else if (type.equals("No3")) return com.github.mophdroid.no3.ManualMotionFragment.newInstance();
                 else if (type.equals("GRIS5A")) return com.github.mophdroid.gris5a.ManualMotionFragment.newInstance();
                 else return null;
             case 2:
                 if (type.equals("No2")) return com.github.mophdroid.no2.PresetFragment.newInstance();
+                else if (type.equals("No3")) return com.github.mophdroid.no3.PresetFragment.newInstance();
                 else if (type.equals("GRIS5A")) return com.github.mophdroid.gris5a.PresetFragment.newInstance();
                 else return null;
         }

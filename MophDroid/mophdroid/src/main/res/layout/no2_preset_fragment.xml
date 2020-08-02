@@ -55,8 +55,8 @@
             android:id="@+id/txtStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorTextStatus"
-            android:text="Standing" />
+            android:text="Stopped"
+            android:textColor="@color/colorTextStatus" />
 
     </LinearLayout>
 

@@ -1,12 +1,14 @@
 <resources>
     <!-- Phantom Type Preference -->
     <string-array name="phantom_type_entries">
-        <item>GRIS5A Motion Phantom</item>
-        <item>No2 Motion Phantom</item>
+        <item>Marker Motion Phantom</item>
+        <item>Liver Deformation Phantom</item>
+        <item>Lung Motion Phantom</item>
     </string-array>
 
     <string-array name="phantom_type_values">
         <item>GRIS5A</item>
         <item>No2</item>
+        <item>No3</item>
     </string-array>
 </resources>
