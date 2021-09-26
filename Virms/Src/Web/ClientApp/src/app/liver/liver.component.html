@@ -1,0 +1,248 @@
+<!-- Copyright (c) 2021 Stefan Grimm. All rights reserved.
+     Licensed under the GPL. See LICENSE file in the project root for full license information.
+-->
+
+<h1>Liver Phantom</h1>
+
+<mat-sidenav-container>
+  <mat-sidenav *ngIf="!sideNavOpen"
+               opened
+               mode="side"
+               position="end">
+    <div>
+      <button mat-button (click)="sideNavOpen = true"><</button>
+    </div>
+    <div align="center">
+      <button mat-icon-button (click)="visiblitiesOpen = !visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav *ngIf="sideNavOpen"
+               opened
+               mode="side"
+               position="end">
+    <div align="left">
+      <button mat-icon-button (click)="visiblitiesOpen = !visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
+      <button mat-button (click)="sideNavOpen = false">></button>
+    </div>
+    <div>
+      <button mat-button (click)="automaticControlsEnabled = false">Manual</button>
+      <button mat-button (click)="automaticControlsEnabled = true">Automatic</button>
+    </div>
+    <table>
+      <tr *ngIf="!automaticControlsEnabled">
+        <td>
+          Left:
+          <br />
+          <mat-slider min="0"
+                      max="255"
+                      step="1"
+                      [thumbLabel]="false"
+                      [(value)]="leftLng"
+                      (input)="onLeftLngChanged($event)">
+          </mat-slider>
+          {{leftLng}}
+          <br />
+          <mat-slider min="0"
+                      max="255"
+                      step="1"
+                      [thumbLabel]="false"
+                      [(value)]="leftRtn"
+                      (input)="onLeftRtnChanged($event)">
+          </mat-slider>
+          {{leftRtn}}
+          <br />
+          Right:
+          <br />
+          <mat-slider min="0"
+                      max="255"
+                      step="1"
+                      [thumbLabel]="false"
+                      [(value)]="rightLng"
+                      (input)="onRightLngChanged($event)">
+          </mat-slider>
+          {{rightLng}}
+          <br />
+          <mat-slider min="0"
+                      max="255"
+                      step="1"
+                      [thumbLabel]="false"
+                      [(value)]="rightRtn"
+                      (input)="onRightRtnChanged($event)">
+          </mat-slider>
+          {{rightRtn}}
+          <br />
+          Gating:
+          <br />
+          <mat-slider min="0"
+                      max="255"
+                      step="1"
+                      [thumbLabel]="false"
+                      [(value)]="gatingLng"
+                      (input)="onGatingLngChanged($event)">
+          </mat-slider>
+          {{gatingLng}}
+          <br />
+          <mat-slider min="0"
+                      max="255"
+                      step="1"
+                      [thumbLabel]="false"
+                      [(value)]="gatingRtn"
+                      (input)="onGatingRtnChanged($event)">
+          </mat-slider>
+          {{gatingRtn}}
+        </td>
+      </tr>
+      <tr *ngIf="automaticControlsEnabled">
+        <td>
+          <mat-form-field appearance="fill">
+            <mat-label>Motion pattern</mat-label>
+            <mat-select [(value)]="selectedPatternId">
+              <mat-option *ngFor="let pattern of patterns()" [value]="pattern.id">
+                {{pattern.data.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div>
+            <button *ngIf="executingPatternId == undefined" mat-button (click)="onStartPattern()">Start</button>
+            <button *ngIf="executingPatternId != undefined" mat-button (click)="onStopPattern()">Stop</button>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </mat-sidenav>
+  <mat-sidenav-content>
+
+    <!--<mat-toolbar>
+      <mat-checkbox [checked]="false"
+                    (change)="onXrayChecked($event.checked)">
+        X-Ray
+      </mat-checkbox>
+      <mat-checkbox [checked]="true"
+                    (change)="onBodyChecked($event.checked)">
+        Body
+      </mat-checkbox>
+      <mat-checkbox [checked]="true"
+                    (change)="onLeftCylinderChecked($event.checked)">
+        Left cylinder
+      </mat-checkbox>
+      <mat-checkbox [checked]="true"
+                    (change)="onRightCylinderChecked($event.checked)">
+        Right cylinder
+      </mat-checkbox>
+    </mat-toolbar>-->
+    <!--<button mat-icon-button #menuBtn [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu"
+              overlapTrigger="false"
+              (closed)="menuBtn.openMenu">
+      <div mat-menu-item>
+        <mat-checkbox [checked]="false"
+                      (change)="onXrayChecked($event.checked)">
+          X-Ray
+        </mat-checkbox>
+      </div>
+      <div mat-menu-item>
+        <mat-checkbox [checked]="true"
+                      (change)="onBodyChecked($event.checked)">
+          Body
+        </mat-checkbox>
+      </div>
+      <div mat-menu-item>
+        <mat-checkbox [checked]="true"
+                      (change)="onLeftCylinderChecked($event.checked)">
+          Left cylinder
+        </mat-checkbox>
+      </div>
+      <div mat-menu-item>
+        <mat-checkbox [checked]="true"
+                      (change)="onRightCylinderChecked($event.checked)">
+          Right cylinder
+        </mat-checkbox>
+      </div>
+      <div mat-menu-item>
+        <mat-checkbox [checked]="true"
+                      (change)="onMarkersChecked($event.checked)">
+          Markers
+        </mat-checkbox>
+      </div>
+    </mat-menu>-->
+
+    <mat-sidenav-container hasBackdrop="false">
+      <mat-sidenav *ngIf="visiblitiesOpen"
+                   opened
+                   mode="over"
+                   position="end">
+        <div>
+          <mat-checkbox [checked]="false"
+                        (change)="onXrayChecked($event.checked)">
+            X-Ray
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox [checked]="true"
+                        (change)="onBodyChecked($event.checked)">
+            Body
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox [checked]="true"
+                        (change)="onLeftCylinderChecked($event.checked)">
+            Left cylinder
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox [checked]="true"
+                        (change)="onRightCylinderChecked($event.checked)">
+            Right cylinder
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox [checked]="true"
+                        (change)="onMarkersChecked($event.checked)">
+            Markers
+          </mat-checkbox>
+        </div>
+      </mat-sidenav>
+    
+      <mat-sidenav-content>
+
+        <div>
+          <div align="center">
+            <canvas #rendererCanvas
+                    id="renderCanvas"
+                    width="600"
+                    height="400"></canvas>
+            <canvas #gatingRendererCanvas
+                    id="gatingRenderCanvas"
+                    align="center"
+                    width="300"
+                    height="300">
+            </canvas>
+
+            <div>
+              synced: {{synced}},
+              state: {{state}},
+              inUseByMe: {{inUseByMe}},
+              inUseByOther: {{inUseByOther}}
+            </div>
+            <div *ngIf="synced == true">
+              <div *ngIf="inUseByOther != true">
+                <button *ngIf="inUseByMe != true" mat-button color="standard" (click)="onTakeControl()">Take control</button>
+                <button *ngIf="inUseByMe == true" mat-button color="standard" (click)="onLetControl()">Let control</button>
+              </div>
+              <div *ngIf="inUseByOther == true">
+                Used by other, please wait.
+              </div>
+            </div>
+            <div *ngIf="synced != true">
+              Device not synced. Set the COM port.
+            </div>
+          </div>
+        </div>
+
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

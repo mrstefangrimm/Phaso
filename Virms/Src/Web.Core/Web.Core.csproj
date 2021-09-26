@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Gris5a\Gris5a.csproj" />
+    <ProjectReference Include="..\No2\No2.csproj" />
+    <ProjectReference Include="..\No3\No3.csproj" />
+  </ItemGroup>
+
+</Project>
