@@ -23,8 +23,8 @@ return myDataIn;
    <statechart>
     <initial target="../1">
      <action>QActive_armX((QActive *)me, 0U,
-  DKBREADINVERVAL,
-  DKBREADINVERVAL);
+  DKBREADINTERVAL,
+  DKBREADINTERVAL);
 
 pinMode(LATCHPIN_IN, OUTPUT);
 pinMode(CLOCKPIN_IN, OUTPUT);
@@ -461,8 +461,8 @@ else {
    <statechart>
     <initial target="../1">
      <action>QActive_armX((QActive *)me, 0U,
-  SERIALRECVINVERVAL,
-  SERIALRECVINVERVAL);
+  SERIALRECVINTERVAL,
+  SERIALRECVINTERVAL);
 
 me-&gt;remainingBytes = 0;
 
@@ -3136,7 +3136,7 @@ void printDKbInData(const DKbInEvArgs&amp; s) {
 #ifndef __DEVICE_H
 #define __DEVICE_H
 
-#include &lt;C:\Users\Stefan Grimm\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.2\libraries\EEPROM\src\EEPROM.h&gt;
+#include &lt;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM\src\EEPROM.h&gt;
 #include &lt;qpn.h&gt;
 #include &quot;../events.h&quot;
 #include &quot;../constants.h&quot;
@@ -3755,8 +3755,8 @@ enum Pins {
 // Possible are 1 for 10 ms or 100 Hz, 2 for 20 ms or 50 Hz, 3 for 30 ms or 33.3 Hz
 enum Constants {
   BSP_TICKS_PER_SEC = 100,          // Number of system clock ticks in one second, e.g. an interrupt every 10 ms
-  DKBREADINVERVAL = 10,             // Read control panel every 100 ms
-  SERIALRECVINVERVAL = 4,           // Read serial in buffer every 40 ms
+  DKBREADINTERVAL = 10,             // Read control panel every 100 ms
+  SERIALRECVINTERVAL = 4,           // Read serial in buffer every 40 ms
   MOTORSENDINTERVAL = 2,            // A move of a motor takes 20 ms. the term step is used in the source code
   PRESETTIMERINTERVAL = 4,          // Discrete step size between the positions is 40 ms
   USERPROGRAMCOUNTERINTERVAL = 100, // Discrete step size between positions is 1000 ms
