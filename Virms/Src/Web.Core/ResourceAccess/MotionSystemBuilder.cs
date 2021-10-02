@@ -3,7 +3,7 @@
 //
 
 using System.Linq;
-using ViphApp.Common.Plugin;
+using Virms.Common.Plugin;
 using Virms.Web.ResourceAccess;
 
 namespace Virms.Web.Core {

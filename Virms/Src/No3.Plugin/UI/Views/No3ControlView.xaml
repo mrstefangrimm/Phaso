@@ -1,0 +1,87 @@
+﻿<!-- Copyright (c) 2020-2021 Stefan Grimm. All rights reserved.
+     Licensed under the GPL. See LICENSE file in the project root for full license information. -->
+
+<UserControl x:Class="Virms.No3.UI.Views.No3ControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:qc="clr-namespace:QuickConverter;assembly=QuickConverter"
+             xmlns:VM="clr-namespace:Virms.No3.UI"
+             xmlns:views="clr-namespace:Virms.No3.UI.Views"
+             d:DesignHeight="600" d:DesignWidth="200">
+
+  <StackPanel>
+
+    <StackPanel Visibility="{qc:Binding '$P==No3ControlViewState.Manual_Minimized || $P==No3ControlViewState.Automatic_Minimized ? Visibility.Visible : Visibility.Collapsed', P={Binding ControlViewState}}">
+      <Button Width="30"
+              HorizontalAlignment="Left"
+              Background="Transparent"
+              BorderBrush="Transparent"
+              Command="{Binding DoSetMinimized}">
+        <Image Source="pack://application:,,,/Common;component/UI/Icons/ArrowLeft.png" />
+      </Button>
+
+    </StackPanel>
+
+    <StackPanel Visibility="{qc:Binding '$P==No3ControlViewState.Manual || $P==No3ControlViewState.Automatic ? Visibility.Visible : Visibility.Collapsed', P={Binding ControlViewState}}">
+
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30">
+        <Button Width="30"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                BorderBrush="Transparent"
+               Command="{Binding DoSetMinimized}">
+          <Image Source="pack://application:,,,/Common;component/UI/Icons/ArrowRight.png" />
+        </Button>
+
+        <ToggleButton Width="80" 
+                      Content="Manual"
+                      Foreground="White"
+                      Background="Transparent"
+                      FontWeight="Bold"
+                      IsChecked="{qc:Binding '$P==No3ControlViewState.Manual', P={Binding ControlViewState, Mode=OneWay}}"
+                      Command="{Binding DoSetManual}"/>
+        <ToggleButton Width="80"
+                      Content="Automatic" 
+                      Foreground="White"
+                      Background="Transparent"
+                      FontWeight="Bold"
+                      IsChecked="{qc:Binding '$P==No3ControlViewState.Automatic', P={Binding ControlViewState, Mode=OneWay}}"
+                      Command="{Binding DoSetAutomatic}"/>
+      </StackPanel>
+
+      <StackPanel>
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding ControlViewState}" Value="{x:Static VM:No3ControlViewState.Manual}">
+                <Setter Property="Visibility" Value="Visible" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
+        <views:No3ControlViewManualPanel />
+      </StackPanel>
+
+      <StackPanel>
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding ControlViewState}" Value="{x:Static VM:No3ControlViewState.Automatic}">
+                <Setter Property="Visibility" Value="Visible" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
+        <views:No3ControlViewAutomaticPanel />
+      </StackPanel>
+
+    </StackPanel>
+
+  </StackPanel>
+
+</UserControl>

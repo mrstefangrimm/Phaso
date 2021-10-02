@@ -1,12 +1,20 @@
-﻿<Application x:Class="ViphApp.App.App"
+﻿<!-- Copyright (c) 2018-2021 Stefan Grimm. All rights reserved.
+     Licensed under the GPL. See LICENSE file in the project root for full license information. -->
+
+<Application x:Class="Virms.App.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Application.Resources>
-      <ResourceDictionary>
-        <ResourceDictionary.MergedDictionaries>
-          <ResourceDictionary Source="pack://application:,,,/ViphApp.Common;component/UI/Views/ComboboxStylesAndTemplates.xaml" />
-          <ResourceDictionary Source="pack://application:,,,/ViphApp.Common;component/UI/Views/ButtonStylesAndTemplates.xaml" />
-        </ResourceDictionary.MergedDictionaries>
-      </ResourceDictionary>
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Virms.Common.Plugin;component/UI/Views/ComboboxStylesAndTemplates.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Virms.Common.Plugin;component/UI/Views/ButtonStylesAndTemplates.xaml" />
+        <!--<ResourceDictionary Source="pack://application:,,,/Virms.Zero.Plugin;component/UI/Views/ZeroDictionary.xaml" />
+        <ResourceDictionary Source="/Virms.Zero.Plugin;component/UI/Views/ZeroDictionary.xaml" />-->
+        <ResourceDictionary Source="/Virms.Gris5a.Plugin;component/UI/Views/Gris5aDictionary.xaml" />
+        <ResourceDictionary Source="/Virms.No2.Plugin;component/UI/Views/No2Dictionary.xaml" />
+        <ResourceDictionary Source="/Virms.No3.Plugin;component/UI/Views/No3Dictionary.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
   </Application.Resources>
 </Application>

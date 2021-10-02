@@ -1,35 +1,28 @@
-﻿<!-- MainWindow.xaml - ViphApp (C) motion phantom application.
- * Copyright (C) 2018-2020 by Stefan Grimm
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+﻿<!-- Copyright (c) 1018-2021 Stefan Grimm. All rights reserved.
+     Licensed under the GPL. See LICENSE file in the project root for full license information. -->
 
- * You should have received a copy of the GNU Lesser General Public License
- * along with the ViphApp software.  If not, see
- *<http://www.gnu.org/licenses/> .
- -->
-
-<Window x:Class="ViphApp.App.UI.Views.MainWindow"
+<Window x:Class="Virms.App.UI.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ViphApp.App.UI.Views"
-        xmlns:common="clr-namespace:ViphApp.Common.UI;assembly=ViphApp.Common"
-        xmlns:VM="clr-namespace:ViphApp.App.UI"
+        xmlns:local="clr-namespace:Virms.App.UI.Views"
+        xmlns:VM="clr-namespace:Virms.App.UI" 
+        xmlns:common="clr-namespace:Virms.Common.UI;assembly=Virms.Common.Plugin" 
         Background="#FF1F1F1F"
         mc:Ignorable="d"
         Title="Virtual Phantom Application" Width="800" Height="600">
   <Window.Resources>
     <common:NegateDoubleConverter x:Key="negConverter"/>
     <BooleanToVisibilityConverter x:Key="boolConverter"/>
+
+    <!--<DataTemplate DataType="{x:Type zvm:ZeroPhantomViewModel}">
+      <zv:ZeroPhantomView />
+    </DataTemplate>-->
+    <!--<DataTemplate DataType="{x:Type vm1:Gris5aControlViewModel}">
+      <views:Gris5aControlView />
+    </DataTemplate>-->    
+    
   </Window.Resources>
 
   <DockPanel Name="dockp">
@@ -158,7 +151,7 @@
         <RowDefinition Height="*"></RowDefinition>
       </Grid.RowDefinitions>
 
-      <ContentControl Content="{Binding Phantom}"/>
+      <ContentControl Content="{Binding Phantom}"/>      
 
       <Grid Grid.Row="1" Name="GatingPlatformPanel" Background="Black">
         <Grid.ColumnDefinitions>

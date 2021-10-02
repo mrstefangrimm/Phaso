@@ -6,7 +6,7 @@ namespace Virms.Web.Core {
   using System;
   using System.Collections.Generic;
   using System.Linq;
-  using ViphApp.Common.Com;
+  using Virms.Common.Com;
 
   public enum AppSericeResult {
     OK,

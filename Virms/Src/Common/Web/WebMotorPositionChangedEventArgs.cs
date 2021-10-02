@@ -4,7 +4,7 @@
 namespace Virms.Common.Web {
 
   using System;
-  using ViphApp.Common.Com;
+  using Virms.Common.Com;
 
   public class WebMotorPositionChangedEventArgs : EventArgs {
     public WebMotorPositionChangedEventArgs(byte channel, ushort position, ushort stepSize) {

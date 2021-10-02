@@ -4,8 +4,8 @@
 
 namespace Virms.Web.Core {
   using System.Collections.Generic;
-  using ViphApp.Common.Com;
-  using ViphApp.Common.Plugin;
+  using Virms.Common.Com;
+  using Virms.Common.Plugin;
   using Virms.Web.ResourceAccess;
 
   public class MotionSystem : Entity<MotionSystemData> {

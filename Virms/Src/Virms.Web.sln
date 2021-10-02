@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Core", "Web.Core\Web.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Web\Web.csproj", "{78ACE01B-626B-493F-A80B-6179C3BB0564}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebConsoleApp", "WebConsoleApp\WebConsoleApp.csproj", "{551C83EA-F6D4-4A80-BAF1-2C49236EE652}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,14 @@ Global
 		{78ACE01B-626B-493F-A80B-6179C3BB0564}.Release|Any CPU.Build.0 = Release|Any CPU
 		{78ACE01B-626B-493F-A80B-6179C3BB0564}.Release|x64.ActiveCfg = Release|Any CPU
 		{78ACE01B-626B-493F-A80B-6179C3BB0564}.Release|x64.Build.0 = Release|Any CPU
+		{551C83EA-F6D4-4A80-BAF1-2C49236EE652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{551C83EA-F6D4-4A80-BAF1-2C49236EE652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{551C83EA-F6D4-4A80-BAF1-2C49236EE652}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{551C83EA-F6D4-4A80-BAF1-2C49236EE652}.Debug|x64.Build.0 = Debug|Any CPU
+		{551C83EA-F6D4-4A80-BAF1-2C49236EE652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{551C83EA-F6D4-4A80-BAF1-2C49236EE652}.Release|Any CPU.Build.0 = Release|Any CPU
+		{551C83EA-F6D4-4A80-BAF1-2C49236EE652}.Release|x64.ActiveCfg = Release|Any CPU
+		{551C83EA-F6D4-4A80-BAF1-2C49236EE652}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

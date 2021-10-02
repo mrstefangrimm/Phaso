@@ -4,7 +4,7 @@
 namespace Virms.Web.ResourceAccess {
 
   using System;
-  using ViphApp.Common.Com;
+  using Virms.Common.Com;
 
   public class DeviceComPortService : IDisposable {
 

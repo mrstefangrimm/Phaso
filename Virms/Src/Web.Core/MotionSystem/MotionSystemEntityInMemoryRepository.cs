@@ -29,9 +29,9 @@ namespace Virms.Web.Core {
       }
 
       var pluginFactory = new WebPluginFactory();
-      var gris5aPluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\ViphApp.Gris5a.dll", pluginPath));
-      var no2PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\ViphApp.No2.dll", pluginPath));
-      var no3PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\ViphApp.No3.dll", pluginPath));
+      var gris5aPluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.Gris5a.dll", pluginPath));
+      var no2PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No2.dll", pluginPath));
+      var no3PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.dll", pluginPath));
 
       var gris5aConnection = new DeviceComPortService();
       var no2Connection = new DeviceComPortService();

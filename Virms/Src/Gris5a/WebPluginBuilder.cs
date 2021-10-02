@@ -3,10 +3,10 @@
 //
 using System;
 using System.Collections.Generic;
-using ViphApp.Common.Com;
-using ViphApp.Common.Plugin;
-using ViphApp.Gris5a;
+using Virms.Common.Com;
+using Virms.Common.Plugin;
 using Virms.Common.Web;
+using Virms.Gris5a;
 
 public class WebPluginBuilder : IWebPluginBuilder {
 

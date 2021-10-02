@@ -1,24 +1,9 @@
-﻿/* ServoNumber.cs - ViphApp (C) motion phantom application.
- * Copyright (C) 2020 by Stefan Grimm
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+﻿// Copyright (c) 2019-2021 Stefan Grimm. All rights reserved.
+// Licensed under the GPL. See LICENSE file in the project root for full license information.
+//
+namespace Virms.Gris5a {
 
- * You should have received a copy of the GNU Lesser General Public License
- * along with the ViphApp software.  If not, see
- * <http://www.gnu.org/licenses/>.
- */
-
-namespace ViphApp.Gris5a {
-
-  internal enum ServoNumber : byte {
+  public enum ServoNumber : byte {
     LURTN = 0,
     LULNG,
     LLRTN,

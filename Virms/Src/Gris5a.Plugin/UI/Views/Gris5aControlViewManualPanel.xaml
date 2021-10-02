@@ -1,0 +1,54 @@
+﻿<!-- Copyright (c) 2018-2021 Stefan Grimm. All rights reserved.
+     Licensed under the GPL. See LICENSE file in the project root for full license information. -->
+
+<UserControl x:Class="Virms.Gris5a.UI.Views.Gris5aControlViewManualPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="200">
+  <StackPanel>
+    <GroupBox Header="Left Upper" Foreground="White" BorderThickness="0" FontWeight="Bold">
+      <StackPanel>
+        <TextBox Text="{Binding LU.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding LU.LNGInt}" />
+        <TextBox Text="{Binding LU.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding LU.RTNInt}" />
+      </StackPanel>
+    </GroupBox>
+    <GroupBox Header="Left Lower" Foreground="White" BorderThickness="0" FontWeight="Bold">
+      <StackPanel>
+        <TextBox Text="{Binding LL.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding LL.LNGInt}"/>
+        <TextBox Text="{Binding LL.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding LL.RTNInt}" />
+      </StackPanel>
+    </GroupBox>
+    <GroupBox Header="Right Upper" Foreground="White" BorderThickness="0" FontWeight="Bold">
+      <StackPanel>
+        <TextBox Text="{Binding RU.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding RU.LNGInt}"/>
+        <TextBox Text="{Binding RU.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White"/>
+        <Slider Minimum="0" Maximum="255" Value="{Binding RU.RTNInt}" />
+      </StackPanel>
+    </GroupBox>
+    <GroupBox Header="Right Lower" Foreground="White" BorderThickness="0" FontWeight="Bold">
+      <StackPanel>
+        <TextBox Text="{Binding RL.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding RL.LNGInt}"/>
+        <TextBox Text="{Binding RL.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding RL.RTNInt}" />
+      </StackPanel>
+    </GroupBox>
+    <GroupBox Header="Gating Platform" Foreground="White" BorderThickness="0" FontWeight="Bold">
+      <StackPanel>
+        <TextBox Text="{Binding GA.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding GA.LNGInt}"/>
+        <TextBox Text="{Binding GA.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="255" Value="{Binding GA.RTNInt}" />
+      </StackPanel>
+    </GroupBox>
+  </StackPanel>
+
+</UserControl>

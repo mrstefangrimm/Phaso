@@ -3,10 +3,10 @@
 //
 using System;
 using System.Collections.Generic;
-using ViphApp.Common.Com;
+using Virms.Common.Com;
 using Virms.Common.Web;
 
-namespace ViphApp.Common.Plugin {
+namespace Virms.Common.Plugin {
 
   public interface IWebPluginMotionSystem {
 
