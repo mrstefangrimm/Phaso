@@ -9,8 +9,8 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-  sideNavOpen: boolean = false
 
+  sideNavOpen: boolean
   markerPhantomActive: boolean = true
   liverPhantomActive: boolean
   lungPhantomActive: boolean
@@ -20,7 +20,6 @@ export class AppComponent {
     this.markerPhantomActive = true
     this.liverPhantomActive = false
     this.lungPhantomActive = false
-
     this.sideNavOpen = false
   }
 
@@ -29,7 +28,6 @@ export class AppComponent {
     this.markerPhantomActive = false
     this.liverPhantomActive = true
     this.lungPhantomActive = false
-
     this.sideNavOpen = false
   }
 
@@ -38,7 +36,7 @@ export class AppComponent {
     this.markerPhantomActive = false
     this.liverPhantomActive = false
     this.lungPhantomActive = true
-
     this.sideNavOpen = false
   }
+
 }

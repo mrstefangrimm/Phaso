@@ -2,7 +2,7 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { timer } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Vector3 } from 'three';
@@ -10,24 +10,20 @@ import { MotionPatternResponse, MotionSystemData, ServoPosition } from '../share
 import { GatingEngine3dService } from '../shared/services/gatingengine3d.service';
 import { LiverEngine3dService } from './liverengine3d.service';
 import { LiverPhantomService } from './liverphantom.service';
+import { LiverService } from './liver.service';
 
 @Component({
   selector: 'app-liver',
   templateUrl: './liver.component.html',
   styleUrls: ['./liver.component.css']
 })
-export class LiverComponent implements OnInit {
+export class LiverComponent implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>;
 
   @ViewChild('gatingRendererCanvas', { static: true })
   gatingRendererCanvas: ElementRef<HTMLCanvasElement>;
-
-  sideNavOpen: boolean = true
-  controlsExpanded: boolean = true
-  automaticControlsEnabled: boolean = false
-  visiblitiesOpen: boolean
 
   selectedPatternId: number
   executingPatternId: number
@@ -47,6 +43,7 @@ export class LiverComponent implements OnInit {
   private refreshTimer: Observable<number> = timer(0, 5000);
 
   constructor(
+    public context: LiverService,
     private readonly engine3d: LiverEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService,
     private readonly phantomService: LiverPhantomService) {
@@ -61,6 +58,8 @@ export class LiverComponent implements OnInit {
 
     this.gatingEngine3d.createScene(this.gatingRendererCanvas);
     this.gatingEngine3d.animate();
+
+    this.setVisibilies()
 
     this.phantomService.updateData().subscribe(
       result => {
@@ -277,20 +276,23 @@ export class LiverComponent implements OnInit {
   }
 
   onXrayChecked(checked: boolean) {
-    this.engine3d.setXray(checked)   
+    this.engine3d.setXray(checked)
+    this.context.showAsXray = checked
   }
 
   onBodyChecked(checked: boolean) {
     this.engine3d.body.setVisible(checked)
     this.engine3d.bodyInsertCenter.setVisible(checked)
     this.engine3d.bodyInsertBack.setVisible(checked)
-  }
+    this.context.showBody = checked
+}
 
   onLeftCylinderChecked(checked: boolean) {
     this.engine3d.cylinderLeft.setVisible(checked)
     this.engine3d.cylinderLeftCylinder.setVisible(checked)
     this.engine3d.cylinderLeftInsertCenter.setVisible(checked)
     this.engine3d.cylinderLeftInsertBack.setVisible(checked)
+    this.context.showLeftCylinder = checked
   }
 
   onRightCylinderChecked(checked: boolean) {
@@ -299,10 +301,29 @@ export class LiverComponent implements OnInit {
     this.engine3d.cylinderRightCylinderBack.setVisible(checked)
     this.engine3d.cylinderRightInsertCenter.setVisible(checked)
     this.engine3d.cylinderRightInsertBack.setVisible(checked)
+    this.context.showRightCylinder = checked
   }
 
   onMarkersChecked(checked: boolean) {
     this.engine3d.cylinderLeftMarkers.setVisible(checked)
+    this.context.showMarkers = true
+  }
+
+  private setVisibilies() {
+    this.engine3d.setXray(this.context.showAsXray)
+    this.engine3d.body.setVisible(this.context.showBody)
+    this.engine3d.bodyInsertCenter.setVisible(this.context.showBody)
+    this.engine3d.bodyInsertBack.setVisible(this.context.showBody)
+    this.engine3d.cylinderLeft.setVisible(this.context.showLeftCylinder)
+    this.engine3d.cylinderLeftCylinder.setVisible(this.context.showLeftCylinder)
+    this.engine3d.cylinderLeftInsertCenter.setVisible(this.context.showLeftCylinder)
+    this.engine3d.cylinderLeftInsertBack.setVisible(this.context.showLeftCylinder)
+    this.engine3d.cylinderRight.setVisible(this.context.showRightCylinder)
+    this.engine3d.cylinderRightCylinderCenter.setVisible(this.context.showRightCylinder)
+    this.engine3d.cylinderRightCylinderBack.setVisible(this.context.showRightCylinder)
+    this.engine3d.cylinderRightInsertCenter.setVisible(this.context.showRightCylinder)
+    this.engine3d.cylinderRightInsertBack.setVisible(this.context.showRightCylinder)
+    this.engine3d.cylinderLeftMarkers.setVisible(this.context.showMarkers)
   }
 }
 

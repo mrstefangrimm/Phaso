@@ -5,31 +5,31 @@
 <h1>Marker Phantom</h1>
 
 <mat-sidenav-container>
-  <mat-sidenav *ngIf="!sideNavOpen"
+  <mat-sidenav *ngIf="!context.sideNavOpen"
                opened
                mode="side"
                position="end">
     <div>
-      <button mat-button (click)="sideNavOpen = true"><</button>
+      <button mat-button (click)="context.sideNavOpen = true"><</button>
     </div>
     <div align="center">
-      <button mat-icon-button (click)="visiblitiesOpen = !visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
+      <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
     </div>
   </mat-sidenav>
-  <mat-sidenav *ngIf="sideNavOpen"
+  <mat-sidenav *ngIf="context.sideNavOpen"
                opened
                mode="side"
                position="end">
     <div align="left">
-      <button mat-icon-button (click)="visiblitiesOpen = !visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
-      <button mat-button (click)="sideNavOpen = false">></button>
+      <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
+      <button mat-button (click)="context.sideNavOpen = false">></button>
     </div>
     <div>
-      <button mat-button (click)="automaticControlsEnabled = false">Manual</button>
-      <button mat-button (click)="automaticControlsEnabled = true">Automatic</button>
+      <button mat-button (click)="context.automaticControlsEnabled = false">Manual</button>
+      <button mat-button (click)="context.automaticControlsEnabled = true">Automatic</button>
     </div>
     <table>
-      <tr *ngIf="!automaticControlsEnabled">
+      <tr *ngIf="!context.automaticControlsEnabled">
         <td>
           Left Upper:
           <br />
@@ -133,7 +133,7 @@
           {{rightLowerRtn}}
         </td>
       </tr>
-      <tr *ngIf="automaticControlsEnabled">
+      <tr *ngIf="context.automaticControlsEnabled">
         <td>
           <mat-form-field appearance="fill">
             <mat-label>Motion pattern</mat-label>
@@ -154,30 +154,30 @@
   <mat-sidenav-content>
 
     <mat-sidenav-container hasBackdrop="false">
-      <mat-sidenav *ngIf="visiblitiesOpen"
+      <mat-sidenav *ngIf="context.visiblitiesOpen"
                    opened
                    mode="over"
                    position="end">
         <div>
-          <mat-checkbox [checked]="false"
+          <mat-checkbox [checked]="context.showAsXray"
                         (change)="onXrayChecked($event.checked)">
             X-Ray
           </mat-checkbox>
         </div>
         <div>
-          <mat-checkbox [checked]="true"
+          <mat-checkbox [checked]="context.showBody"
                         (change)="onBodyChecked($event.checked)">
             Body
           </mat-checkbox>
         </div>
         <div>
-          <mat-checkbox [checked]="true"
+          <mat-checkbox [checked]="context.showCylinders"
                         (change)="onCylindersChecked($event.checked)">
             Cylinders
           </mat-checkbox>
         </div>
         <div>
-          <mat-checkbox [checked]="true"
+          <mat-checkbox [checked]="context.showMarkers"
                         (change)="onMarkersChecked($event.checked)">
             Markers
           </mat-checkbox>

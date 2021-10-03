@@ -17,7 +17,7 @@ export class LiverPhantomService  {
   inUse: boolean
 
   constructor(private readonly motionSystems: MotionSystemsService) {
-    console.info('LiverPhantomService')
+    console.info(LiverPhantomService.name, "c'tor")
     this.updateData()
   }
 

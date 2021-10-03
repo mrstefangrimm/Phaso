@@ -4,10 +4,11 @@
 
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Vector3 } from 'three';
 import { GatingEngine3dService } from '../shared/services/gatingengine3d.service';
 import { ServoPosition } from '../shared/services/motionsystems.service';
+import { MarkerService } from './marker.service';
 import { MarkerEngine3dService } from './markerengine3d.service';
 
 @Component({
@@ -15,18 +16,13 @@ import { MarkerEngine3dService } from './markerengine3d.service';
   templateUrl: './marker.component.html',
   styleUrls: ['./marker.component.css']
 })
-export class MarkerComponent implements OnInit {
+export class MarkerComponent implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>;
 
   @ViewChild('gatingRendererCanvas', { static: true })
   gatingRendererCanvas: ElementRef<HTMLCanvasElement>;
-
-  sideNavOpen: boolean = true
-  controlsExpanded: boolean = true
-  automaticControlsEnabled: boolean = false
-  visiblitiesOpen: boolean
 
   leftUpperLng: number = 127
   leftUpperRtn: number = 127
@@ -49,6 +45,7 @@ export class MarkerComponent implements OnInit {
   state: UIState = UIState.DeviceNotReady
 
   constructor(
+    public context: MarkerService,
     private readonly engine3d: MarkerEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService) {
     console.info(MarkerComponent.name, "c'tor")
@@ -74,6 +71,8 @@ export class MarkerComponent implements OnInit {
     //      this.gatingRtn = result.axes[ServoNumber.GARTN].position
     //    }
     //  }, err => console.error(err))
+
+    this.setVisibilies()
   }
 
   ngOnDestroy() {
@@ -247,24 +246,41 @@ export class MarkerComponent implements OnInit {
 
   onXrayChecked(checked: boolean) {
     this.engine3d.setXray(checked)
+    this.context.showAsXray = checked
   }
 
   onBodyChecked(checked: boolean) {
     this.engine3d.body.setVisible(checked)
-  }
+    this.context.showBody = checked
+}
 
   onCylindersChecked(checked: boolean) {
     this.engine3d.cylinderLeftUpper.setVisible(checked)
     this.engine3d.cylinderLeftLower.setVisible(checked)
     this.engine3d.cylinderRightUpper.setVisible(checked)
     this.engine3d.cylinderRightLower.setVisible(checked)
-  }
+    this.context.showCylinders = checked
+ }
 
   onMarkersChecked(checked: boolean) {
     this.engine3d.markerLeftUpper.setVisible(checked)
     this.engine3d.markerLeftLower.setVisible(checked)
     this.engine3d.markerRightUpper.setVisible(checked)
     this.engine3d.markerRightLower.setVisible(checked)
+    this.context.showMarkers = checked
+ }
+
+  private setVisibilies() {
+    this.engine3d.setXray(this.context.showAsXray)
+    this.engine3d.body.setVisible(this.context.showBody)
+    this.engine3d.cylinderLeftUpper.setVisible(this.context.showCylinders)
+    this.engine3d.cylinderLeftLower.setVisible(this.context.showCylinders)
+    this.engine3d.cylinderRightUpper.setVisible(this.context.showCylinders)
+    this.engine3d.cylinderRightLower.setVisible(this.context.showCylinders)
+    this.engine3d.markerLeftUpper.setVisible(this.context.showMarkers)
+    this.engine3d.markerLeftLower.setVisible(this.context.showMarkers)
+    this.engine3d.markerRightUpper.setVisible(this.context.showMarkers)
+    this.engine3d.markerRightLower.setVisible(this.context.showMarkers)
   }
 
 }

@@ -4,10 +4,11 @@
 
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Vector3 } from 'three';
 import { GatingEngine3dService } from '../shared/services/gatingengine3d.service';
 import { ServoPosition } from '../shared/services/motionsystems.service';
+import { LungService } from './lung.service';
 import { LungEngine3dService } from './lungengine3d.service';
 
 @Component({
@@ -15,18 +16,13 @@ import { LungEngine3dService } from './lungengine3d.service';
   templateUrl: './lung.component.html',
   styleUrls: ['./lung.component.css']
 })
-export class LungComponent implements OnInit {
+export class LungComponent implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>;
 
   @ViewChild('gatingRendererCanvas', { static: true })
   gatingRendererCanvas: ElementRef<HTMLCanvasElement>;
-
-  sideNavOpen: boolean = true
-  controlsExpanded: boolean = true
-  automaticControlsEnabled: boolean = false
-  visiblitiesOpen: boolean
 
   selectedPatternId: number
   executingPatternId: number
@@ -46,6 +42,7 @@ export class LungComponent implements OnInit {
   state: UIState = UIState.DeviceNotReady
 
   constructor(
+    public context: LungService,
     private readonly engine3d: LungEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService) {
     console.info(LungComponent.name, "c'tor")
@@ -59,6 +56,8 @@ export class LungComponent implements OnInit {
 
     this.gatingEngine3d.createScene(this.gatingRendererCanvas);
     this.gatingEngine3d.animate();
+
+    this.setVisibilies()
 
     //this.phantomService.updateData().subscribe(
     //  result => {
@@ -181,29 +180,45 @@ export class LungComponent implements OnInit {
 
   onXrayChecked(checked: boolean) {
     this.engine3d.setXray(checked)
+    this.context.showAsXray = checked
   }
 
   onChestChecked(checked: boolean) {
     this.engine3d.chest.setVisible(checked)
     this.engine3d.lungLeftInsert.setVisible(checked)
     this.engine3d.skeleton.setVisible(checked)
+    this.context.showChest = checked
   }
 
   onRightLungrChecked(checked: boolean) {
     this.engine3d.lungRight.setVisible(checked)
+    this.context.showRightLung = checked
   }
-
 
   onLeftLungChecked(checked: boolean) {
     this.engine3d.lungLeft.setVisible(checked)
     this.engine3d.upperCylinder.setVisible(checked)
     this.engine3d.lowerCylinder.setVisible(checked)
+    this.context.showLeftLung = checked
   }
-
 
   onTargetsChecked(checked: boolean) {
     this.engine3d.target.setVisible(checked)
     this.engine3d.secondTarget.setVisible(checked)
+    this.context.showTargets = checked
+  }
+
+  private setVisibilies() {
+    this.engine3d.setXray(this.context.showAsXray)
+    this.engine3d.chest.setVisible(this.context.showChest)
+    this.engine3d.lungLeftInsert.setVisible(this.context.showChest)
+    this.engine3d.skeleton.setVisible(this.context.showChest)
+    this.engine3d.lungRight.setVisible(this.context.showRightLung)
+    this.engine3d.lungLeft.setVisible(this.context.showLeftLung)
+    this.engine3d.upperCylinder.setVisible(this.context.showLeftLung)
+    this.engine3d.lowerCylinder.setVisible(this.context.showLeftLung)
+    this.engine3d.target.setVisible(this.context.showTargets)
+    this.engine3d.secondTarget.setVisible(this.context.showTargets)
   }
 
 }
