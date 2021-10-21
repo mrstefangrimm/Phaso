@@ -26,7 +26,7 @@
     </div>
     <div>
       <button mat-button (click)="context.automaticControlsEnabled = false">Manual</button>
-      <button mat-button (click)="context.automaticControlsEnabled = true">Automatic</button>
+      <!--<button mat-button (click)="context.automaticControlsEnabled = true">Automatic</button>-->
     </div>
     <table>
       <tr *ngIf="!context.automaticControlsEnabled">
@@ -107,6 +107,26 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <!--<td>
+          synced: {{synced}},
+          state: {{state}},
+          inUseByMe: {{inUseByMe}},
+          inUseByOther: {{inUseByOther}}
+        </td>-->
+        <td *ngIf="synced == true">
+          <div *ngIf="inUseByOther != true">
+            <button *ngIf="inUseByMe != true" mat-button color="standard" (click)="onTakeControl()">Take control</button>
+            <button *ngIf="inUseByMe == true" mat-button color="standard" (click)="onLetControl()">Let control</button>
+          </div>
+          <div *ngIf="inUseByOther == true">
+            Used by other, please wait.
+          </div>
+        </td>
+        <td *ngIf="synced != true">
+          Device not synced. Set the COM port.
+        </td>
+      </tr>
     </table>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -160,25 +180,6 @@
                     width="300"
                     height="300">
             </canvas>
-
-            <div>
-              synced: {{synced}},
-              state: {{state}},
-              inUseByMe: {{inUseByMe}},
-              inUseByOther: {{inUseByOther}}
-            </div>
-            <div *ngIf="synced == true">
-              <div *ngIf="inUseByOther != true">
-                <button *ngIf="inUseByMe != true" mat-button color="standard" (click)="onTakeControl()">Take control</button>
-                <button *ngIf="inUseByMe == true" mat-button color="standard" (click)="onLetControl()">Let control</button>
-              </div>
-              <div *ngIf="inUseByOther == true">
-                Used by other, please wait.
-              </div>
-            </div>
-            <div *ngIf="synced != true">
-              Device not synced. Set the COM port.
-            </div>
           </div>
         </div>
 

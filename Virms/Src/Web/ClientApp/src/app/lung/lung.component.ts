@@ -6,17 +6,19 @@ import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Vector3 } from 'three';
-import { GatingEngine3dService } from '../shared/services/gatingengine3d.service';
-import { ServoPosition } from '../shared/services/motionsystems.service';
+import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service';
+import { MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
 import { LungService } from './lung.service';
 import { LungEngine3dService } from './lungengine3d.service';
+import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model';
+import { Observable, timer } from 'rxjs';
 
 @Component({
   selector: 'app-lung',
   templateUrl: './lung.component.html',
   styleUrls: ['./lung.component.css']
 })
-export class LungComponent implements OnInit, OnDestroy {
+export class LungComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>;
@@ -29,22 +31,17 @@ export class LungComponent implements OnInit, OnDestroy {
 
   upperLng: number = 127
   upperRtn: number = 127
-
   lowerLng: number = 127
   lowerRtn: number = 127
-
   gatingLng: number = 127
   gatingRtn: number = 127
 
-  inUseByMe: boolean = false
-  inUseByOther: boolean = false
-  synced: boolean = false
-  state: UIState = UIState.DeviceNotReady
-
   constructor(
     public context: LungService,
+    public remoteService: MotionSystemsService,
     private readonly engine3d: LungEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService) {
+    super(remoteService, 'NO3')
     console.info(LungComponent.name, "c'tor")
   }
 
@@ -57,31 +54,35 @@ export class LungComponent implements OnInit, OnDestroy {
     this.gatingEngine3d.createScene(this.gatingRendererCanvas);
     this.gatingEngine3d.animate();
 
+    this.remoteService.getMotionSystemData(this.alias).subscribe(
+      result => {
+        console.info(result.id, result.data.alias, result.data.name)
+        this.motionSystemId = result.id
+
+        this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
+          result => {
+            if (this.synced) {
+              this.upperLng = result.data.axes[ServoNumber.UPLNG].position
+              this.upperRtn = result.data.axes[ServoNumber.UPRTN].position
+              this.lowerLng = result.data.axes[ServoNumber.LOLNG].position
+              this.lowerRtn = result.data.axes[ServoNumber.LORTN].position
+              this.gatingLng = result.data.axes[ServoNumber.GALNG].position
+              this.gatingRtn = result.data.axes[ServoNumber.GARTN].position
+              this.updateStatus(result.data)
+            }
+            this.initSystemStatusPullTimer(this.motionSystemId)
+          }, err => console.error(err))
+      }, err => console.error(err))
+
     this.setVisibilies()
-
-    //this.phantomService.updateData().subscribe(
-    //  result => {
-    //    if (result.synced) {
-    //      this.leftLng = result.axes[ServoNumber.LLNG].position
-    //      this.leftRtn = result.axes[ServoNumber.LRTN].position
-    //      this.rightLng = result.axes[ServoNumber.RLNG].position
-    //      this.rightRtn = result.axes[ServoNumber.RRTN].position
-    //      this.gatingLng = result.axes[ServoNumber.GALNG].position
-    //      this.gatingRtn = result.axes[ServoNumber.GARTN].position
-    //    }
-    //  }, err => console.error(err))
-
   }
 
   ngOnDestroy() {
     console.info(LungComponent.name, "ngOnDestroy")
-    //if (this.executingPatternId != undefined) {
-    //  this.onStopPattern()
-    //}
-    //this.onLetControl()
-
     this.engine3d.ngOnDestroy()
     this.gatingEngine3d.ngOnDestroy()
+    this.refreshTimerSubscription.unsubscribe()
+    this.onLetControl()
   }
 
   onUpperLngChanged(event) {
@@ -96,7 +97,7 @@ export class LungComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.UPLNG;
       servoPos.position = event.value;
 
-      // this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -112,7 +113,7 @@ export class LungComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.UPRTN;
       servoPos.position = event.value;
 
-      //this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -128,7 +129,7 @@ export class LungComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.LOLNG;
       servoPos.position = event.value;
 
-      // this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -144,7 +145,7 @@ export class LungComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.LORTN;
       servoPos.position = event.value;
 
-      //this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -159,7 +160,7 @@ export class LungComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.GALNG;
       servoPos.position = event.value;
 
-      //this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -174,7 +175,7 @@ export class LungComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.GARTN;
       servoPos.position = event.value;
 
-      //this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -230,11 +231,4 @@ const enum ServoNumber {
   LOLNG,
   UPLNG,
   GALNG
-}
-
-const enum UIState {
-  InControl,
-  NotInControl,
-  OtherInControl,
-  DeviceNotReady
 }

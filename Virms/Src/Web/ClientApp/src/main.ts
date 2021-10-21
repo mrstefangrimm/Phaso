@@ -8,8 +8,13 @@ export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href
 }
 
+export function getIsProdMode() {
+  return environment.production
+}
+
 const providers = [
-  { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }
+  { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },
+  { provide: 'PROD_MODE', useFactory: getIsProdMode, deps: [] }
 ]
 
 if (environment.production) {

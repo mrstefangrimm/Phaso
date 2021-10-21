@@ -2,7 +2,7 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 import { Injectable } from "@angular/core"
-import { NavigationContextBaseModel } from "../shared/navigationcontextbase.model"
+import { NavigationContextBaseModel } from "../shared/ui/navigationcontextbase.model"
 
 @Injectable({ providedIn: 'root' })
 export class MarkerService extends NavigationContextBaseModel {
@@ -17,9 +17,4 @@ export class MarkerService extends NavigationContextBaseModel {
     console.info(MarkerService.name, "c'tor")
   }
 
-  //read(): Observable<AppService> {
-  //  return new Observable<AppService>(subscriber => {
-  //    subscriber.next(this)
-  //  })
-  //}
 }

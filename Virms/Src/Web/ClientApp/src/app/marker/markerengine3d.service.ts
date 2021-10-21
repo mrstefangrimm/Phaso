@@ -6,8 +6,8 @@ import * as THREE from 'three'
 import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
 import { OrbitControls } from 'three-orbitcontrols-ts'
-import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/loadedobject.model';
-import { ThreeCylinder } from '../shared/threecylinder.model';
+import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model';
+import { ThreeCylinder } from '../shared/ui/threecylinder.model';
 
 @Injectable({providedIn: 'root'})
 

@@ -37,7 +37,7 @@ public class WebPluginBuilder : IWebPluginBuilder {
       axes.Add(axis);
     }
 
-    var phantom = new WebPluginMotionSystem("Lung Phantom", "N03", mophApp, patterns, axes);
+    var phantom = new WebPluginMotionSystem("Lung Phantom", "No3", mophApp, patterns, axes);
     return phantom;
   }
 }

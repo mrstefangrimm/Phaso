@@ -3,21 +3,19 @@
 //
 
 import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { timer } from 'rxjs';
-import { Observable } from 'rxjs';
 import { Vector3 } from 'three';
-import { MotionPatternResponse, MotionSystemData, ServoPosition } from '../shared/services/motionsystems.service';
-import { GatingEngine3dService } from '../shared/services/gatingengine3d.service';
+import { MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
+import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service';
 import { LiverEngine3dService } from './liverengine3d.service';
-import { LiverPhantomService } from './liverphantom.service';
 import { LiverService } from './liver.service';
+import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model';
 
 @Component({
   selector: 'app-liver',
   templateUrl: './liver.component.html',
   styleUrls: ['./liver.component.css']
 })
-export class LiverComponent implements OnInit, OnDestroy {
+export class LiverComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>;
@@ -35,18 +33,12 @@ export class LiverComponent implements OnInit, OnDestroy {
   gatingLng: number = 127
   gatingRtn: number = 127
 
-  inUseByMe: boolean = false
-  inUseByOther: boolean = false
-  synced: boolean = false
-  state: UIState = UIState.DeviceNotReady
-
-  private refreshTimer: Observable<number> = timer(0, 5000);
-
   constructor(
     public context: LiverService,
+    public remoteService: MotionSystemsService,
     private readonly engine3d: LiverEngine3dService,
-    private readonly gatingEngine3d: GatingEngine3dService,
-    private readonly phantomService: LiverPhantomService) {
+    private readonly gatingEngine3d: GatingEngine3dService) {
+    super(remoteService, 'NO2')
     console.info(LiverComponent.name, "c'tor")
   }
 
@@ -59,59 +51,27 @@ export class LiverComponent implements OnInit, OnDestroy {
     this.gatingEngine3d.createScene(this.gatingRendererCanvas);
     this.gatingEngine3d.animate();
 
-    this.setVisibilies()
-
-    this.phantomService.updateData().subscribe(
+    this.remoteService.getMotionSystemData(this.alias).subscribe(
       result => {
-        if (result.synced) {
-          this.leftLng = result.axes[ServoNumber.LLNG].position
-          this.leftRtn = result.axes[ServoNumber.LRTN].position
-          this.rightLng = result.axes[ServoNumber.RLNG].position
-          this.rightRtn = result.axes[ServoNumber.RRTN].position
-          this.gatingLng = result.axes[ServoNumber.GALNG].position
-          this.gatingRtn = result.axes[ServoNumber.GARTN].position
-        }
+        console.info(result.id, result.data.alias, result.data.name)
+        this.motionSystemId = result.id
+
+        this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
+          result => {
+            if (this.synced) {
+              this.leftLng = result.data.axes[ServoNumber.LLNG].position
+              this.leftRtn = result.data.axes[ServoNumber.LRTN].position
+              this.rightLng = result.data.axes[ServoNumber.RLNG].position
+              this.rightRtn = result.data.axes[ServoNumber.RRTN].position
+              this.gatingLng = result.data.axes[ServoNumber.GALNG].position
+              this.gatingRtn = result.data.axes[ServoNumber.GARTN].position
+              this.updateStatus(result.data)
+            }
+            this.initSystemStatusPullTimer(this.motionSystemId)
+          }, err => console.error(err))
       }, err => console.error(err))
 
-    this.refreshTimer.subscribe(seconds => {
-      // In control, the connection is not checked. if an action is not successful on the device, the state goes in notready.
-      if (this.state != UIState.InControl) {
-        this.phantomService.updateData().subscribe(
-          result => {
-            this.synced = result.synced
-            if (this.state == UIState.DeviceNotReady && this.synced == true) {
-              if (result.inUse) {
-                this.state = UIState.OtherInControl
-                this.inUseByOther = true
-              }
-              else {
-                this.state = UIState.NotInControl
-                this.inUseByOther = false
-              }
-            }
-            else if ((this.state == UIState.NotInControl || this.state == UIState.OtherInControl) && this.synced == false) {
-              this.state = UIState.DeviceNotReady
-              this.inUseByOther = false
-            }
-            else if (this.state == UIState.NotInControl && this.synced == true) {
-              if (result.inUse) {
-                this.state = UIState.OtherInControl
-                this.inUseByOther = true
-              }
-            }
-            else if (this.state == UIState.OtherInControl && this.synced == true) {
-              if (result.inUse == false) {
-                this.state = UIState.NotInControl
-                this.inUseByOther = false
-              }
-            }
-          },
-          err => {
-            console.error(err)
-            this.state = UIState.DeviceNotReady
-          })
-      }
-    })
+    this.setVisibilies()
   }
 
   ngOnDestroy() {
@@ -119,34 +79,34 @@ export class LiverComponent implements OnInit, OnDestroy {
     if (this.executingPatternId != undefined) {
       this.onStopPattern()
     }
-    this.onLetControl()
-
     this.engine3d.ngOnDestroy()
     this.gatingEngine3d.ngOnDestroy()
+    this.refreshTimerSubscription.unsubscribe()
+    this.onLetControl()
   }
 
-  patterns(): MotionPatternResponse[] { return this.phantomService.patterns }
+  //patterns(): MotionPatternResponse[] { return this.remoteService.patterns }
 
   onStartPattern() {
-    console.info(this.selectedPatternId)
-    this.phantomService.startPattern(this.selectedPatternId)
-    this.executingPatternId = this.selectedPatternId
+  //  console.info(this.selectedPatternId)
+  //  this.phantomService.startPattern(this.selectedPatternId)
+  //  this.executingPatternId = this.selectedPatternId
   }
 
   onStopPattern() {
-    this.phantomService.stopPattern(this.selectedPatternId).subscribe(
-      result => {
-        this.executingPatternId = undefined
+//    this.phantomService.stopPattern(this.selectedPatternId).subscribe(
+//      result => {
+//        this.executingPatternId = undefined
 
-        this.leftLng = result.axes[ServoNumber.LLNG].position
-        this.leftRtn = result.axes[ServoNumber.LRTN].position
-        this.rightLng = result.axes[ServoNumber.RLNG].position
-        this.rightRtn = result.axes[ServoNumber.RRTN].position
-        this.gatingLng = result.axes[ServoNumber.GALNG].position
-        this.gatingRtn = result.axes[ServoNumber.GARTN].position
+//        this.leftLng = result.axes[ServoNumber.LLNG].position
+//        this.leftRtn = result.axes[ServoNumber.LRTN].position
+//        this.rightLng = result.axes[ServoNumber.RLNG].position
+//        this.rightRtn = result.axes[ServoNumber.RRTN].position
+//        this.gatingLng = result.axes[ServoNumber.GALNG].position
+//        this.gatingRtn = result.axes[ServoNumber.GARTN].position
 
-        console.info(this.gatingLng)
-      }, err => console.error(err))
+//        console.info(this.gatingLng)
+//      }, err => console.error(err))
 }
 
   onLeftLngChanged(event) {
@@ -164,7 +124,7 @@ export class LiverComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.LLNG;
       servoPos.position = event.value;
 
-      this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -183,7 +143,7 @@ export class LiverComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.LRTN;
       servoPos.position = event.value;
 
-      this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -202,7 +162,7 @@ export class LiverComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.RLNG;
       servoPos.position = event.value;
 
-      this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -221,7 +181,7 @@ export class LiverComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.RRTN;
       servoPos.position = event.value;
 
-      this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -236,7 +196,7 @@ export class LiverComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.GALNG;
       servoPos.position = event.value;
 
-      this.phantomService.patchPhantom([servoPos])
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -251,27 +211,7 @@ export class LiverComponent implements OnInit, OnDestroy {
       servoPos.servoNumber = ServoNumber.GARTN;
       servoPos.position = event.value;
 
-      this.phantomService.patchPhantom([servoPos])
-    }
-  }
-
-  onTakeControl() {
-    if (this.state == UIState.NotInControl) {
-      let data = new MotionSystemData
-      data.inUse = true
-      this.phantomService.patch(data)
-      this.inUseByMe = true
-      this.state = UIState.InControl
-    }
-  }
-
-  onLetControl() {
-    if (this.state == UIState.InControl) {
-      let data = new MotionSystemData
-      data.inUse = false
-      this.phantomService.patch(data)
-      this.inUseByMe = false
-      this.state = UIState.NotInControl
+      if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
   }
 
@@ -334,11 +274,4 @@ const enum ServoNumber {
   LRTN,
   RRTN,
   GARTN
-}
-
-const enum UIState {
-  InControl,
-  NotInControl,
-  OtherInControl,
-  DeviceNotReady
 }

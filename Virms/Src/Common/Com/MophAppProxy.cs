@@ -262,8 +262,7 @@ namespace Virms.Common.Com {
                 var msg = string.Format("Free memory: {0} Bytes", freeMem);
                 LogOutput?.Invoke(this, new LogOutputEventArgs { Text = msg });
               }
-              else if (cmd.Length > 2 && 
-              (cmd[0] >= '0' && cmd[0] <= '9')) {
+              else if (cmd.Length > 2 && cmd[0] >= '0' && cmd[0] <= '9') {
                 var servoNo = cmd[0] - '0';
                 var pos = byte.Parse(cmd.Substring(1));
                 LatestMotorPosition[servoNo] = pos;

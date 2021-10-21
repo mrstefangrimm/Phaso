@@ -121,15 +121,19 @@ export class LoadedObject implements LoadableObject {
   }
 
   setVisible(show: boolean) {
-    this.object.visible = show
+    if (this.object) {
+      this.object.visible = show
+    }
   }
 
   setMaterial(mat: Material) {
-    this.objectAsGroup.traverse(child => {
-      if (child instanceof THREE.Mesh) {
-        child.material = mat
-      }
-    })  
+    if (this.objectAsGroup) {
+      this.objectAsGroup.traverse(child => {
+        if (child instanceof THREE.Mesh) {
+          child.material = mat
+        }
+      })
+    }
   }
 }
 
