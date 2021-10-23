@@ -130,7 +130,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.LULNG;
+      servoPos.servoNumber = ServoNumber.LLLNG;
       servoPos.position = event.value;
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
@@ -146,7 +146,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.LURTN;
+      servoPos.servoNumber = ServoNumber.LLRTN;
       servoPos.position = event.value;
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])

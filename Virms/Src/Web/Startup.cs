@@ -13,10 +13,6 @@ using Virms.Web.Core;
 namespace Virms.Web {
   public class Startup {
 
-    private readonly string LocalhostOrigins = "LocalhostOrigins";
-    private readonly string GithubOrigins = "GithubOrigins";
-    private readonly string Dynv6Origins = "Dynv6Origins";
-
     private readonly IWebHostEnvironment _env;
 
     public Startup(IConfiguration configuration, IWebHostEnvironment env) {
@@ -35,25 +31,7 @@ namespace Virms.Web {
       // TODO: Minor; Can this static variable be replaced with a better concept?
       MotionSystemEntityInMemoryRepository.IsDevelopment = _env.IsDevelopment();
       services.AddSingleton<MotionSystemEntityInMemoryRepository>();
-
-      services.AddCors(options => {
-        options.AddPolicy(name: LocalhostOrigins,
-          builder => {
-            builder.WithOrigins(
-              "http://localhost:4200");
-          });
-        options.AddPolicy(name: GithubOrigins,
-          builder => {
-            builder.WithOrigins(
-              "https://mrstefangrimm.github.io");
-          });
-        options.AddPolicy(name: Dynv6Origins,
-          builder => {
-            builder.WithOrigins(
-              "https://live-phantoms.dynv6.net");
-          });
-      });
-
+          
       // In production, the Angular files will be served from this directory
       services.AddSpaStaticFiles(configuration => {
         configuration.RootPath = "ClientApp/dist";
@@ -75,11 +53,18 @@ namespace Virms.Web {
         app.UseSpaStaticFiles();
       }
 
-      app.UseRouting();
+      // CORS, e.g. UseCors before UseRouting: https://stackoverflow.com/questions/44379560/how-to-enable-cors-in-asp-net-core-webapi
+      app.UseCors(
+       options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()
+       );
+      app.UseCors(
+       options => options.WithOrigins("https://mrstefangrimm.github.io")
+       );
+      app.UseCors(
+       options => options.WithOrigins("https://live-phantoms.dynv6.net")
+       );
 
-      app.UseCors(LocalhostOrigins);
-      app.UseCors(GithubOrigins);
-      app.UseCors(Dynv6Origins);
+      app.UseRouting();
 
       app.UseEndpoints(endpoints => {
         endpoints.MapControllerRoute(
