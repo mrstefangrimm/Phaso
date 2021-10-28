@@ -57,7 +57,7 @@ export class GatingEngine3dService implements OnDestroy {
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
     this.camera.position.x = 0
     this.camera.position.y = 10
-    this.camera.position.z = 150
+    this.camera.position.z = 100
     this.scene.add(this.camera)
 
     // soft white light

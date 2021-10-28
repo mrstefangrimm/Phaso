@@ -76,7 +76,7 @@ export class MarkerEngine3dService implements OnDestroy {
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
     this.camera.position.x = -100
     this.camera.position.y = 100
-    this.camera.position.z = 180
+    this.camera.position.z = 120
     this.scene.add(this.camera)
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement)

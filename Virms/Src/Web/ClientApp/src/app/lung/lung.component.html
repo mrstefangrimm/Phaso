@@ -107,26 +107,6 @@
           </div>
         </td>
       </tr>
-      <tr>
-        <!--<td>
-          synced: {{synced}},
-          state: {{state}},
-          inUseByMe: {{inUseByMe}},
-          inUseByOther: {{inUseByOther}}
-        </td>-->
-        <td *ngIf="synced == true">
-          <div *ngIf="inUseByOther != true">
-            <button *ngIf="inUseByMe != true" mat-button color="standard" (click)="onTakeControl()">Take control</button>
-            <button *ngIf="inUseByMe == true" mat-button color="standard" (click)="onLetControl()">Let control</button>
-          </div>
-          <div *ngIf="inUseByOther == true">
-            Used by other, please wait.
-          </div>
-        </td>
-        <td *ngIf="synced != true">
-          Device not synced. Set the COM port.
-        </td>
-      </tr>
     </table>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -168,17 +148,36 @@
       </mat-sidenav>
       <mat-sidenav-content>
 
-        <div>
-          <div align="center">
+        <div class="stack-horz">
+          <div class="content">
             <canvas #rendererCanvas
                     id="renderCanvas"
-                    width="600"
-                    height="400"></canvas>
+                    width="500"
+                    height="500">
+            </canvas>
+          </div>
+          <div class="content">
+            <span *ngIf="synced == true">
+              <span *ngIf="inUseByOther != true">
+                <button *ngIf="inUseByMe != true" mat-button color="standard" (click)="onTakeControl()">Take control</button>
+                <button *ngIf="inUseByMe == true" mat-button color="standard" (click)="onLetControl()">Let control</button>
+              </span>
+              <span *ngIf="inUseByOther == true">
+                Used by other, please wait.
+              </span>
+            </span>
+            <span *ngIf="synced != true">
+              Device not synced. Set the COM port.
+            </span>
+            <br />
+            <img [src]="getLivePicture()" alt="live image">
+          </div>
+          <div class="content">
             <canvas #gatingRendererCanvas
                     id="gatingRenderCanvas"
-                    align="center"
-                    width="300"
-                    height="300">
+                    align="right"
+                    width="250"
+                    height="250">
             </canvas>
           </div>
         </div>

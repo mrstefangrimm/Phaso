@@ -1,0 +1,20 @@
+DIV.stack-vert {
+/*  border: solid thick red;
+  overflow: hidden;
+*/}
+
+DIV.stack-horz {
+/*  border: solid thick blue;
+  overflow: hidden;
+*/}
+
+DIV.content {
+  border: solid thin gray;
+  /*  padding: 5px;
+  background-color: grey;
+*/
+}
+
+DIV.stack-horz > DIV.content {
+  float: left;
+}

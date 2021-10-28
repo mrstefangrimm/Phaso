@@ -11,7 +11,6 @@ import { MotionSystemsService, ServoPosition } from '../shared/remote/motionsyst
 import { LungService } from './lung.service';
 import { LungEngine3dService } from './lungengine3d.service';
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model';
-import { Observable, timer } from 'rxjs';
 
 @Component({
   selector: 'app-lung',
@@ -21,10 +20,10 @@ import { Observable, timer } from 'rxjs';
 export class LungComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
-  rendererCanvas: ElementRef<HTMLCanvasElement>;
+  rendererCanvas: ElementRef<HTMLCanvasElement>
 
   @ViewChild('gatingRendererCanvas', { static: true })
-  gatingRendererCanvas: ElementRef<HTMLCanvasElement>;
+  gatingRendererCanvas: ElementRef<HTMLCanvasElement>
 
   selectedPatternId: number
   executingPatternId: number
@@ -71,6 +70,7 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
               this.updateStatus(result.data)
             }
             this.initSystemStatusPullTimer(this.motionSystemId)
+            this.initLiveImageTimer("third-live.jpg")
           }, err => console.error(err))
       }, err => console.error(err))
 
@@ -81,7 +81,8 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
     console.info(LungComponent.name, "ngOnDestroy")
     this.engine3d.ngOnDestroy()
     this.gatingEngine3d.ngOnDestroy()
-    this.refreshTimerSubscription.unsubscribe()
+    this.liveImgRefreshTimerSubscription.unsubscribe()
+    this.statusRefreshTimerSubscription.unsubscribe()
     this.onLetControl()
   }
 

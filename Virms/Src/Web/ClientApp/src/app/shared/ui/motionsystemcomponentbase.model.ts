@@ -2,8 +2,8 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
-import { Observable, Subscription, timer } from "rxjs";
-import { MotionSystemData, MotionSystemsService } from "../remote/motionsystems.service";
+import { Observable, Subscription, timer } from "rxjs"
+import { MotionSystemData, MotionSystemsService } from "../remote/motionsystems.service"
 
 export class MotionsystemComponentBaseModel  {
 
@@ -14,15 +14,20 @@ export class MotionsystemComponentBaseModel  {
   synced: boolean = false
   state: UIState = UIState.DeviceNotReady
 
-  refreshTimer: Observable<number> = timer(1000, 5000);
-  refreshTimerSubscription: Subscription
+  statusRefreshTimer: Observable<number> = timer(1000, 5000);
+  statusRefreshTimerSubscription: Subscription
+
+  liveImgRefreshTimer: Observable<number> = timer(1000, 500);
+  liveImgRefreshTimerSubscription: Subscription
+  public linkPicture: string
+  public timeStamp: number
 
   constructor(
     public remoteService: MotionSystemsService,
     public alias: string) { }
 
   initSystemStatusPullTimer(id: number) {
-    this.refreshTimerSubscription = this.refreshTimer.subscribe(seconds => {
+    this.statusRefreshTimerSubscription = this.statusRefreshTimer.subscribe(seconds => {
 
       this.remoteService.getMotionSystem(id).subscribe(
         result => {
@@ -31,7 +36,7 @@ export class MotionsystemComponentBaseModel  {
         }, err => console.error(err))
     })
   }
-
+  
   updateStatus(data: MotionSystemData) {
     this.synced = data.synced
     if (this.state == UIState.DeviceNotReady && this.synced == true) {
@@ -62,13 +67,33 @@ export class MotionsystemComponentBaseModel  {
     }
   }
 
-  onTakeControl() {
+  initLiveImageTimer(name: string) {
+    this.liveImgRefreshTimerSubscription = this.liveImgRefreshTimer.subscribe(seconds => {
+      this.setLivePicture("https://live-phantoms.dynv6.net:8444/images/" + name)
+    })
+  }
+
+  public getLivePicture() {
+    if (this.timeStamp) {
+      return this.linkPicture + '?' + this.timeStamp;
+    }
+    return this.linkPicture;
+  }
+
+  public setLivePicture(url: string) {
+    this.linkPicture = url;
+    this.timeStamp = (new Date()).getTime();
+  }
+
+  public onTakeControl() {
     if (this.state == UIState.NotInControl) {
       let data = new MotionSystemData
       data.inUse = true
-      this.remoteService.patch(this.motionSystemId, data)
-      this.inUseByMe = true
-      this.state = UIState.InControl
+      this.remoteService.patch(this.motionSystemId, data).subscribe(
+        result => {
+          this.inUseByMe = true
+          this.state = UIState.InControl
+        }, err => console.error(err))
     }
   }
 
@@ -76,9 +101,11 @@ export class MotionsystemComponentBaseModel  {
     if (this.state == UIState.InControl) {
       let data = new MotionSystemData
       data.inUse = false
-      this.remoteService.patch(this.motionSystemId, data)
-      this.inUseByMe = false
-      this.state = UIState.NotInControl
+      this.remoteService.patch(this.motionSystemId, data).subscribe(
+        result => {
+          this.inUseByMe = false
+          this.state = UIState.NotInControl
+        }, err => console.error(err))
     }
   }
 

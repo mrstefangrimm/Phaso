@@ -93,19 +93,19 @@ export class MotionSystemsService {
     }
   }
 
-  patch(motionSystemId: number, data: MotionSystemData) {
+  patch(motionSystemId: number, data: MotionSystemData): Observable<any> {
 
     let doWork = () => {
       let request = this.apiBaseUrl + '/' + motionSystemId
       console.debug(request, data)
-      this.http.patch(request, data).subscribe(null, err => console.error(err))
+      return this.http.patch(request, data)
     }
     if (this.apiBaseUrl) {
-      doWork()
+      return doWork()
     }
     else {
       this.getApiBaseUrlFromToc().subscribe(null, null, () => {
-        doWork()
+        return doWork()
       })
     }
   }

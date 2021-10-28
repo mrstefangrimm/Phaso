@@ -18,10 +18,10 @@ import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcompone
 export class LiverComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
-  rendererCanvas: ElementRef<HTMLCanvasElement>;
+  rendererCanvas: ElementRef<HTMLCanvasElement>
 
   @ViewChild('gatingRendererCanvas', { static: true })
-  gatingRendererCanvas: ElementRef<HTMLCanvasElement>;
+  gatingRendererCanvas: ElementRef<HTMLCanvasElement>
 
   selectedPatternId: number
   executingPatternId: number
@@ -68,6 +68,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
               this.updateStatus(result.data)
             }
             this.initSystemStatusPullTimer(this.motionSystemId)
+            this.initLiveImageTimer("second-live.jpg")
           }, err => console.error(err))
       }, err => console.error(err))
 
@@ -81,7 +82,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     }
     this.engine3d.ngOnDestroy()
     this.gatingEngine3d.ngOnDestroy()
-    this.refreshTimerSubscription.unsubscribe()
+    this.liveImgRefreshTimerSubscription.unsubscribe()
+    this.statusRefreshTimerSubscription.unsubscribe()
     this.onLetControl()
   }
 

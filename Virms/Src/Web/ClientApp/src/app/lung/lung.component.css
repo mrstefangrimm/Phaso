@@ -1,0 +1,13 @@
+DIV.stack-vert {
+}
+
+DIV.stack-horz {
+}
+
+DIV.content {
+  border: solid thin gray;
+}
+
+DIV.stack-horz > DIV.content {
+  float: left;
+}
