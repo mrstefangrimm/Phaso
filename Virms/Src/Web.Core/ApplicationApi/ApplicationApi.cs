@@ -14,13 +14,18 @@ namespace Virms.Web.Core {
     NotChanged
   }
 
-  public class VirmsServerService {
+  public class ApplicationApi {
 
-    private readonly MotionSystemEntityInMemoryRepository _motionSystemEntities;
+    private readonly IRepository<MotionSystem> _motionSystemEntities;
 
-    public VirmsServerService(
-      MotionSystemEntityInMemoryRepository entities) {
+    public ApplicationApi(IRepository<MotionSystem> entities) {
       _motionSystemEntities = entities;
+
+      foreach (var entity in _motionSystemEntities.GetAll()) {
+        if (!string.IsNullOrEmpty(entity.Data.ComPort)) {
+          entity.Reconnect(entity.Data.ComPort);
+        }
+      }
     }
 
     public IEnumerable<MotionSystem> GetPhantoms() {
@@ -48,7 +53,10 @@ namespace Virms.Web.Core {
           motionSystem.Reconnect(data.ComPort);
         }
 
+        motionSystem.Data.ComPort = data.ComPort;
         motionSystem.Data.InUse = data.InUse;
+
+        _motionSystemEntities.Update(motionSystem);
 
         return AppSericeResult.OK;
       }

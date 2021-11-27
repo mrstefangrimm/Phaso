@@ -18,13 +18,13 @@ namespace Virms.Web {
   public class MotionSystemsController : ControllerBase {
 
     private readonly ILogger<MotionSystemsController> _logger;
-    private readonly VirmsServerService _serverService;
+    private readonly ApplicationApi _applicationApi;
 
     public MotionSystemsController(
       ILogger<MotionSystemsController> logger,
-      VirmsServerService serverService) {
+      ApplicationApi applicationApi) {
       _logger = logger;
-      _serverService = serverService;
+      _applicationApi = applicationApi;
     }
 
     // GET: api/motionsystems
@@ -34,7 +34,7 @@ namespace Virms.Web {
 
       _logger.LogInformation("GetMotionSystems");
 
-      var result = _serverService.GetPhantoms();
+      var result = _applicationApi.GetPhantoms();
       var phantoms = result.ToList();
 
       var response = new MotionSystemsResponse();
@@ -54,7 +54,7 @@ namespace Virms.Web {
     [ProducesResponseType(typeof(StatusCodeResult), StatusCodes.Status404NotFound)]
     public IActionResult GetMotionSystem(long id) {
 
-      var entity = _serverService.GetMotionSystem(id);
+      var entity = _applicationApi.GetMotionSystem(id);
       if (entity == null) { return NotFound(); }
 
       var response = new MotionSystemResponse();
@@ -79,7 +79,7 @@ namespace Virms.Web {
     [ProducesResponseType(StatusCodes.Status304NotModified)]
     public IActionResult PatchMotionSystem(long id, MotionSystemData data) {
 
-      var result = _serverService.PatchMotionSystem(id, data);
+      var result = _applicationApi.PatchMotionSystem(id, data);
 
       switch (result) {
         default: return Ok();
@@ -95,7 +95,7 @@ namespace Virms.Web {
     [ProducesResponseType(StatusCodes.Status304NotModified)]
     public IActionResult PatchMotionSystem(long id, ServoPositionData[] data) {
 
-      var result = _serverService.PatchMotionSystem(id, data);
+      var result = _applicationApi.PatchMotionSystem(id, data);
 
       switch (result) {
         default: return Ok();
@@ -110,7 +110,7 @@ namespace Virms.Web {
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status304NotModified)]
     public IActionResult PatchMotionPattern(long id, long pid, MotionPatternData data) {
-      var result = _serverService.PatchMotionSystemMotionPattern(id, pid, data);
+      var result = _applicationApi.PatchMotionSystemMotionPattern(id, pid, data);
 
       switch (result) {
         default: return Ok();

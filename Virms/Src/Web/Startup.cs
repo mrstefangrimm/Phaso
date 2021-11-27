@@ -25,13 +25,13 @@ namespace Virms.Web {
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
       services.AddControllersWithViews();
+            
+      services.AddSingleton<ApplicationApi>();
 
-      services.AddSingleton<VirmsServerService>();
+      //services.AddSingleton<IRepository<MotionSystem>, MotionSystemInMemoryRepository>();
+      services.AddSingleton<IRepository<MotionSystem>>(x => new MotionSystemSqliteRepository(_env.IsDevelopment()));
+      
 
-      // TODO: Minor; Can this static variable be replaced with a better concept?
-      MotionSystemEntityInMemoryRepository.IsDevelopment = _env.IsDevelopment();
-      services.AddSingleton<MotionSystemEntityInMemoryRepository>();
-          
       // In production, the Angular files will be served from this directory
       services.AddSpaStaticFiles(configuration => {
         configuration.RootPath = "ClientApp/dist";

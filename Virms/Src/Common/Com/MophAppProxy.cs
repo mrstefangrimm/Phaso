@@ -84,15 +84,15 @@ namespace Virms.Common.Com {
 
     public MophAppProxy() {
       TimerCallback timerDelegate =
-      new TimerCallback(delegate (object state) {
-       lock(_lockObject) {
-          var data = _sendBuffer.Data;
-          if (data.Length > 1 && _serialPort != null && _serialPort.IsOpen) {
-            _serialPort.Write(data, 0, data.Length);
-            _sendBuffer.Clear();
+        new TimerCallback(delegate (object state) {
+          lock (_lockObject) {
+            var data = _sendBuffer.Data;
+            if (data.Length > 1 && _serialPort != null && _serialPort.IsOpen) {
+              SerialWrite(data, 0, data.Length);
+              _sendBuffer.Clear();
+            }
           }
-        }
-      });
+        });
       _timer = new Timer(timerDelegate, null, 50, 50);
     }
 
@@ -129,7 +129,7 @@ namespace Virms.Common.Com {
         lock (_lockObject) {
           byte[] syncMsg = new byte[1];
           syncMsg[0] = cmd;
-          _serialPort.Write(syncMsg, 0, 1);
+          SerialWrite(syncMsg, 0, 1);
         }
       }
       else {
@@ -142,7 +142,7 @@ namespace Virms.Common.Com {
         lock (_lockObject) {
           byte[] syncMsg = new byte[1];
           syncMsg[0] = 19;
-          _serialPort.Write(syncMsg, 0, 1);
+          SerialWrite(syncMsg, 0, 1);
         }
       }
       else {
@@ -169,7 +169,7 @@ namespace Virms.Common.Com {
         lock (_lockObject) {
           byte[] syncMsg = new byte[1];
           syncMsg[0] = 11;
-          _serialPort.Write(syncMsg, 0, 1);
+          SerialWrite(syncMsg, 0, 1);
         }
       }
       else {
@@ -293,5 +293,14 @@ namespace Virms.Common.Com {
       }
     }
 
+    private void SerialWrite(byte[] buffer, int offset, int count) {
+      try {
+        _serialPort.Write(buffer, offset, count);
+      }
+      catch (Exception e) {
+        _serialPort = null;
+        LogOutput?.Invoke(this, new LogOutputEventArgs { Text = "Write on Serial Port failed." });
+      }
+    }
   }
 }

@@ -2,10 +2,10 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
-import { NgModule } from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {AppComponent} from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core'
+import {BrowserModule} from '@angular/platform-browser'
+import {AppComponent} from './app.component'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { MatSliderModule } from '@angular/material/slider'
 import { MatInputModule } from '@angular/material/input'
@@ -36,9 +36,12 @@ import { HomeComponent } from './home/home.component'
     BrowserAnimationsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'marker', component: MarkerComponent },
-      { path: 'liver', component: LiverComponent },
-      { path: 'lung', component: LungComponent }
+      {
+        // markerphantom, liverphantom, lungphantom
+        path: ':motionSystem',
+        component: HomeComponent,
+        pathMatch: 'full'
+      },
     ]),
     MatSliderModule,
     MatInputModule,

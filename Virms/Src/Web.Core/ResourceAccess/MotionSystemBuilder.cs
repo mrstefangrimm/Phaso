@@ -16,9 +16,9 @@ namespace Virms.Web.Core {
 
       var entityMotionSystem = new MotionSystem(pluginMotionSystem, deviceService);
       entityMotionSystem.Id = idCreator.CreateId();
-      entityMotionSystem.Data.ComPort = string.Empty;
       entityMotionSystem.Data.Name = pluginMotionSystem.Name;
       entityMotionSystem.Data.Alias = pluginMotionSystem.Alias;
+      entityMotionSystem.Data.ComPort = string.Empty;
       entityMotionSystem.Data.InUse = false;
       entityMotionSystem.Data.Synced = false;
 

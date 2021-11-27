@@ -94,13 +94,13 @@ export class MarkerEngine3dService implements OnDestroy {
     this.materialMarker = new THREE.MeshBasicMaterial({ color: 0xFFFF00, transparent: false })
     this.materialMarkerXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: false })
     this.materialTissue = new THREE.MeshPhysicalMaterial({
-      color: 0x0000AA,
+      color: 0xFFFFFF,
       metalness: 0,
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.8, // use material.transmission for glass materials
-      opacity: 1, // set material.opacity to 1 when material.transmission is non-zero
+      transmission: 0.8,
+      opacity: 1,
       transparent: true
     })
     this.materialTissueXray = new THREE.MeshPhysicalMaterial({
@@ -109,7 +109,7 @@ export class MarkerEngine3dService implements OnDestroy {
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.7,
+      transmission: 0.4,
       opacity: 1,
       transparent: true
     })
@@ -264,6 +264,12 @@ export class MarkerEngine3dService implements OnDestroy {
       this.scene.background = this.backGroundXray
 
       this.body.setMaterial(this.materialTissueXray)
+
+      this.cylinderLeftUpper.setMaterial(this.materialTissueXray)
+      this.cylinderLeftLower.setMaterial(this.materialTissueXray)
+      this.cylinderRightUpper.setMaterial(this.materialTissueXray)
+      this.cylinderRightLower.setMaterial(this.materialTissueXray)
+
       this.markerLeftUpper.setMaterial(this.materialMarkerXray)
       this.markerLeftLower.setMaterial(this.materialMarkerXray)
       this.markerRightUpper.setMaterial(this.materialMarkerXray)
@@ -273,6 +279,12 @@ export class MarkerEngine3dService implements OnDestroy {
       this.scene.background = this.backGround
 
       this.body.setMaterial(this.materialTissue)
+
+      this.cylinderLeftUpper.setMaterial(this.materialTissue)
+      this.cylinderLeftLower.setMaterial(this.materialTissue)
+      this.cylinderRightUpper.setMaterial(this.materialTissue)
+      this.cylinderRightLower.setMaterial(this.materialTissue)
+
       this.markerLeftUpper.setMaterial(this.materialMarker)
       this.markerLeftLower.setMaterial(this.materialMarker)
       this.markerRightUpper.setMaterial(this.materialMarker)

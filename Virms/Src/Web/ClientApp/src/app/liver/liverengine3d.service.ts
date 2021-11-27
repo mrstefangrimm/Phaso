@@ -102,26 +102,30 @@ export class LiverEngine3dService implements OnDestroy {
 
     this.backGround = null
     this.backGroundXray = new THREE.Color(0x000000)
-    this.materialLiver = new THREE.MeshBasicMaterial({ color: 0xEE0000, opacity: 0.2, transparent: true })
+    this.materialLiver = new THREE.MeshBasicMaterial({
+      color: 0xEE0000,
+      opacity: 0.1,
+      transparent: true
+    })
     this.materialLiverXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.4, transparent: true })
-    this.materialLiver2 = new THREE.MeshBasicMaterial({ color: 0xDD0000, opacity: 0.2, transparent: true })
+    this.materialLiver2 = new THREE.MeshBasicMaterial({
+      color: 0xDD0000,
+      opacity: 0.1,
+      transparent: true
+    })
     this.materialLiverXray2 = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.1, transparent: true })
     this.materialSecondTarget = new THREE.MeshBasicMaterial({ color: 0x0000EE, opacity: 0.2, transparent: true })
     this.materialSecondTargetXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.6, transparent: true })
     this.materialMarker = new THREE.MeshBasicMaterial({ color: 0xFFFF00, transparent: false })
     this.materialMarkerXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: false })
-
     this.materialTissue = new THREE.MeshPhysicalMaterial({
-      color: 0x0000AA,
+      color: 0xFFFFFF,
       metalness: 0,
       roughness: 0,
-      //alphaMap: texture,
       alphaTest: 0.5,
-      //envMap: hdrCubeRenderTarget.texture,
-      //envMapIntensity: params.envMapIntensity,
       depthWrite: false,
-      transmission: 0.8, // use material.transmission for glass materials
-      opacity: 1, // set material.opacity to 1 when material.transmission is non-zero
+      transmission: 0.8,
+      opacity: 1,
       transparent: true
     })
     this.materialTissueXray = new THREE.MeshPhysicalMaterial({
@@ -130,7 +134,7 @@ export class LiverEngine3dService implements OnDestroy {
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.3,
+      transmission: 0.4,
       opacity: 1,
       transparent: true
     })

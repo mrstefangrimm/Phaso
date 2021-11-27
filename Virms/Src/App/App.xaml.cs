@@ -33,11 +33,11 @@ namespace Virms.App {
       var no3PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.Plugin.dll", pluginPath));
 
       ObservableCollection<IPluginPhantom> availablePhantoms = new ObservableCollection<IPluginPhantom>() {
-        zeroPluginBuilder.BuildPluginPhantom(_mophApp),
         gris5aPluginBulder.BuildPluginPhantom(_mophApp),
         no2PluginBulder.BuildPluginPhantom(_mophApp),
-        no3PluginBulder.BuildPluginPhantom(_mophApp)
-        };
+        no3PluginBulder.BuildPluginPhantom(_mophApp),
+        zeroPluginBuilder.BuildPluginPhantom(_mophApp),
+      };
 
       // 20210929 - Adding styles works when in App.xaml commented out (must be first entries due to docs.
       //var rd1 = new Uri("pack://application:,,,/Virms.Common;component/UI/Views/ComboboxStylesAndTemplates.xaml", UriKind.RelativeOrAbsolute);

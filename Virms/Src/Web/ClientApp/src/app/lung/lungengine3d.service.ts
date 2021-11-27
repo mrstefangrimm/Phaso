@@ -104,15 +104,14 @@ export class LungEngine3dService implements OnDestroy {
     this.materialSkeletonXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.6, transparent: true })
     this.materialTarget = new THREE.MeshBasicMaterial({ color: 0xFF0000, opacity: 0.2, transparent: true })
     this.materialTargetXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.4, transparent: true })
-
     this.materialTissue = new THREE.MeshPhysicalMaterial({
       color: 0xFFFFFF,
       metalness: 0,
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.6, // use material.transmission for glass materials
-      opacity: 1, // set material.opacity to 1 when material.transmission is non-zero
+      transmission: 0.7,
+      opacity: 1,
       transparent: true
     })
     this.materialTissueXray = new THREE.MeshPhysicalMaterial({
@@ -121,7 +120,7 @@ export class LungEngine3dService implements OnDestroy {
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.5,
+      transmission: 0.4,
       opacity: 1,
       transparent: true
     })
@@ -131,7 +130,7 @@ export class LungEngine3dService implements OnDestroy {
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.7,
+      transmission: 0.6,
       opacity: 1,
       transparent: true
     })
@@ -141,7 +140,7 @@ export class LungEngine3dService implements OnDestroy {
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.8,
+      transmission: 0.9,
       opacity: 1,
       transparent: true
     })

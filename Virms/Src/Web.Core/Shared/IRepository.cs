@@ -14,7 +14,6 @@ namespace Virms.Web.Core {
     void Add(T entity);
     void Remove(T entity);
     void Update(T entity);
-    void Save(T entity);
   }
 
 }

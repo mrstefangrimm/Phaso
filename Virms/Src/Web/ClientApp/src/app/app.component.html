@@ -2,29 +2,8 @@
      Licensed under the GPL. See LICENSE file in the project root for full license information.
 -->
 
-<mat-sidenav-container>
-  <mat-sidenav *ngIf="!sideNavOpen" opened mode="side">
-    <button mat-button (click)="sideNavOpen = true">></button>
-  </mat-sidenav>
-  <mat-sidenav *ngIf="sideNavOpen" opened mode="over">
-    <div align="right">
-      <button mat-button (click)="sideNavOpen = false"><</button>
-    </div>
-    <div>Phantoms:</div>
-    <div>
-      <button mat-button (click)="onMarkerPhantomClicked()">Marker Phantom</button>
-    </div>
-    <div>
-      <button mat-button (click)="onLiverPhantomClicked()">Liver Phantom</button>
-    </div>
-    <div>
-      <button mat-button (click)="onLungPhantomClicked()">Lung Phantom</button>
-    </div>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <app-marker *ngIf="markerPhantomActive"></app-marker>
-    <app-liver *ngIf="liverPhantomActive"></app-liver>
-    <app-lung *ngIf="lungPhantomActive"></app-lung>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
+<body>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</body>

@@ -2,7 +2,8 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,55 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  constructor() { }
-  ngOnInit() { }
+
+  sideNavOpen: boolean
+  markerPhantomActive: boolean = true
+  liverPhantomActive: boolean
+  lungPhantomActive: boolean
+
+  constructor(
+    //private readonly router: Router,
+    private readonly route: ActivatedRoute) {
+    console.info(HomeComponent.name, "c'tor")
+  }
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      console.info(HomeComponent.name, "Parameter", params.motionSystem)
+      if (params.motionSystem == 'markerphantom') {
+        this.onMarkerPhantomClicked()
+      }
+      else if (params.motionSystem == 'liverphantom') {
+        this.onLiverPhantomClicked()
+      }
+      else if (params.motionSystem == 'lungphantom') {
+        this.onLungPhantomClicked()
+      }
+    }, error => console.error(error))
+  }
+
+  onMarkerPhantomClicked() {
+    console.info(HomeComponent.name, "onMarkerPhantomClicked")
+    this.markerPhantomActive = true
+    this.liverPhantomActive = false
+    this.lungPhantomActive = false
+    this.sideNavOpen = false
+  }
+
+  onLiverPhantomClicked() {
+    console.info(HomeComponent.name, "onLiverPhantomClicked")
+    this.markerPhantomActive = false
+    this.liverPhantomActive = true
+    this.lungPhantomActive = false
+    this.sideNavOpen = false
+  }
+
+  onLungPhantomClicked() {
+    console.info(HomeComponent.name, "onLungPhantomClicked")
+    this.markerPhantomActive = false
+    this.liverPhantomActive = false
+    this.lungPhantomActive = true
+    this.sideNavOpen = false
+  }
+
 }

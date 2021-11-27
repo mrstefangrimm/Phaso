@@ -10,17 +10,17 @@ namespace Virms.Web.Core {
   using System.Linq.Expressions;
   using Virms.Web.ResourceAccess;
 
-  public class MotionSystemEntityInMemoryRepository : IRepository<MotionSystem>, IIdCreator {
+  public class MotionSystemInMemoryRepository : IRepository<MotionSystem>, IIdCreator {
 
     private IList<MotionSystem> _entities;
-    private static int _counter;
+    private static long _counter;
 
-    public MotionSystemEntityInMemoryRepository() {
+    public MotionSystemInMemoryRepository(bool isDevelopment) {
       _entities = new List<MotionSystem>(3);
 
       string pluginPath = Environment.CurrentDirectory;
 
-      if (IsDevelopment) {
+      if (isDevelopment) {
 #if DEBUG
         pluginPath = Environment.CurrentDirectory + @"\bin\Debug\net5.0";
 #else
@@ -42,11 +42,6 @@ namespace Virms.Web.Core {
       _entities.Add(new MotionSystemBuilder().Create(no3PluginBulder, this, no3Connection));
     }
 
-    public static bool IsDevelopment { get; set; }
-
-    public void Add(MotionSystem entity) {
-      throw new NotImplementedException();
-    }
 
     public IEnumerable<MotionSystem> GetAll() {
       return _entities;
@@ -56,23 +51,18 @@ namespace Virms.Web.Core {
       return _entities.Where(filter.Compile());
     }
 
+    public void Add(MotionSystem entity) {
+      throw new NotImplementedException();
+    }
+
     public void Remove(MotionSystem entity) {
       throw new NotImplementedException();
     }
 
-    public void Save(MotionSystem entity) {
-      throw new NotImplementedException();
-    }
-
     public void Update(MotionSystem entity) {
-      throw new NotImplementedException();
     }
 
-    public int CreateId() { return ++_counter; }
+    public long CreateId() { return ++_counter; }
 
-  }
-
-  public interface IIdCreator {
-    int CreateId();
   }
 }
