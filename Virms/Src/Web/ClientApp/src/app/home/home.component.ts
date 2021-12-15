@@ -13,9 +13,10 @@ import { ActivatedRoute, Router } from '@angular/router'
 export class HomeComponent implements OnInit {
 
   sideNavOpen: boolean
-  markerPhantomActive: boolean = true
+  markerPhantomActive: boolean
   liverPhantomActive: boolean
   lungPhantomActive: boolean
+  lnrActuatorActive: boolean = true
 
   constructor(
     //private readonly router: Router,
@@ -35,6 +36,9 @@ export class HomeComponent implements OnInit {
       else if (params.motionSystem == 'lungphantom') {
         this.onLungPhantomClicked()
       }
+      else if (params.motionSystem == 'lnractuatorrev4') {
+        this.onLnrActuatorClicked()
+      }
     }, error => console.error(error))
   }
 
@@ -43,6 +47,7 @@ export class HomeComponent implements OnInit {
     this.markerPhantomActive = true
     this.liverPhantomActive = false
     this.lungPhantomActive = false
+    this.lnrActuatorActive = false
     this.sideNavOpen = false
   }
 
@@ -51,6 +56,7 @@ export class HomeComponent implements OnInit {
     this.markerPhantomActive = false
     this.liverPhantomActive = true
     this.lungPhantomActive = false
+    this.lnrActuatorActive = false
     this.sideNavOpen = false
   }
 
@@ -59,7 +65,16 @@ export class HomeComponent implements OnInit {
     this.markerPhantomActive = false
     this.liverPhantomActive = false
     this.lungPhantomActive = true
+    this.lnrActuatorActive = false
     this.sideNavOpen = false
   }
 
+  onLnrActuatorClicked() {
+    console.info(HomeComponent.name, "onLnrActuatorClicked")
+    this.markerPhantomActive = false
+    this.liverPhantomActive = false
+    this.lungPhantomActive = false
+    this.lnrActuatorActive = true
+    this.sideNavOpen = false
+  }  
 }

@@ -192,7 +192,7 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
     this.context.showChest = checked
   }
 
-  onRightLungrChecked(checked: boolean) {
+  onRightLungChecked(checked: boolean) {
     this.engine3d.lungRight.setVisible(checked)
     this.context.showRightLung = checked
   }

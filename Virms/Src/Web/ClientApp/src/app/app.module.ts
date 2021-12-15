@@ -21,6 +21,7 @@ import { SharedModule } from './shared/shared.module';
 import { MarkerComponent } from './marker/marker.component';
 import { LiverComponent } from './liver/liver.component';
 import { LungComponent } from './lung/lung.component';
+import { LnrComponent } from './lnr/lnr.component';
 import { HomeComponent } from './home/home.component'
 
 @NgModule({
@@ -29,6 +30,7 @@ import { HomeComponent } from './home/home.component'
     MarkerComponent,
     LiverComponent,
     LungComponent,
+    LnrComponent,
     HomeComponent,
   ],
   imports: [
@@ -37,7 +39,7 @@ import { HomeComponent } from './home/home.component'
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       {
-        // markerphantom, liverphantom, lungphantom
+        // markerphantom, liverphantom, lungphantom, lnractuator
         path: ':motionSystem',
         component: HomeComponent,
         pathMatch: 'full'

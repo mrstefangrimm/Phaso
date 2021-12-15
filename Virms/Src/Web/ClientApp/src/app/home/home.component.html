@@ -20,10 +20,14 @@
     <div>
       <button mat-button (click)="onLungPhantomClicked()">Lung Phantom</button>
     </div>
+    <div>
+      <button mat-button (click)="onLnrActuatorClicked()">LnR Actuator</button>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-marker *ngIf="markerPhantomActive"></app-marker>
     <app-liver *ngIf="liverPhantomActive"></app-liver>
     <app-lung *ngIf="lungPhantomActive"></app-lung>
+    <app-lnr *ngIf="lnrActuatorActive"></app-lnr>
   </mat-sidenav-content>
 </mat-sidenav-container>

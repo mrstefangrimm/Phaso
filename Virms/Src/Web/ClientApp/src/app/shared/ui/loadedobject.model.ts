@@ -17,6 +17,7 @@ export interface LoadableObject {
   object: Object3D
 
   load(url: string): Observable<Object3D>
+  loadInvisible(url: string): Observable<Object3D>
 
   setLng(lng: number)
   translate(value: Vector3)
@@ -55,6 +56,14 @@ export class LoadedObject implements LoadableObject {
   }
 
   load(url: string): Observable<Object3D> {
+    return this._load(url, true)
+  }
+
+  loadInvisible(url: string): Observable<Object3D> {
+    return this._load(url, false)
+  }
+
+  private _load(url: string, show: boolean): Observable<Object3D> {
     return new Observable<Object3D>(subscriber => {
       const loader = new OBJLoader()
       console.info(LoadedObject.name, "load", url)
@@ -65,7 +74,9 @@ export class LoadedObject implements LoadableObject {
               child.material = this.material
             }
           })
+
           this.object = group
+          this.object.visible = show
           this.objectAsGroup = group
 
           const q = new Quaternion()
@@ -148,6 +159,11 @@ export class NotLoadedObject implements LoadableObject {
   object: Object3D = new Object3D
 
   load(url: string): Observable<Object3D> {
+    return new Observable<Object3D>(subscriber => {
+      subscriber.error()
+    })
+  }
+  loadInvisible(url: string): Observable<Object3D> {
     return new Observable<Object3D>(subscriber => {
       subscriber.error()
     })
