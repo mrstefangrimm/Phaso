@@ -22,11 +22,11 @@
     <ComboBox Width="100" 
               ItemsSource="{Binding Status.SerialPorts, Mode=OneWay}"    
               SelectedItem="{Binding Status.SelectedSerialPort, Mode=TwoWay}"
-              IsEnabled="{qc:Binding '$P==False', P={Binding Status.IsConnected}}" />
+              IsEnabled="{qc:Binding '!$P', P={Binding Status.IsConnected}}" />
 
     <Button Content="Refresh" 
             Command="{Binding Status.DoRefreshSerialPorts}"
-            IsEnabled="{qc:Binding '$P==False', P={Binding Status.IsConnected}}" />
+            IsEnabled="{qc:Binding '!$P', P={Binding Status.IsConnected}}" />
 
     <ToggleButton Content="{Binding}" 
                   Background="{Binding}"

@@ -53,7 +53,7 @@
               SelectedItem="{Binding Path=Settings.SelectedPhantom}"
               SelectionMode="Single"
               Background="#FF1F1F1F"
-              IsEnabled="{qc:Binding '$P==False', P={Binding Status.IsConnected}}"
+              IsEnabled="{qc:Binding '!$P', P={Binding Status.IsConnected}}"
               IsSynchronizedWithCurrentItem="True"
               Style="{StaticResource DarkListViewStyle}">
       <ListView.ItemTemplate>

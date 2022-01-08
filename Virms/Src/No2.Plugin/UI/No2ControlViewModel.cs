@@ -61,6 +61,7 @@ namespace Virms.No2.UI {
         if (_viewState != value) {
           _viewState = value;
           OnPropertyChanged();
+          OnPropertyChanged("IsShown");
         }
       }
     }
@@ -124,6 +125,7 @@ namespace Virms.No2.UI {
       }
     }
 
+    public bool IsShown => ControlViewState == No2ControlViewState.Automatic || ControlViewState == No2ControlViewState.Manual;
     public bool IsRunning {
       get {
         return _isRunning;

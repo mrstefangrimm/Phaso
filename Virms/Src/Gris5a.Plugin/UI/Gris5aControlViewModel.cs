@@ -26,8 +26,9 @@ namespace Virms.Gris5a.UI {
     private MotionPatternGenerator _patternGenerator;
 
     static Gris5aControlViewModel() {
-      QuickConverter.EquationTokenizer.AddNamespace(typeof(Gri5aControlViewState));
+      QuickConverter.EquationTokenizer.AddNamespace(typeof(object));
       QuickConverter.EquationTokenizer.AddNamespace(typeof(System.Windows.Visibility));
+      QuickConverter.EquationTokenizer.AddNamespace("Virms.Gris5a.UI", typeof(Gri5aControlViewState).Assembly);
     }
 
     public Gris5aControlViewModel(MophAppProxy mophApp) {
@@ -43,7 +44,7 @@ namespace Virms.Gris5a.UI {
       Programs.Add("Program 7");
       Programs.Add("Program 8");
       SelectedProgram = "Program 1";
-      
+
       LU.PropertyChanged += LU_PropertyChanged;
       LL.PropertyChanged += LL_PropertyChanged;
       RU.PropertyChanged += RU_PropertyChanged;
@@ -59,6 +60,7 @@ namespace Virms.Gris5a.UI {
         if (_viewState != value) {
           _viewState = value;
           OnPropertyChanged();
+          OnPropertyChanged("IsShown");
         }
       }
     }
@@ -120,6 +122,7 @@ namespace Virms.Gris5a.UI {
       }      
     }
 
+    public bool IsShown => ControlViewState == Gri5aControlViewState.Automatic || ControlViewState == Gri5aControlViewState.Manual;
     public bool IsRunning {
       get {
         return _isRunning;
