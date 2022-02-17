@@ -55,7 +55,15 @@ export class LnrComponent implements OnInit, OnDestroy {
 
     let alpha = event.value / 255 * Math.PI
 
-    let lng = Math.cos(alpha) * -26
+    const magicNum = -49.2
+    const magicAng = 0.307
+    const c2 = 52 * 52
+    let x = Math.sin(alpha) * 26
+    let a = x - 10.13
+    let b = Math.sqrt(c2 - a * a)
+    let lng = magicNum + b + Math.cos(alpha) * -26
+    let beta = magicAng - Math.asin(a / 52)
+
     this.engine3d.groupSliderBlue.setLng(lng)
     this.engine3d.groupSliderSilver.setLng(lng)
     this.engine3d.groupSliderGold.setLng(lng)
@@ -72,8 +80,7 @@ export class LnrComponent implements OnInit, OnDestroy {
     this.engine3d.groupServoArmAnthracite.rotate(-rtnServoArm, new Vector3(0, 0, 1))
     this.engine3d.groupServoArmBlue.rotate(-rtnServoArm, new Vector3(0, 0, 1))
 
-    let rtnExtensionArm = (Math.sin(alpha) - 1) * -0.51
-    this.engine3d.groupExtensionArm.rotate(rtnExtensionArm, new Vector3(0, 0, 1))
+    this.engine3d.groupExtensionArm.rotate(beta, new Vector3(0, 0, 1))
   }
 
   onRtnChanged(event) {
