@@ -10,13 +10,17 @@ import { TocService } from './toc.service'
 @Injectable({ providedIn: 'root' })
 export class MotionSystemsService {
 
-  apiBaseUrl: string
-
+  private apiBaseUrl: string
+  
   constructor(
     private readonly http: HttpClient,
     private readonly tocService: TocService) {
+    this.clientId = Math.floor(Math.random() * 1000).toString()
+    console.info(MotionSystemsService.name, "c'tor, client id:", this.clientId)
   }
- 
+
+  clientId: string
+
   getMotionSystems(): Observable<MotionSystemsResponse> {
     let doWork = () => {
       return this.http.get<MotionSystemsResponse>(this.apiBaseUrl)
@@ -96,6 +100,8 @@ export class MotionSystemsService {
   patch(motionSystemId: number, data: MotionSystemData): Observable<any> {
 
     let doWork = () => {
+      data.clientId = this.clientId
+      data.timestamp = new Date()
       let request = this.apiBaseUrl + '/' + motionSystemId
       console.debug(request, data)
       return this.http.patch(request, data)
@@ -164,6 +170,8 @@ export class MotionSystemData {
   name: string
   alias: string
   inUse: boolean
+  clientId: string
+  timestamp: Date
   synced: boolean
   servoCount: number
   axes: Axis[]

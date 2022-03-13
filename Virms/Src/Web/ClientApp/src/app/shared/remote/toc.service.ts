@@ -24,7 +24,7 @@ export class TocService {
 
       return new Observable<TocResponse>(subscriber => {
         const tocFakeResponse: TocResponse = { hrefs: {} }
-        tocFakeResponse.hrefs['motionsystems'] = 'https://live-phantoms.dynv6.net:8443/api/motionsystems'
+        tocFakeResponse.hrefs['motionsystems'] = 'https://webaepp.dynv6.net:50445/api/motionsystems'
         console.info(tocFakeResponse)
         subscriber.next(tocFakeResponse);
       })

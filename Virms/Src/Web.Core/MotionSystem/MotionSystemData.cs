@@ -2,6 +2,7 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
+using System;
 using System.Collections.Generic;
 using Virms.Common.Web;
 
@@ -10,6 +11,8 @@ namespace Virms.Web.Core {
     public string Name { get; set; }
     public string Alias { get; set; }
     public bool InUse { get; set; }
+    public string ClientId { get; set; }
+    public DateTime Timestamp { get; set; }
     public bool Synced { get; set; }
     public string ComPort { get; set; }
     public int ServoCount { get; set; }

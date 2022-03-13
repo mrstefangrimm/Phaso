@@ -1,8 +1,8 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
-import { ViewChild } from '@angular/core';
+import { HostListener, ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Vector3 } from 'three';
@@ -83,6 +83,13 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
     this.gatingEngine3d.ngOnDestroy()
     this.liveImgRefreshTimerSubscription.unsubscribe()
     this.statusRefreshTimerSubscription.unsubscribe()
+    this.onLetControl()
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:pagehide', ['$event'])
+  WindowBeforeUnoad($event: any) {
+    //$event.preventDefault()
     this.onLetControl()
   }
 

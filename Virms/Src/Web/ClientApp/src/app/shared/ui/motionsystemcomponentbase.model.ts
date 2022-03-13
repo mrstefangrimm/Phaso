@@ -19,8 +19,8 @@ export class MotionsystemComponentBaseModel  {
 
   liveImgRefreshTimer: Observable<number> = timer(1000, 500);
   liveImgRefreshTimerSubscription: Subscription
-  public linkPicture: string
-  public timeStamp: number
+  linkPicture: string
+  timeStamp: number
 
   constructor(
     public remoteService: MotionSystemsService,
@@ -54,22 +54,38 @@ export class MotionsystemComponentBaseModel  {
       this.inUseByOther = false
     }
     else if (this.state == UIState.NotInControl && this.synced == true) {
+      // System was available and is now in use => used by someone else
       if (data.inUse) {
         this.state = UIState.OtherInControl
         this.inUseByOther = true
       }
     }
     else if (this.state == UIState.OtherInControl && this.synced == true) {
+      // Is other use still in control? If not, system is available
       if (data.inUse == false) {
         this.state = UIState.NotInControl
         this.inUseByOther = false
+      }
+
+      let a = +new Date()
+      let b = +(new Date(data.timestamp))
+      if (a - b > 300000) {
+        console.warn("Kick out ", data.clientId, "which reserved the motion system at", data.timestamp)
+        let data2 = new MotionSystemData
+        data2.inUse = false
+        this.remoteService.patch(this.motionSystemId, data2).subscribe(
+          result => {
+            this.inUseByMe = false
+            this.inUseByOther = false
+            this.state = UIState.NotInControl
+          }, err => console.error(err))
       }
     }
   }
 
   initLiveImageTimer(name: string) {
     this.liveImgRefreshTimerSubscription = this.liveImgRefreshTimer.subscribe(seconds => {
-      this.setLivePicture("https://live-phantoms.dynv6.net:8444/images/" + name)
+      this.setLivePicture("https://webaepp.dynv6.net:50445/images/" + name)
     })
   }
 

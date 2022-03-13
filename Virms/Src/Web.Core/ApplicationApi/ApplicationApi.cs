@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 namespace Virms.Web.Core {
@@ -51,10 +51,13 @@ namespace Virms.Web.Core {
 
         if (!string.IsNullOrEmpty(data.ComPort) && motionSystem.Data.ComPort != data.ComPort) {
           motionSystem.Reconnect(data.ComPort);
+          // COM port cannot be set to null
+          motionSystem.Data.ComPort = data.ComPort;
         }
 
-        motionSystem.Data.ComPort = data.ComPort;
         motionSystem.Data.InUse = data.InUse;
+        motionSystem.Data.Timestamp = data.Timestamp;
+        motionSystem.Data.ClientId = data.ClientId;
 
         _motionSystemEntities.Update(motionSystem);
 
