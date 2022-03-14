@@ -1,26 +1,26 @@
-﻿// Copyright (c) 2019-2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2019-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Windows;
-using Virms.App.Plugin;
-using Virms.Common.Plugin;
-
 namespace Virms.App {
+  using System;
+  using System.Collections.ObjectModel;
+  using System.Threading;
+  using System.Windows;
+  using Virms.App.Plugin;
+  using Virms.Common;
+  using Virms.Common.Plugin;
 
   public partial class App : Application {  
 
     private CancellationTokenSource _cancellationTokenSource;
-    private Common.Com.MophAppProxy _mophApp;
+    private IMophAppProxy _mophApp;
 
     protected override void OnStartup(StartupEventArgs e) {
       base.OnStartup(e);
 
       _cancellationTokenSource = new CancellationTokenSource();
 
-      _mophApp = new Common.Com.MophAppProxy();
+      _mophApp = new MophAppProxyFactory<MophAppProxy>().Create();
 
       var pluginFactory = new PluginFactory();
 
@@ -80,7 +80,9 @@ namespace Virms.App {
     protected override void OnExit(ExitEventArgs e) {
       base.OnExit(e);
       _cancellationTokenSource.Cancel();
-      _mophApp.Dispose();
+      if (_mophApp is IDisposable) {
+        ((IDisposable)_mophApp).Dispose();
+      }
     }
   }
 }

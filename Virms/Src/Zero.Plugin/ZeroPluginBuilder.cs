@@ -1,18 +1,15 @@
-﻿
-
-using System;
-using System.Windows;
-using System.Windows.Markup;
-using Virms.Common.Com;
-using Virms.Common.Plugin;
-using Virms.Zero.UI;
-using Virms.Zero.UI.Views;
-
-namespace Virms.Zero {
+﻿namespace Virms.Zero {
+  using System;
+  using System.Windows;
+  using System.Windows.Markup;
+  using Virms.Common;
+  using Virms.Common.Plugin;
+  using Virms.Zero.UI;
+  using Virms.Zero.UI.Views;
 
   public class ZeroPluginBuilder : IPluginBuilder {
 
-    public IPluginPhantom BuildPluginPhantom(MophAppProxy mophApp) {
+    public IPluginPhantom BuildPluginPhantom(IMophAppProxy mophApp) {
       return new PluginPhantom("Zero Phantom", new ZeroPhantomViewModel(), new ZeroControlViewModel(mophApp));
     }
 

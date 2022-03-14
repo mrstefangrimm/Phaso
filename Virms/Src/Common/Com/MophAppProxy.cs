@@ -63,7 +63,7 @@ namespace Virms.Common {
 
   }
 
-  internal class MophAppProxy : IMophAppProxy, IDisposable {
+  public class MophAppProxy : IMophAppProxy, IDisposable {
 
     private const int _portBaudRate = 9600; // 9600, 38400, 115200;
 

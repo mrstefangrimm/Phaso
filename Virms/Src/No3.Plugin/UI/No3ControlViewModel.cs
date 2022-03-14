@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2020-2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2020-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
-using Virms.Common.Com;
+using Virms.Common;
 using Virms.Common.UI;
 
 namespace Virms.No3.UI {
@@ -30,8 +30,8 @@ namespace Virms.No3.UI {
       QuickConverter.EquationTokenizer.AddNamespace(typeof(System.Windows.Visibility));
     }
 
-    public No3ControlViewModel(MophAppProxy mophApp) {
-      _mophApp = mophApp;
+    public No3ControlViewModel(IMophAppProxy mophApp) {
+      _mophApp = mophApp as MophAppProxy;
       ControlViewState = No3ControlViewState.Manual;
 
       Programs.Add("Program 1");
