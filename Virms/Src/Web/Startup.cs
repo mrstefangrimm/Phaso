@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Virms.Common;
 using Virms.Web.Core;
 
 namespace Virms.Web {
@@ -28,8 +29,13 @@ namespace Virms.Web {
             
       services.AddSingleton<ApplicationApi>();
 
+      //services.AddSingleton<MophAppProxyFactory>();
       //services.AddSingleton<IRepository<MotionSystem>, MotionSystemInMemoryRepository>();
-      services.AddSingleton<IRepository<MotionSystem>>(x => new MotionSystemSqliteRepository(_env.IsDevelopment()));
+      services.AddSingleton<IRepository<MotionSystem>>(
+        x => new MotionSystemSqliteRepository(
+          new MophAppProxyFactory<FakeMophAppProxy>(),
+          _env.IsDevelopment())
+      );
       
 
       // In production, the Angular files will be served from this directory

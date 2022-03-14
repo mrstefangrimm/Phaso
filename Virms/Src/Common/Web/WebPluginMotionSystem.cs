@@ -1,21 +1,18 @@
-﻿// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System;
-using System.Collections.Generic;
-using Virms.Common.Com;
-using Virms.Common.Web;
-
-namespace Virms.Common.Plugin {
+namespace Virms.Common {
+  using System;
+  using System.Collections.Generic;
 
   public class  WebPluginMotionSystem : IWebPluginMotionSystem { 
 
-    private readonly MophAppProxy _proxy;
+    private readonly IMophAppProxy _proxy;
 
     public event EventHandler<LogOutputEventArgs> LogOutput;
 
     public WebPluginMotionSystem(string name, string alias,
-                                 MophAppProxy mophApp, 
+                                 IMophAppProxy mophApp, 
                                  IEnumerable<WebMotionPattern> motionPatterns,
                                  IEnumerable<WebMotionAxis> axes) {
       Name = name;

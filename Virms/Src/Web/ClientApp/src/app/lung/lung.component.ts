@@ -7,7 +7,7 @@ import { ElementRef } from '@angular/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Vector3 } from 'three';
 import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service';
-import { MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
+import { MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
 import { LungService } from './lung.service';
 import { LungEngine3dService } from './lungengine3d.service';
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model';
@@ -60,15 +60,7 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
         this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
           result => {
-            if (this.synced) {
-              this.upperLng = result.data.axes[ServoNumber.UPLNG].position
-              this.upperRtn = result.data.axes[ServoNumber.UPRTN].position
-              this.lowerLng = result.data.axes[ServoNumber.LOLNG].position
-              this.lowerRtn = result.data.axes[ServoNumber.LORTN].position
-              this.gatingLng = result.data.axes[ServoNumber.GALNG].position
-              this.gatingRtn = result.data.axes[ServoNumber.GARTN].position
-              this.updateStatus(result.data)
-            }
+            this.updateStatus(result.data)
             this.initSystemStatusPullTimer(this.motionSystemId)
             this.initLiveImageTimer("third-live.jpg")
           }, err => console.error(err))
@@ -91,6 +83,17 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
   WindowBeforeUnoad($event: any) {
     //$event.preventDefault()
     this.onLetControl()
+  }
+
+  override updateUI(data: MotionSystemData) {
+    if (data.synced) {
+      this.upperLng = data.axes[ServoNumber.UPLNG].position
+      this.upperRtn = data.axes[ServoNumber.UPRTN].position
+      this.lowerLng = data.axes[ServoNumber.LOLNG].position
+      this.lowerRtn = data.axes[ServoNumber.LORTN].position
+      this.gatingLng = data.axes[ServoNumber.GALNG].position
+      this.gatingRtn = data.axes[ServoNumber.GARTN].position
+    }
   }
 
   onUpperLngChanged(event) {

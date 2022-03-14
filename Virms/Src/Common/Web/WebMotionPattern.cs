@@ -1,14 +1,12 @@
-﻿// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using Virms.Common.Com;
-
-namespace Virms.Common.Web {
+namespace Virms.Common {
 
   public class WebMotionPattern {
-    private readonly MophAppProxy _proxy;
+    private readonly IMophAppProxy _proxy;
 
-    public WebMotionPattern(string name, int programId, MophAppProxy mophApp, IWebMotionGenerator motionGenerator) {
+    public WebMotionPattern(string name, int programId, IMophAppProxy mophApp, IWebMotionGenerator motionGenerator) {
       Name = name;
       ProgramId = programId;
       _proxy = mophApp;

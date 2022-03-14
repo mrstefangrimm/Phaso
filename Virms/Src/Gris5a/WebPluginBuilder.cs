@@ -3,14 +3,12 @@
 //
 using System;
 using System.Collections.Generic;
-using Virms.Common.Com;
-using Virms.Common.Plugin;
-using Virms.Common.Web;
+using Virms.Common;
 using Virms.Gris5a;
 
 public class WebPluginBuilder : IWebPluginBuilder {
 
-  public IWebPluginMotionSystem BuildPluginWebMotionSystem(MophAppProxy mophApp) {
+  public IWebPluginMotionSystem BuildPluginWebMotionSystem(IMophAppProxy mophApp) {
 
     var generator = new MarkerGeneratorHook();
     List<WebMotionPattern> patterns = new List<WebMotionPattern>();

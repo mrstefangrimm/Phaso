@@ -3,14 +3,12 @@
 //
 using System;
 using System.Collections.Generic;
-using Virms.Common.Com;
-using Virms.Common.Plugin;
-using Virms.Common.Web;
+using Virms.Common;
 using Virms.No2;
 
 public class WebPluginBuilder : IWebPluginBuilder {
 
-  public IWebPluginMotionSystem BuildPluginWebMotionSystem(MophAppProxy mophApp) {
+  public IWebPluginMotionSystem BuildPluginWebMotionSystem(IMophAppProxy mophApp) {
 
     var generator = new LiverGeneratorHook();
     List<WebMotionPattern> patterns = new List<WebMotionPattern>();

@@ -1,15 +1,14 @@
-﻿// Copyright (c) 2019-2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2019-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System;
-using System.Collections.Generic;
-using System.IO.Ports;
-using System.Linq;
-using System.Threading;
+namespace Virms.Common {
+  using System;
+  using System.Collections.Generic;
+  using System.IO.Ports;
+  using System.Linq;
+  using System.Threading;
 
-namespace Virms.Common.Com {
-
-  class SerialOutMessage {
+  internal class SerialOutMessage {
     private const byte CMD = 2;
     private Dictionary<byte, byte[]> _servoData = new Dictionary<byte, byte[]>();
 
@@ -64,7 +63,7 @@ namespace Virms.Common.Com {
 
   }
 
-  public class MophAppProxy : IDisposable {
+  internal class MophAppProxy : IMophAppProxy, IDisposable {
 
     private const int _portBaudRate = 9600; // 9600, 38400, 115200;
 

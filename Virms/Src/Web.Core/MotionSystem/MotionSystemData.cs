@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using Virms.Common.Web;
+using Virms.Common;
 
 namespace Virms.Web.Core {
   public class MotionSystemData {

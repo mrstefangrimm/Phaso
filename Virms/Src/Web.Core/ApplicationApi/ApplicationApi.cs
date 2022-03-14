@@ -2,11 +2,10 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 namespace Virms.Web.Core {
-
   using System;
   using System.Collections.Generic;
   using System.Linq;
-  using Virms.Common.Com;
+  using Virms.Common;
 
   public enum AppSericeResult {
     OK,

@@ -81,7 +81,10 @@ export class MotionsystemComponentBaseModel  {
           }, err => console.error(err))
       }
     }
+    this.updateUI(data)
   }
+
+  updateUI(data: MotionSystemData) {}
 
   initLiveImageTimer(name: string) {
     this.liveImgRefreshTimerSubscription = this.liveImgRefreshTimer.subscribe(seconds => {
@@ -89,19 +92,19 @@ export class MotionsystemComponentBaseModel  {
     })
   }
 
-  public getLivePicture() {
+  getLivePicture() {
     if (this.timeStamp) {
       return this.linkPicture + '?' + this.timeStamp;
     }
     return this.linkPicture;
   }
 
-  public setLivePicture(url: string) {
+  setLivePicture(url: string) {
     this.linkPicture = url;
     this.timeStamp = (new Date()).getTime();
   }
 
-  public onTakeControl() {
+  onTakeControl() {
     if (this.state == UIState.NotInControl) {
       let data = new MotionSystemData
       data.inUse = true
