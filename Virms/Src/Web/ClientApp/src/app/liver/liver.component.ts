@@ -4,7 +4,7 @@
 
 import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { Vector3 } from 'three';
-import { MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
+import { MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
 import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service';
 import { LiverEngine3dService } from './liverengine3d.service';
 import { LiverService } from './liver.service';
@@ -58,15 +58,6 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
         this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
           result => {
-            if (this.synced) {
-              this.leftLng = result.data.axes[ServoNumber.LLNG].position
-              this.leftRtn = result.data.axes[ServoNumber.LRTN].position
-              this.rightLng = result.data.axes[ServoNumber.RLNG].position
-              this.rightRtn = result.data.axes[ServoNumber.RRTN].position
-              this.gatingLng = result.data.axes[ServoNumber.GALNG].position
-              this.gatingRtn = result.data.axes[ServoNumber.GARTN].position
-              this.updateStatus(result.data)
-            }
             this.initSystemStatusPullTimer(this.motionSystemId)
             this.initLiveImageTimer("second-live.jpg")
           }, err => console.error(err))
@@ -92,6 +83,54 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   WindowBeforeUnoad($event) {
     //$event.preventDefault()
     this.onLetControl()
+  }
+
+  override updateUI(data: MotionSystemData) {
+    if (data.synced) {
+      {
+        this.leftLng = data.axes[ServoNumber.LLNG].position
+        let lng = (this.leftLng - 127) / 10
+        this.engine3d.cylinderLeft.setLng(lng)
+        this.engine3d.cylinderLeftCylinder.setLng(lng)
+        this.engine3d.cylinderLeftInsertCenter.setLng(lng)
+        this.engine3d.cylinderLeftInsertBack.setLng(lng)
+        this.engine3d.cylinderLeftMarkers.setLng(lng)
+
+        this.leftRtn = data.axes[ServoNumber.LRTN].position
+        let rtn = (this.leftRtn - 127) / 100
+        this.engine3d.cylinderLeft.setRtn(rtn)
+        this.engine3d.cylinderLeftCylinder.setRtn(rtn)
+        this.engine3d.cylinderLeftInsertCenter.setRtn(rtn)
+        this.engine3d.cylinderLeftInsertBack.setRtn(rtn)
+        this.engine3d.cylinderLeftMarkers.setRtn(rtn)
+      }
+      {
+        this.rightLng = data.axes[ServoNumber.RLNG].position
+        let lng = (this.rightLng - 127) / 10
+        this.engine3d.cylinderRight.setLng(lng)
+        this.engine3d.cylinderRightCylinderCenter.setLng(lng)
+        this.engine3d.cylinderRightCylinderBack.setLng(lng)
+        this.engine3d.cylinderRightInsertCenter.setLng(lng)
+        this.engine3d.cylinderRightInsertBack.setLng(lng)
+
+        this.rightRtn = data.axes[ServoNumber.RRTN].position
+        let rtn = (this.rightRtn - 127) / 100
+        this.engine3d.cylinderRight.setRtn(rtn)
+        this.engine3d.cylinderRightCylinderCenter.setRtn(rtn)
+        this.engine3d.cylinderRightCylinderBack.setRtn(rtn)
+        this.engine3d.cylinderRightInsertCenter.setRtn(rtn)
+        this.engine3d.cylinderRightInsertBack.setRtn(rtn)
+      }
+      {
+        this.gatingLng = data.axes[ServoNumber.GALNG].position
+        let lng = (this.gatingLng - 127) / 10
+        this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
+
+        this.gatingRtn = data.axes[ServoNumber.GARTN].position
+        let rtn = (this.gatingRtn - 127) / 100
+        this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
+      }
+    }
   }
 
   //patterns(): MotionPatternResponse[] { return this.remoteService.patterns }

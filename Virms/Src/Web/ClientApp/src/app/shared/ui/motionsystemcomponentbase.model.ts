@@ -14,7 +14,7 @@ export class MotionsystemComponentBaseModel  {
   synced: boolean = false
   state: UIState = UIState.DeviceNotReady
 
-  statusRefreshTimer: Observable<number> = timer(1000, 5000);
+  statusRefreshTimer: Observable<number> = timer(1000, 500);
   statusRefreshTimerSubscription: Subscription
 
   liveImgRefreshTimer: Observable<number> = timer(1000, 500);

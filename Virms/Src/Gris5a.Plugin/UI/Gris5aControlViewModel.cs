@@ -1,14 +1,13 @@
-﻿// Copyright (c) 2018-2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2018-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Input;
-using Virms.Common.Com;
-using Virms.Common.UI;
-
 namespace Virms.Gris5a.UI {
+  using System.Collections.Generic;
+  using System.Collections.ObjectModel;
+  using System.ComponentModel;
+  using System.Windows.Input;
+  using Virms.Common;
+  using Virms.Common.UI;
 
   public enum Gri5aControlViewState {
     Manual,
@@ -24,15 +23,15 @@ namespace Virms.Gris5a.UI {
     private bool _isRunning;
     private string _selectedProgram;
     private MotionPatternGenerator _patternGenerator;
-
+    //private MotionPatternEngine _patternEngine;
     static Gris5aControlViewModel() {
       QuickConverter.EquationTokenizer.AddNamespace(typeof(object));
       QuickConverter.EquationTokenizer.AddNamespace(typeof(System.Windows.Visibility));
       QuickConverter.EquationTokenizer.AddNamespace("Virms.Gris5a.UI", typeof(Gri5aControlViewState).Assembly);
     }
 
-    public Gris5aControlViewModel(MophAppProxy mophApp) {
-      _mophApp = mophApp;
+    public Gris5aControlViewModel(IMophAppProxy mophApp) {
+      _mophApp = mophApp as MophAppProxy;
       ControlViewState = Gri5aControlViewState.Manual;
 
       Programs.Add("Program 1");
@@ -52,6 +51,7 @@ namespace Virms.Gris5a.UI {
       GA.PropertyChanged += GA_PropertyChanged;
 
       _patternGenerator = new MotionPatternGenerator(OnCylinderPositionsChanged);
+      //_patternEngine = new MotionPatternEngine(OnCylinderPositionsChanged);
     }
 
     public Gri5aControlViewState ControlViewState {
@@ -134,10 +134,33 @@ namespace Virms.Gris5a.UI {
             string[] progrIds = SelectedProgram.Split(' ');
             if (progrIds != null && progrIds.Length == 2) {
               _patternGenerator.Start(int.Parse(progrIds[1]));
+              /*_patternEngine.Start("Prog", @"
+
+let NAME = 'My Program'
+const PRESETTIMERINCR = 40
+let preSetTimer = 0;
+
+var stepsz = 10
+var lulng = 0, lurtn = 0, rulng = 0, rurtn = 0, lllng = 0, llrtn = 0, rllng = 0, rlrtn = 0, galng = 0, gartn = 0
+
+function Prog() {
+  let target = 127 + 80 * Math.sin((preSetTimer - 3000) / 2500.0 * Math.PI);
+
+  lulng = target;
+
+  if (preSetTimer == 7960) {
+    preSetTimer = 3000;
+  }
+  else {
+    preSetTimer += PRESETTIMERINCR;
+  }
+}
+");*/
             }
           }
           else {
             _patternGenerator.Stop();
+            //_patternEngine.Stop();
           }
           OnPropertyChanged();
         }
@@ -214,27 +237,27 @@ namespace Virms.Gris5a.UI {
       }
     }
 
-    private void OnCylinderPositionsChanged(IEnumerable<CylinderPosition> positions) {
+    private void OnCylinderPositionsChanged(IEnumerable<Virms.Common.CylinderPosition> positions) {
       foreach (var pos in positions) {
         switch (pos.Cy) {
         default: break;
-        case Cylinder.LeftUpper:
+        case Common.Cylinder.LeftUpper:
           LU.LNGInt = pos.Lng;
           LU.RTNInt = pos.Rtn;
           break;
-        case Cylinder.LeftLower:
+        case Common.Cylinder.LeftLower:
           LL.LNGInt = pos.Lng;
           LL.RTNInt = pos.Rtn;
           break;
-        case Cylinder.RightUpper:
+        case Common.Cylinder.RightUpper:
           RU.LNGInt = pos.Lng;
           RU.RTNInt = pos.Rtn;
           break;
-        case Cylinder.RightLower:
+        case Common.Cylinder.RightLower:
           RL.LNGInt = pos.Lng;
           RL.RTNInt = pos.Rtn;
           break;
-        case Cylinder.Platform:
+        case Common.Cylinder.Platform:
           GA.LNGInt = pos.Lng;
           GA.RTNInt = pos.Rtn;
           break;

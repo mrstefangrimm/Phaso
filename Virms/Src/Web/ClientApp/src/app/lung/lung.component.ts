@@ -60,7 +60,6 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
         this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
           result => {
-            this.updateStatus(result.data)
             this.initSystemStatusPullTimer(this.motionSystemId)
             this.initLiveImageTimer("third-live.jpg")
           }, err => console.error(err))
@@ -87,12 +86,37 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
   override updateUI(data: MotionSystemData) {
     if (data.synced) {
-      this.upperLng = data.axes[ServoNumber.UPLNG].position
-      this.upperRtn = data.axes[ServoNumber.UPRTN].position
-      this.lowerLng = data.axes[ServoNumber.LOLNG].position
-      this.lowerRtn = data.axes[ServoNumber.LORTN].position
-      this.gatingLng = data.axes[ServoNumber.GALNG].position
-      this.gatingRtn = data.axes[ServoNumber.GARTN].position
+      {
+        this.upperLng = data.axes[ServoNumber.UPLNG].position
+        let lng = (this.upperLng - 127) / 10
+        this.engine3d.upperCylinder.setLng(lng)
+        this.engine3d.target.setLng(lng)
+
+        this.upperRtn = data.axes[ServoNumber.UPRTN].position
+        let rtn = (this.upperRtn - 127) / 100
+        this.engine3d.upperCylinder.setRtn(rtn)
+        this.engine3d.target.setRtn(rtn)
+      }
+      {
+        this.lowerLng = data.axes[ServoNumber.LOLNG].position
+        let lng = (this.lowerLng - 127) / 10
+        this.engine3d.lowerCylinder.setLng(lng)
+        this.engine3d.secondTarget.setLng(lng)
+
+        this.lowerRtn = data.axes[ServoNumber.LORTN].position
+        let rtn = (this.lowerRtn - 127) / 100
+        this.engine3d.lowerCylinder.setRtn(rtn)
+        this.engine3d.secondTarget.setRtn(rtn)
+      }
+      {
+        this.gatingLng = data.axes[ServoNumber.GALNG].position
+        let lng = (this.gatingLng - 127) / 10
+        this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
+
+        this.gatingRtn = data.axes[ServoNumber.GARTN].position
+        let rtn = (this.gatingRtn - 127) / 100
+        this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
+      }
     }
   }
 
