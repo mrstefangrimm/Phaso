@@ -5,7 +5,7 @@ namespace Virms.Web.Core {
   using System;
   using Virms.Common;
 
-  public class FakeMophAppProxy : IMophAppProxy {
+  public class FakeRandomMophAppProxy : IMophAppProxy {
 
     private Random _randomGenerator = new Random();
 
@@ -13,7 +13,7 @@ namespace Virms.Web.Core {
 
     public byte[] LatestMotorPosition {
       get {
-        var data = new byte[20];
+        var data = new byte[16];
         _randomGenerator.NextBytes(data);
         return data;
       }

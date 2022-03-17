@@ -33,7 +33,7 @@ namespace Virms.Web {
       //services.AddSingleton<IRepository<MotionSystem>, MotionSystemInMemoryRepository>();
       services.AddSingleton<IRepository<MotionSystem>>(
         x => new MotionSystemSqliteRepository(
-          new MophAppProxyFactory<FakeMophAppProxy>(),
+          new MophAppProxyFactory<MophAppProxy>(),
           _env.IsDevelopment())
       );
       

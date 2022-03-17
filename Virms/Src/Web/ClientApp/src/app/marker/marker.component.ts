@@ -86,7 +86,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   override updateUI(data: MotionSystemData) {
-    if (data.synced) {
+    if (this.synced && (this.inUseByMe || this.inUseByOther)) {
       {
         this.leftUpperLng = data.axes[ServoNumber.LULNG].position
         let lng = (this.leftUpperLng - 127) / 10

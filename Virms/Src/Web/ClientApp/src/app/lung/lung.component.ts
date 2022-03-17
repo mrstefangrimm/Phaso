@@ -85,7 +85,7 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
   }
 
   override updateUI(data: MotionSystemData) {
-    if (data.synced) {
+    if (this.synced && (this.inUseByMe || this.inUseByOther)) {
       {
         this.upperLng = data.axes[ServoNumber.UPLNG].position
         let lng = (this.upperLng - 127) / 10

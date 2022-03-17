@@ -86,7 +86,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   override updateUI(data: MotionSystemData) {
-    if (data.synced) {
+    if (this.synced && (this.inUseByMe || this.inUseByOther)) {
       {
         this.leftLng = data.axes[ServoNumber.LLNG].position
         let lng = (this.leftLng - 127) / 10
