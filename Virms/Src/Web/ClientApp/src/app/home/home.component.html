@@ -29,5 +29,30 @@
     <app-liver *ngIf="liverPhantomActive"></app-liver>
     <app-lung *ngIf="lungPhantomActive"></app-lung>
     <app-lnr *ngIf="lnrActuatorActive"></app-lnr>
+    <table *ngIf="showHome()"
+           width="100%">
+      <tbody>
+        <tr>
+          <td align="right">
+            <button mat-raised-button (click)="onMarkerPhantomClicked()"><img src="assets/MarkerPhantom.jpg" /></button>
+          </td>
+          <td>
+            <button mat-raised-button (click)="onLiverPhantomClicked()"><img src="assets/LiverPhantom.jpg" /></button>
+          </td>
+        </tr>
+        <tr>
+          <td align="right">
+            <button mat-raised-button (click)="onLungPhantomClicked()"><img src="assets/LungPhantom.jpg" /></button>
+          </td>
+          <td>
+            <button mat-raised-button (click)="onLnrActuatorClicked()"><img src="assets/LnrActuator.jpg" /></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </mat-sidenav-content>
 </mat-sidenav-container>
+<footer>
+  <mat-divider></mat-divider>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Stefan Grimm</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+</footer>
