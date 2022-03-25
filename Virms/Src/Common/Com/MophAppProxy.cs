@@ -6,7 +6,7 @@ namespace Virms.Common {
   using System.Collections.Generic;
   using System.IO.Ports;
   using System.Linq;
-  using System.Threading;
+  using System.Timers;
 
   internal class SerialOutMessage {
     private const byte CMD = 2;
@@ -82,17 +82,19 @@ namespace Virms.Common {
     public event EventHandler<LogOutputEventArgs> LogOutput;
 
     public MophAppProxy() {
-      TimerCallback timerDelegate =
-        new TimerCallback(delegate (object state) {
-          lock (_lockObject) {
-            var data = _sendBuffer.Data;
-            if (data.Length > 1 && _serialPort != null && _serialPort.IsOpen) {
-              SerialWrite(data, 0, data.Length);
-              _sendBuffer.Clear();
-            }
+      _timer = new Timer();
+      _timer.AutoReset = false;
+      _timer.Interval = 50;
+      _timer.Elapsed += (o, e) => {
+        lock (_lockObject) {
+          var data = _sendBuffer.Data;
+          if (data.Length > 1 && _serialPort != null && _serialPort.IsOpen) {
+            SerialWrite(data, 0, data.Length);
+            _sendBuffer.Clear();
           }
-        });
-      _timer = new Timer(timerDelegate, null, 50, 50);
+        }
+        _timer.Start();
+      };
     }
 
     public void Dispose() {
@@ -106,12 +108,14 @@ namespace Virms.Common {
     public bool Connect(string comPort) {
       bool connected = SerialConnect(comPort);
       if (connected) {
+        _timer.Start();
         SendSync();
       }
       return connected;
     }
 
     public void Disconnect() {
+      _timer.Stop();
       SerialDisconnect();
     }
     
