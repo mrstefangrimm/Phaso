@@ -3,7 +3,7 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Timers;
 
 namespace Virms.Gris5a {
 
@@ -25,24 +25,24 @@ namespace Virms.Gris5a {
     private int _currentProgramId;
 
     public MotionPatternGenerator(Action<IEnumerable<CylinderPosition>> handler) {
-      TimerCallback timerDelegate =
-      new TimerCallback(delegate (object state) {
-        _timer.Change(Timeout.Infinite, Timeout.Infinite);
+      _timer = new Timer();
+      _timer.AutoReset = false;
+      _timer.Interval = PRESETTIMERINCR;
+      _timer.Elapsed += (o, e) => {
         switch (_currentProgramId) {
           default: Stop(); break;
-          case 1:_prog1(handler); break;
-          case 2:_prog2(handler); break;
-          case 3:_prog3(handler); break;
-          case 4:_prog4(handler); break;
-          case 5:_prog5(handler); break;
-          case 6:_prog6(handler); break;
-          case 7:_prog7(handler); break;
-          case 8:_prog8(handler); break;
-        }
-        _timer.Change(PRESETTIMERINCR, PRESETTIMERINCR);
-      });
 
-      _timer = new Timer(timerDelegate);
+          case 1: _prog1(handler); break;
+          case 2: _prog2(handler); break;
+          case 3: _prog3(handler); break;
+          case 4: _prog4(handler); break;
+          case 5: _prog5(handler); break;
+          case 6: _prog6(handler); break;
+          case 7: _prog7(handler); break;
+          case 8: _prog8(handler); break;
+        }
+        _timer.Start();
+      };
     }
 
     public void Dispose() {
@@ -57,13 +57,13 @@ namespace Virms.Gris5a {
       _currentProgramId = programId;
       _preSetTimer = 0;
       if (_timer != null) {
-        _timer.Change(0, PRESETTIMERINCR);
+        _timer.Start();
       }
     }
 
     public void Stop() {
       if (_timer != null) {
-        _timer.Change(Timeout.Infinite, Timeout.Infinite);
+        _timer.Stop();
       }
     }
 

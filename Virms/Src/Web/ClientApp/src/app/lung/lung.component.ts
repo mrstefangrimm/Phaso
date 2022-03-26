@@ -1,16 +1,13 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
-import { ViewChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Vector3 } from 'three';
-import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service';
-import { MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
-import { LungService } from './lung.service';
-import { LungEngine3dService } from './lungengine3d.service';
-import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core'
+import { Vector3 } from 'three'
+import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service'
+import { MotionPatternResponse, MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service'
+import { LungService } from './lung.service'
+import { LungEngine3dService } from './lungengine3d.service'
+import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
 
 @Component({
   selector: 'app-lung',
@@ -53,27 +50,7 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
     this.gatingEngine3d.createScene(this.gatingRendererCanvas);
     this.gatingEngine3d.animate();
 
-    this.remoteService.getMotionSystemData(this.alias).subscribe(
-      result => {
-        console.info(result.id, result.data.alias, result.data.name)
-        this.motionSystemId = result.id
-
-        this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
-          result => {
-            if (this.synced) {
-              this.upperLng = result.data.axes[ServoNumber.UPLNG].position
-              this.upperRtn = result.data.axes[ServoNumber.UPRTN].position
-              this.lowerLng = result.data.axes[ServoNumber.LOLNG].position
-              this.lowerRtn = result.data.axes[ServoNumber.LORTN].position
-              this.gatingLng = result.data.axes[ServoNumber.GALNG].position
-              this.gatingRtn = result.data.axes[ServoNumber.GARTN].position
-              this.updateStatus(result.data)
-            }
-            this.initSystemStatusPullTimer(this.motionSystemId)
-            this.initLiveImageTimer("third-live.jpg")
-          }, err => console.error(err))
-      }, err => console.error(err))
-
+    this.onInit("third-live.jpg")
     this.setVisibilies()
   }
 
@@ -81,14 +58,84 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
     console.info(LungComponent.name, "ngOnDestroy")
     this.engine3d.ngOnDestroy()
     this.gatingEngine3d.ngOnDestroy()
-    this.liveImgRefreshTimerSubscription.unsubscribe()
-    this.statusRefreshTimerSubscription.unsubscribe()
-    this.onLetControl()
+    this.onDestroy()
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:pagehide', ['$event'])
+  WindowBeforeUnoad($event: any) {
+    //$event.preventDefault()
+    this.onDestroy()
+  }
+
+  override updateUI(data: MotionSystemData) {
+    if (this.synced && (this.inUseByMe || this.inUseByOther)) {
+      {
+        this.upperLng = data.axes[ServoNumber.UPLNG].position
+        let lng = (this.upperLng - 127) / 10
+        this.engine3d.upperCylinder.setLng(lng)
+        this.engine3d.target.setLng(lng)
+
+        this.upperRtn = data.axes[ServoNumber.UPRTN].position
+        let rtn = (this.upperRtn - 127) / 100
+        this.engine3d.upperCylinder.setRtn(rtn)
+        this.engine3d.target.setRtn(rtn)
+      }
+      {
+        this.lowerLng = data.axes[ServoNumber.LOLNG].position
+        let lng = (this.lowerLng - 127) / 10
+        this.engine3d.lowerCylinder.setLng(lng)
+        this.engine3d.secondTarget.setLng(lng)
+
+        this.lowerRtn = data.axes[ServoNumber.LORTN].position
+        let rtn = (this.lowerRtn - 127) / 100
+        this.engine3d.lowerCylinder.setRtn(rtn)
+        this.engine3d.secondTarget.setRtn(rtn)
+      }
+      {
+        this.gatingLng = data.axes[ServoNumber.GALNG].position
+        let lng = (this.gatingLng - 127) / 10
+        this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
+
+        this.gatingRtn = data.axes[ServoNumber.GARTN].position
+        let rtn = (this.gatingRtn - 127) / 100
+        this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
+      }
+    }
+  }
+
+  onStartPattern() {
+    console.info(LungComponent.name, "onStartPattern", "selected pattern:", this.selectedPatternId)
+    if (this.inUseByMe) {
+      let mp: MotionPatternResponse = this.patterns.find(x => x.id = this.selectedPatternId)
+      if (mp != undefined) {
+        mp.data.executing = true
+        this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
+          result => {
+            console.debug(result)
+            this.executingPatternId = this.selectedPatternId
+          }, err => console.error(err))
+      }
+    }
+  }
+
+  onStopPattern() {
+    console.info(LungComponent.name, "onStopPattern", "executing pattern:", this.executingPatternId)
+    let temp = this.executingPatternId
+    this.executingPatternId = undefined
+    if (this.inUseByMe) {
+      let mp: MotionPatternResponse = this.patterns.find(x => x.id = temp)
+      if (mp != undefined) {
+        mp.data.executing = false
+        this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
+          result => {
+            console.debug(result)
+          }, err => console.error(err))
+      }
+    }
   }
 
   onUpperLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.engine3d.upperCylinder.setLng(lng)
     this.engine3d.target.setLng(lng)
@@ -103,8 +150,6 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
   }
 
   onUpperRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.engine3d.upperCylinder.setRtn(rtn)
     this.engine3d.target.setRtn(rtn)
@@ -119,8 +164,6 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
   }
 
   onLowerLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.engine3d.lowerCylinder.setLng(lng)
     this.engine3d.secondTarget.setLng(lng)
@@ -135,8 +178,6 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
   }
 
   onLowerRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.engine3d.lowerCylinder.setRtn(rtn)
     this.engine3d.secondTarget.setRtn(rtn)
@@ -151,8 +192,6 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
   }
 
   onGatingLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
 
@@ -166,8 +205,6 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
   }
 
   onGatingRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
 

@@ -1,18 +1,16 @@
-﻿// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
-using System.Linq;
-using Virms.Common.Plugin;
-using Virms.Web.ResourceAccess;
-
 namespace Virms.Web.Core {
+  using System.Linq;
+  using Virms.Common;
+  using Virms.Web.ResourceAccess;
 
   public class MotionSystemBuilder {
 
-    public MotionSystem Create(IWebPluginBuilder pluginBuilder, IIdCreator idCreator, DeviceComPortService deviceService) {
+    public MotionSystem Create(IMotionSystemBuilder pluginBuilder, IIdCreator idCreator, DeviceComPortService deviceService) {
 
-      var pluginMotionSystem = pluginBuilder.BuildPluginWebMotionSystem(deviceService.Proxy);
+      var pluginMotionSystem = pluginBuilder.BuildMotionSystem(deviceService.Proxy);
 
       var entityMotionSystem = new MotionSystem(pluginMotionSystem, deviceService);
       entityMotionSystem.Id = idCreator.CreateId();

@@ -1,20 +1,19 @@
-﻿// Copyright (c) 2020-2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2020-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System;
-using System.Windows;
-using System.Windows.Markup;
-using Virms.Common.Com;
-using Virms.Common.Plugin;
-using Virms.No2.UI;
-using Virms.No2.UI.Views;
-
 namespace Virms.No2 {
+  using System;
+  using System.Windows;
+  using System.Windows.Markup;
+  using Virms.Common;
+  using Virms.Common.Plugin;
+  using Virms.No2.UI;
+  using Virms.No2.UI.Views;
 
   public class PluginBuilder : IPluginBuilder {
 
-    public IPluginPhantom BuildPluginPhantom(MophAppProxy mophApp) {
-      return new PluginPhantom("Liver Phantom", new No2PhantomViewModel(), new No2ControlViewModel(mophApp));
+    public IPluginPhantom BuildPluginPhantom(IMotionSystem motionSystem) {
+      return new PluginPhantom("Liver Phantom", new No2PhantomViewModel(), new No2ControlViewModel(motionSystem));
     }
 
     public DataTemplate BuildPhantomTemplate() {

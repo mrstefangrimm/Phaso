@@ -24,10 +24,6 @@
       <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
       <button mat-button (click)="context.sideNavOpen = false">></button>
     </div>
-    <div>
-      <button mat-button (click)="context.automaticControlsEnabled = false">Manual</button>
-      <!--<button mat-button (click)="context.automaticControlsEnabled = true">Automatic</button>-->
-    </div>
     <table>
       <tr *ngIf="!context.automaticControlsEnabled">
         <td>

@@ -23,7 +23,7 @@
     <Label Foreground="White" FontWeight="Bold" Content="Program"/>
     <ComboBox ItemsSource="{Binding Path=Programs, Mode=OneWay}"    
               SelectedItem="{Binding Path=SelectedProgram, Mode=TwoWay}"
-              IsEnabled="{qc:Binding '$P==False', P={Binding IsRunning}}" />
+              IsEnabled="{qc:Binding '!$P', P={Binding IsRunning}}" />
 
     <TextBlock Margin="0,10" 
                Width="{Binding ActualWidth, ElementName=No2Controls}"

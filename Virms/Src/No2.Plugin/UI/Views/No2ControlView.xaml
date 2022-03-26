@@ -14,18 +14,18 @@
 
   <StackPanel>
 
-    <StackPanel Visibility="{qc:Binding '$P==No2ControlViewState.Manual_Minimized || $P==No2ControlViewState.Automatic_Minimized ? Visibility.Visible : Visibility.Collapsed', P={Binding ControlViewState}}">
+    <StackPanel Visibility="{qc:Binding '!$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsShown}}">
       <Button Width="30"
               HorizontalAlignment="Left"
               Background="Transparent"
               BorderBrush="Transparent"
               Command="{Binding DoSetMinimized}">
-        <Image Source="pack://application:,,,/Common;component/UI/Icons/ArrowLeft.png" />
+        <Image Source="pack://application:,,,/Virms.Common.Plugin;component/UI/Icons/ArrowLeft.png" />
       </Button>
 
     </StackPanel>
 
-    <StackPanel Visibility="{qc:Binding '$P==No2ControlViewState.Manual || $P==No2ControlViewState.Automatic ? Visibility.Visible : Visibility.Collapsed', P={Binding ControlViewState}}">
+    <StackPanel Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsShown}}">
 
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30">
         <Button Width="30"
@@ -33,7 +33,7 @@
                 Background="Transparent"
                 BorderBrush="Transparent"
                Command="{Binding DoSetMinimized}">
-          <Image Source="pack://application:,,,/Common;component/UI/Icons/ArrowRight.png" />
+          <Image Source="pack://application:,,,/Virms.Common.Plugin;component/UI/Icons/ArrowRight.png" />
         </Button>
 
         <ToggleButton Width="80" 

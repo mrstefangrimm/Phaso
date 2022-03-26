@@ -1,9 +1,6 @@
-﻿
-using System.ComponentModel;
-using Virms.Common.Com;
-using Virms.Common.UI;
-
-namespace Virms.Zero.UI {
+﻿namespace Virms.Zero.UI {
+  using System.ComponentModel;
+  using Virms.Common.UI;
 
   public enum ZeroControlViewState {
     Manual,
@@ -14,15 +11,12 @@ namespace Virms.Zero.UI {
 
   public class ZeroControlViewModel : ZeroViewModel, IPlugInControlViewModel {
 
-    private MophAppProxy _mophApp;
-
     static ZeroControlViewModel() {
       QuickConverter.EquationTokenizer.AddNamespace(typeof(ZeroControlViewState));
       QuickConverter.EquationTokenizer.AddNamespace(typeof(System.Windows.Visibility));
     }
 
-    public ZeroControlViewModel(MophAppProxy mophApp) {
-      _mophApp = mophApp;
+    public ZeroControlViewModel() {
     }
 
     INotifyPropertyChanged IPlugInControlViewModel.GA => GA;

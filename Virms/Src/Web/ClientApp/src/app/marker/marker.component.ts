@@ -1,16 +1,13 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
-import { ViewChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Vector3 } from 'three';
-import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service';
-import { MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
-import { MarkerService } from './marker.service';
-import { MarkerEngine3dService } from './markerengine3d.service';
-import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core'
+import { Vector3 } from 'three'
+import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service'
+import { MotionPatternResponse, MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service'
+import { MarkerService } from './marker.service'
+import { MarkerEngine3dService } from './markerengine3d.service'
+import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
 
 @Component({
   selector: 'app-marker',
@@ -24,6 +21,9 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
   @ViewChild('gatingRendererCanvas', { static: true })
   gatingRendererCanvas: ElementRef<HTMLCanvasElement>
+
+  selectedPatternId: number
+  executingPatternId: number
 
   leftUpperLng: number = 127
   leftUpperRtn: number = 127
@@ -54,46 +54,114 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
     this.gatingEngine3d.createScene(this.gatingRendererCanvas);
     this.gatingEngine3d.animate();
 
-    this.remoteService.getMotionSystemData(this.alias).subscribe(
-      result => {
-        console.info(result.id, result.data.alias, result.data.name)
-        this.motionSystemId = result.id
-
-        this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
-          result => {
-            if (this.synced) {
-              this.leftUpperLng = result.data.axes[ServoNumber.LULNG].position
-              this.leftUpperRtn = result.data.axes[ServoNumber.LURTN].position
-              this.leftLowerLng = result.data.axes[ServoNumber.LLLNG].position
-              this.leftLowerRtn = result.data.axes[ServoNumber.LLRTN].position
-              this.rightUpperLng = result.data.axes[ServoNumber.RULNG].position
-              this.rightUpperRtn = result.data.axes[ServoNumber.RURTN].position
-              this.rightLowerLng = result.data.axes[ServoNumber.RLLNG].position
-              this.rightLowerRtn = result.data.axes[ServoNumber.RLRTN].position
-              this.gatingLng = result.data.axes[ServoNumber.GALNG].position
-              this.gatingRtn = result.data.axes[ServoNumber.GARTN].position
-              this.updateStatus(result.data)
-            }
-            this.initSystemStatusPullTimer(this.motionSystemId)
-            this.initLiveImageTimer("first-live.jpg")
-          }, err => console.error(err))
-      }, err => console.error(err))
-
-    this.setVisibilies()   
+    this.onInit("first-live.jpg")
+    this.setVisibilies()
   }
 
   ngOnDestroy() {
     console.info(MarkerComponent.name, "ngOnDestroy")
     this.engine3d.ngOnDestroy()
     this.gatingEngine3d.ngOnDestroy()
-    this.liveImgRefreshTimerSubscription.unsubscribe()
-    this.statusRefreshTimerSubscription.unsubscribe()
-    this.onLetControl()
+    this.onDestroy()
   }
-  
-  onLeftUpperLngChanged(event) {
-    console.debug(event.value)
 
+  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:pagehide', ['$event'])
+  WindowBeforeUnoad($event: any) {
+    //$event.preventDefault()
+    this.onDestroy()
+  }
+
+  override updateUI(data: MotionSystemData) {
+    if (this.synced && (this.inUseByMe || this.inUseByOther)) {
+      {
+        this.leftUpperLng = data.axes[ServoNumber.LULNG].position
+        let lng = (this.leftUpperLng - 127) / 10
+        this.engine3d.cylinderLeftUpper.setLng(lng)
+        this.engine3d.markerLeftUpper.setLng(lng)
+
+        this.leftUpperRtn = data.axes[ServoNumber.LURTN].position
+        let rtn = (this.leftUpperRtn - 127) / 100
+        this.engine3d.cylinderLeftUpper.setRtn(rtn)
+        this.engine3d.markerLeftUpper.setRtn(rtn)
+      }
+      {
+        this.leftLowerLng = data.axes[ServoNumber.LLLNG].position
+        let lng = (this.leftLowerLng - 127) / 10
+        this.engine3d.cylinderLeftLower.setLng(lng)
+        this.engine3d.markerLeftLower.setLng(lng)
+
+        this.leftLowerRtn = data.axes[ServoNumber.LLRTN].position
+        let rtn = (this.leftLowerRtn - 127) / 100
+        this.engine3d.cylinderLeftLower.setRtn(rtn)
+        this.engine3d.markerLeftLower.setRtn(rtn)
+      }
+      {
+        this.rightUpperLng = data.axes[ServoNumber.RULNG].position
+        let lng = (this.rightUpperLng - 127) / 10
+        this.engine3d.cylinderRightUpper.setLng(lng)
+        this.engine3d.markerRightUpper.setLng(lng)
+
+        this.rightUpperRtn = data.axes[ServoNumber.RURTN].position
+        let rtn = (this.rightUpperRtn - 127) / 100
+        this.engine3d.cylinderRightUpper.setRtn(rtn)
+        this.engine3d.markerRightUpper.setRtn(rtn)
+      }
+      {
+        this.rightLowerLng = data.axes[ServoNumber.RLLNG].position
+        let lng = (this.rightLowerLng - 127) / 10
+        this.engine3d.cylinderRightLower.setLng(lng)
+        this.engine3d.markerRightLower.setLng(lng)
+
+        this.rightLowerRtn = data.axes[ServoNumber.RLRTN].position
+        let rtn = (this.rightLowerRtn - 127) / 100
+        this.engine3d.cylinderRightLower.setRtn(rtn)
+        this.engine3d.markerRightLower.setRtn(rtn)
+      }
+      {
+        this.gatingLng = data.axes[ServoNumber.GALNG].position
+        let lng = (this.gatingLng - 127) / 10
+        this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
+
+        this.gatingRtn = data.axes[ServoNumber.GARTN].position
+        let rtn = (this.gatingRtn - 127) / 100
+        this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
+      }
+    }
+  }
+
+  onStartPattern() {
+    console.info(MarkerComponent.name, "onStartPattern", "selected pattern:", this.selectedPatternId)
+    if (this.inUseByMe) {
+      let mp: MotionPatternResponse = this.patterns.find(x => x.id = this.selectedPatternId)
+      if (mp != undefined) {
+        mp.data.executing = true
+        this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
+          result => {
+            console.debug(result)
+            this.executingPatternId = this.selectedPatternId
+          }, err => console.error(err))
+      }
+    }
+  }
+
+  onStopPattern() {
+    console.info(MarkerComponent.name, "onStopPattern", "executing pattern:", this.executingPatternId)
+    let temp = this.executingPatternId
+    this.executingPatternId = undefined
+    if (this.inUseByMe) {
+      let mp: MotionPatternResponse = this.patterns.find(x => x.id = temp)
+      if (mp != undefined) {
+        mp.data.executing = false
+        this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
+          result => {
+            console.debug(result)
+          }, err => console.error(err))
+      }
+    }
+  }
+
+  onLeftUpperLngChanged(event) {
     let lng = (event.value - 127) / 10
     this.engine3d.cylinderLeftUpper.setLng(lng)
     this.engine3d.markerLeftUpper.setLng(lng)
@@ -108,8 +176,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onLeftUpperRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.engine3d.cylinderLeftUpper.setRtn(rtn)
     this.engine3d.markerLeftUpper.setRtn(rtn)
@@ -124,8 +190,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onLeftLowerLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.engine3d.cylinderLeftLower.setLng(lng)
     this.engine3d.markerLeftLower.setLng(lng)
@@ -140,8 +204,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onLeftLowerRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.engine3d.cylinderLeftLower.setRtn(rtn)
     this.engine3d.markerLeftLower.setRtn(rtn)
@@ -156,8 +218,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onRightUpperLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.engine3d.cylinderRightUpper.setLng(lng)
     this.engine3d.markerRightUpper.setLng(lng)
@@ -172,8 +232,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onRightUpperRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.engine3d.cylinderRightUpper.setRtn(rtn)
     this.engine3d.markerRightUpper.setRtn(rtn)
@@ -188,8 +246,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onRightLowerLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.engine3d.cylinderRightLower.setLng(lng)
     this.engine3d.markerRightLower.setLng(lng)
@@ -204,8 +260,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onRightLowerRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.engine3d.cylinderRightLower.setRtn(rtn)
     this.engine3d.markerRightLower.setRtn(rtn)
@@ -220,8 +274,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onGatingLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
 
@@ -235,8 +287,6 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onGatingRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Virms.Common;
 using Virms.Web.Core;
 
 namespace Virms.Web {
@@ -28,8 +29,13 @@ namespace Virms.Web {
             
       services.AddSingleton<ApplicationApi>();
 
-      //services.AddSingleton<IRepository<MotionSystem>, MotionSystemInMemoryRepository>();
-      services.AddSingleton<IRepository<MotionSystem>>(x => new MotionSystemSqliteRepository(_env.IsDevelopment()));
+      services.AddSingleton(
+        (System.Func<System.IServiceProvider, IRepository<Core.MotionSystem>>)(
+        // MotionSystemSqliteRepository, MotionSystemInMemoryRepository
+        x => new MotionSystemSqliteRepository(
+          // MophAppProxy, FakeEchoMophAppProxy, FakeRandomMophAppProxy
+          new MophAppProxyFactory<MophAppProxy>(),
+          _env.IsDevelopment())));
       
 
       // In production, the Angular files will be served from this directory
@@ -48,20 +54,12 @@ namespace Virms.Web {
         app.UseExceptionHandler("/Error");
       }
 
+      // for live images:
       app.UseStaticFiles();
-      if (!env.IsDevelopment()) {
-        app.UseSpaStaticFiles();
-      }
 
       // CORS, e.g. UseCors before UseRouting: https://stackoverflow.com/questions/44379560/how-to-enable-cors-in-asp-net-core-webapi
       app.UseCors(
-       options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()
-       );
-      app.UseCors(
-       options => options.WithOrigins("https://mrstefangrimm.github.io")
-       );
-      app.UseCors(
-       options => options.WithOrigins("https://live-phantoms.dynv6.net")
+        options => options.WithOrigins("https://virms.github.io").AllowAnyMethod().AllowAnyHeader()
        );
 
       app.UseRouting();

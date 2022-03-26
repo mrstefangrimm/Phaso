@@ -1,20 +1,19 @@
-﻿// Copyright (c) 2020-2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2020-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System;
-using System.Windows;
-using System.Windows.Markup;
-using Virms.Common.Com;
-using Virms.Common.Plugin;
-using Virms.Gris5a.UI;
-using Virms.Gris5a.UI.Views;
-
 namespace Virms.Gris5a {
+  using System;
+  using System.Windows;
+  using System.Windows.Markup;
+  using Virms.Common;
+  using Virms.Common.Plugin;
+  using Virms.Gris5a.UI;
+  using Virms.Gris5a.UI.Views;
 
   public class PluginBuilder : IPluginBuilder {
 
-    public IPluginPhantom BuildPluginPhantom(MophAppProxy mophApp) {
-      return new PluginPhantom("Marker Phantom", new Gris5aPhantomViewModel(), new Gris5aControlViewModel(mophApp));
+    public IPluginPhantom BuildPluginPhantom(IMotionSystem motionSystem) {
+      return new PluginPhantom(motionSystem.Name, new Gris5aPhantomViewModel(), new Gris5aControlViewModel(motionSystem));
     }
 
     public DataTemplate BuildPhantomTemplate() {

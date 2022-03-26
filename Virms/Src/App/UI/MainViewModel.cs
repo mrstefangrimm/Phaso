@@ -1,14 +1,14 @@
-﻿// Copyright (c) 2018-2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2018-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Virms.Common.Plugin;
-using Virms.Common.UI;
-
 namespace Virms.App.UI {
+  using System;
+  using System.Collections.ObjectModel;
+  using System.ComponentModel;
+  using System.Runtime.CompilerServices;
+  using Virms.Common;
+  using Virms.Common.Plugin;
+  using Virms.Common.UI;
 
   public enum MainViewState {
     Normal,
@@ -29,14 +29,14 @@ namespace Virms.App.UI {
 
   public class MainViewModel : INotifyPropertyChanged {
 
-    private Common.Com.MophAppProxy _mophApp;
+    private IMophAppProxy _mophApp;
     private IPlugInPhantomViewModel _phantom;
     private IPlugInControlViewModel _control;
     private MainViewState _mainViewState;
     private ComStatusViewState _comStatusViewState;
     private AppSettingsViewState _appSettingsViewState;
       
-    public MainViewModel(Common.Com.MophAppProxy mophApp, ObservableCollection<IPluginPhantom> availablePhantoms) {
+    public MainViewModel(IMophAppProxy mophApp, ObservableCollection<IPluginPhantom> availablePhantoms) {
       _mophApp = mophApp;
       Status = new ComStatusViewModel(this, _mophApp);
       Settings = new AppSettingsViewModel(this, availablePhantoms);

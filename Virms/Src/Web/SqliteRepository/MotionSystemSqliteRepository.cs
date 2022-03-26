@@ -1,13 +1,13 @@
-﻿// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 namespace Virms.Web.Core {
-
   using Microsoft.EntityFrameworkCore;
   using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Linq.Expressions;
+  using Virms.Common;
   using Virms.Web.ResourceAccess;
 
   public class MotionSystemSqliteRepository : IRepository<MotionSystem>, IIdCreator {
@@ -15,7 +15,9 @@ namespace Virms.Web.Core {
     private IList<MotionSystem> _entities;
     private static long _counter;
 
-    public MotionSystemSqliteRepository(bool isDevelopment) {
+    public MotionSystemSqliteRepository(
+      IMophAppProxyFactory proxyFactory,
+      bool isDevelopment) {
       _entities = new List<MotionSystem>(3);
 
       string pluginPath = Environment.CurrentDirectory;
@@ -28,25 +30,24 @@ namespace Virms.Web.Core {
 #endif
       }
 
-      var pluginFactory = new WebPluginFactory();
-      var gris5aPluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.Gris5a.dll", pluginPath));
-      var no2PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No2.dll", pluginPath));
-      var no3PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.dll", pluginPath));
+      var pluginFactory = new MotionSystemFactory();
+      var gris5aPluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.Gris5a.dll", pluginPath));
+      var no2PluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No2.dll", pluginPath));
+      var no3PluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.dll", pluginPath));
 
-      var gris5aConnection = new DeviceComPortService();
-      var no2Connection = new DeviceComPortService();
-      var no3Connection = new DeviceComPortService();
+      var gris5aConnection = new DeviceComPortService(proxyFactory.Create());
+      var no2Connection = new DeviceComPortService(proxyFactory.Create());
+      var no3Connection = new DeviceComPortService(proxyFactory.Create());
 
-      var marker = new MotionSystemBuilder().Create(gris5aPluginBulder, this, gris5aConnection);
-      var liver = new MotionSystemBuilder().Create(no2PluginBulder, this, no2Connection);
-      var lung = new MotionSystemBuilder().Create(no3PluginBulder, this, no3Connection);
+      var marker = new MotionSystemBuilder().Create(gris5aPluginBuilder, this, gris5aConnection);
+      var liver = new MotionSystemBuilder().Create(no2PluginBuilder, this, no2Connection);
+      var lung = new MotionSystemBuilder().Create(no3PluginBuilder, this, no3Connection);
 
       //var dbOptBuilder = new DbContextOptionsBuilder();
       //var dbOptBuilderSqlite = dbOptBuilder.UseSqlite("DefaultConnection");
       //var dbOptions = dbOptBuilderSqlite.Options;
       var dbContextOptions = new DbContextOptions<MotionSystemConfigContext>();
       using var dbContext = new MotionSystemConfigContext(dbContextOptions);
-
       var comPorts = dbContext.Config.ToList();
       var markerConfig = comPorts.Where(x => string.Compare(x.Alias, marker.Data.Alias, true) == 0).FirstOrDefault();
       if (markerConfig != null) {

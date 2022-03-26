@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -16,30 +16,48 @@ export class HomeComponent implements OnInit {
   markerPhantomActive: boolean
   liverPhantomActive: boolean
   lungPhantomActive: boolean
-  lnrActuatorActive: boolean = true
+  lnrActuatorActive: boolean
 
   constructor(
-    //private readonly router: Router,
+    private readonly router: Router,
     private readonly route: ActivatedRoute) {
     console.info(HomeComponent.name, "c'tor")
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      console.info(HomeComponent.name, "Parameter", params.motionSystem)
-      if (params.motionSystem == 'markerphantom') {
-        this.onMarkerPhantomClicked()
-      }
-      else if (params.motionSystem == 'liverphantom') {
-        this.onLiverPhantomClicked()
-      }
-      else if (params.motionSystem == 'lungphantom') {
-        this.onLungPhantomClicked()
-      }
-      else if (params.motionSystem == 'lnractuatorrev4') {
-        this.onLnrActuatorClicked()
-      }
-    }, error => console.error(error))
+    console.info(HomeComponent.name, "ngOnInit")
+    // Paths do not work on github.io
+    //if (this.router.url == '/a') {
+    //  this.onMarkerPhantomClicked()
+    //}
+    //else if (this.router.url == '/b') {
+    //  this.onLiverPhantomClicked()
+    //}
+    //else if (this.router.url == '/c') {
+    //  this.onLungPhantomClicked()
+    //}
+    //else if (this.router.url == '/d') {
+    //  this.onLnrActuatorClicked()
+    //}
+    //this.route.params.subscribe(params => {
+    //  console.info(HomeComponent.name, "Parameter", params.motionSystem)
+    //  if (params.motionSystem == 'markerphantom') {
+    //    this.onMarkerPhantomClicked()
+    //  }
+    //  else if (params.motionSystem == 'liverphantom') {
+    //    this.onLiverPhantomClicked()
+    //  }
+    //  else if (params.motionSystem == 'lungphantom') {
+    //    this.onLungPhantomClicked()
+    //  }
+    //  else if (params.motionSystem == 'lnractuatorrev4') {
+    //    this.onLnrActuatorClicked()
+    //  }
+    //}, error => console.error(error))
+  }
+
+  showHome(): boolean {
+    return !this.markerPhantomActive && !this.liverPhantomActive && !this.lungPhantomActive && !this.lnrActuatorActive
   }
 
   onMarkerPhantomClicked() {

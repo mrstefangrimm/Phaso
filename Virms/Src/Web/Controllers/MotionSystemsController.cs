@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -31,8 +31,7 @@ namespace Virms.Web {
     [HttpGet]
     [ProducesResponseType(typeof(MotionSystemsResponse), StatusCodes.Status200OK)]
     public IActionResult GetMotionSystems() {
-
-      _logger.LogInformation("GetMotionSystems");
+      _logger.LogDebug("GetMotionSystems");
 
       var result = _applicationApi.GetPhantoms();
       var phantoms = result.ToList();
@@ -53,6 +52,7 @@ namespace Virms.Web {
     [ProducesResponseType(typeof(MotionSystemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(StatusCodeResult), StatusCodes.Status404NotFound)]
     public IActionResult GetMotionSystem(long id) {
+      _logger.LogDebug($"GetMotionSystem id:{id}");
 
       var entity = _applicationApi.GetMotionSystem(id);
       if (entity == null) { return NotFound(); }
@@ -78,6 +78,7 @@ namespace Virms.Web {
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status304NotModified)]
     public IActionResult PatchMotionSystem(long id, MotionSystemData data) {
+      _logger.LogDebug($"PatchMotionSystem id:{id}");
 
       var result = _applicationApi.PatchMotionSystem(id, data);
 
@@ -94,6 +95,7 @@ namespace Virms.Web {
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status304NotModified)]
     public IActionResult PatchMotionSystem(long id, ServoPositionData[] data) {
+      _logger.LogDebug($"PatchMotionSystem id:{id}");
 
       var result = _applicationApi.PatchMotionSystem(id, data);
 
@@ -110,6 +112,8 @@ namespace Virms.Web {
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status304NotModified)]
     public IActionResult PatchMotionPattern(long id, long pid, MotionPatternData data) {
+      _logger.LogDebug($"PatchMotionSystem id:{id}, pid:{pid}");
+
       var result = _applicationApi.PatchMotionSystemMotionPattern(id, pid, data);
 
       switch (result) {

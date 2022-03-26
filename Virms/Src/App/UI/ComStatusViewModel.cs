@@ -1,24 +1,23 @@
-﻿// Copyright (c) 2018-2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2018-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO.Ports;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using Virms.Common.Com;
-using Virms.Common.UI;
-
 namespace Virms.App.UI {
+  using System;
+  using System.Collections.ObjectModel;
+  using System.ComponentModel;
+  using System.IO.Ports;
+  using System.Runtime.CompilerServices;
+  using System.Windows.Input;
+  using Virms.Common;
+  using Virms.Common.UI;
 
   public class ComStatusViewModel : INotifyPropertyChanged {
 
     private MainViewModel _parent;
-    private MophAppProxy _mophApp;
+    private IMophAppProxy _mophApp;
     private bool _isConnected;
 
-    public ComStatusViewModel(MainViewModel parent, MophAppProxy mophApp) {
+    public ComStatusViewModel(MainViewModel parent, IMophAppProxy mophApp) {
       _parent = parent;
       _mophApp = mophApp;
       _mophApp.LogOutput += OnLogOutput;
