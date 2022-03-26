@@ -29,13 +29,13 @@ namespace Virms.Web {
             
       services.AddSingleton<ApplicationApi>();
 
-      //services.AddSingleton<MophAppProxyFactory>();
-      //services.AddSingleton<IRepository<MotionSystem>, MotionSystemInMemoryRepository>();
-      services.AddSingleton<IRepository<MotionSystem>>(
+      services.AddSingleton(
+        (System.Func<System.IServiceProvider, IRepository<Core.MotionSystem>>)(
+        // MotionSystemSqliteRepository, MotionSystemInMemoryRepository
         x => new MotionSystemSqliteRepository(
+          // MophAppProxy, FakeEchoMophAppProxy, FakeRandomMophAppProxy
           new MophAppProxyFactory<MophAppProxy>(),
-          _env.IsDevelopment())
-      );
+          _env.IsDevelopment())));
       
 
       // In production, the Angular files will be served from this directory
@@ -61,12 +61,6 @@ namespace Virms.Web {
       app.UseCors(
         options => options.WithOrigins("https://virms.github.io").AllowAnyMethod().AllowAnyHeader()
        );
-      //app.UseCors(
-      // options => options.WithOrigins("https://mrstefangrimm.github.io")
-      // );
-      //app.UseCors(
-      // options => options.WithOrigins("https://live-phantoms.dynv6.net")
-      // );
 
       app.UseRouting();
 

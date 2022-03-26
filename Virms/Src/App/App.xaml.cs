@@ -20,6 +20,7 @@ namespace Virms.App {
 
       _cancellationTokenSource = new CancellationTokenSource();
 
+      // MophAppProxy, FakeEchoMophAppProxy
       _mophApp = new MophAppProxyFactory<MophAppProxy>().Create();
 
       string pluginPath = Environment.CurrentDirectory;

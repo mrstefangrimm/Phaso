@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021 Stefan Grimm. All rights reserved.
+<!-- Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
      Licensed under the GPL. See LICENSE file in the project root for full license information.
 -->
 
@@ -24,9 +24,9 @@
       <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
       <button mat-button (click)="context.sideNavOpen = false">></button>
     </div>
-    <div>
+    <div *ngIf="synced">
       <button mat-button (click)="context.automaticControlsEnabled = false">Manual</button>
-      <!--<button mat-button (click)="context.automaticControlsEnabled = true">Automatic</button>-->
+      <button mat-button (click)="context.automaticControlsEnabled = true">Automatic</button>
     </div>
     <table>
       <tr *ngIf="!context.automaticControlsEnabled">
@@ -97,9 +97,9 @@
           <mat-form-field appearance="fill">
             <mat-label>Motion pattern</mat-label>
             <mat-select [(value)]="selectedPatternId">
-              <!--<mat-option *ngFor="let pattern of patterns()" [value]="pattern.id">
-            {{pattern.data.name}}
-          </mat-option>-->
+              <mat-option *ngFor="let pattern of patterns" [value]="pattern.id">
+                {{pattern.data.name}}
+              </mat-option>
             </mat-select>
           </mat-form-field>
           <div>
@@ -204,7 +204,7 @@
           </mat-checkbox>
         </div>
       </mat-sidenav>
-    
+
       <mat-sidenav-content>
 
         <div class="stack-horz">
@@ -229,7 +229,9 @@
               Device not synced. Set the COM port.
             </span>
             <br />
-            <img [src]="getLivePicture()" alt="live image">
+            <span *ngIf="hasLiveImage">
+              <img [src]="getLivePicture()" alt="live image">
+            </span>
           </div>
           <div class="content">
             <canvas #gatingRendererCanvas
@@ -246,3 +248,5 @@
 
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<!--<iframe width="640" height="480" frameborder="0" src="http://webaepp.dynv6.net:8081/" allowfullscreen></iframe>-->

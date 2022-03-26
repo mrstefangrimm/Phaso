@@ -1,17 +1,18 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
 import { Observable, Subscription, timer } from "rxjs"
-import { MotionSystemData, MotionSystemsService } from "../remote/motionsystems.service"
+import { MotionPatternResponse, MotionSystemData, MotionSystemsService } from "../remote/motionsystems.service"
 
 export class MotionsystemComponentBaseModel  {
 
   motionSystemId: number;
+  patterns: MotionPatternResponse[]
 
-  inUseByMe: boolean = false
-  inUseByOther: boolean = false
-  synced: boolean = false
+  inUseByMe: boolean
+  inUseByOther: boolean
+  synced: boolean
+  hasLiveImage: boolean
   state: UIState = UIState.DeviceNotReady
 
   statusRefreshTimer: Observable<number> = timer(1000, 500);
@@ -26,17 +27,27 @@ export class MotionsystemComponentBaseModel  {
     public remoteService: MotionSystemsService,
     public alias: string) { }
 
-  initSystemStatusPullTimer(id: number) {
-    this.statusRefreshTimerSubscription = this.statusRefreshTimer.subscribe(seconds => {
+  onInit(liveimagename: string) {
+    this.remoteService.getMotionSystemData(this.alias).subscribe(
+      result => {
+        console.info(result.id, result.data.alias, result.data.name)
+        this.motionSystemId = result.id
 
-      this.remoteService.getMotionSystem(id).subscribe(
-        result => {
-          console.debug(result)
-          this.updateStatus(result.data)
-        }, err => console.error(err))
-    })
+        this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
+          result => {
+            this.initSystemStatusPullTimer(this.motionSystemId)
+            this.initLiveImageTimer(liveimagename)
+            this.patterns = result.motionPatterns.data
+          }, err => console.error(err))
+      }, err => console.error(err))
   }
-  
+
+  onDestroy() {
+    if (this.liveImgRefreshTimerSubscription) this.liveImgRefreshTimerSubscription.unsubscribe()
+    if (this.statusRefreshTimerSubscription) this.statusRefreshTimerSubscription.unsubscribe()
+    this.onLetControl()
+  }
+
   updateStatus(data: MotionSystemData) {
     this.synced = data.synced
     if (this.state == UIState.DeviceNotReady && this.synced == true) {
@@ -86,12 +97,6 @@ export class MotionsystemComponentBaseModel  {
 
   updateUI(data: MotionSystemData) {}
 
-  initLiveImageTimer(name: string) {
-    this.liveImgRefreshTimerSubscription = this.liveImgRefreshTimer.subscribe(seconds => {
-      this.setLivePicture("https://webaepp.dynv6.net:50445/images/" + name)
-    })
-  }
-
   getLivePicture() {
     if (this.timeStamp) {
       return this.linkPicture + '?' + this.timeStamp;
@@ -116,7 +121,7 @@ export class MotionsystemComponentBaseModel  {
     }
   }
 
-  onLetControl() {
+  private onLetControl() {
     if (this.state == UIState.InControl) {
       let data = new MotionSystemData
       data.inUse = false
@@ -128,12 +133,40 @@ export class MotionsystemComponentBaseModel  {
     }
   }
 
+  private initSystemStatusPullTimer(id: number) {
+    this.statusRefreshTimerSubscription = this.statusRefreshTimer.subscribe(seconds => {
+
+      this.remoteService.getMotionSystem(id).subscribe(
+        result => {
+          console.debug(result)
+          this.updateStatus(result.data)
+        }, err => console.error(err))
+    })
+  }
+
+  private initLiveImageTimer(name: string) {
+    if (this.remoteService.liveImageUrl) {
+      this.hasLiveImage = true
+      this.liveImgRefreshTimerSubscription = this.liveImgRefreshTimer.subscribe(seconds => {
+        this.setLivePicture(this.remoteService.liveImageUrl + '/' + name)
+      })
+    }
+    else {
+      console.info("live-image url is not set.")
+    }
+  }
+
 }
 
 const enum UIState {
-  InControl,
+  // There is no connection to the web service
+  // or the device has not synced with the service
+  // or the service does not allow to use the device. 
+  DeviceNotReady,
+  // Device is ready to use.
   NotInControl,
+  // Device is under this client's control.
+  InControl,
+  // Some other client is in control of the device.
   OtherInControl,
-  DeviceNotReady
 }
-

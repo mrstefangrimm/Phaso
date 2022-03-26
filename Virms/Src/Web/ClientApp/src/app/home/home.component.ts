@@ -25,20 +25,20 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.info(HomeComponent.name, "ngOnInit", this.router.url)
-    if (this.router.url == '/a') {
-      this.onMarkerPhantomClicked()
-    }
-    else if (this.router.url == '/b') {
-      this.onLiverPhantomClicked()
-    }
-    else if (this.router.url == '/c') {
-      this.onLungPhantomClicked()
-    }
-    else if (this.router.url == '/d') {
-      this.onLnrActuatorClicked()
-    }
-
+    console.info(HomeComponent.name, "ngOnInit")
+    // Paths do not work on github.io
+    //if (this.router.url == '/a') {
+    //  this.onMarkerPhantomClicked()
+    //}
+    //else if (this.router.url == '/b') {
+    //  this.onLiverPhantomClicked()
+    //}
+    //else if (this.router.url == '/c') {
+    //  this.onLungPhantomClicked()
+    //}
+    //else if (this.router.url == '/d') {
+    //  this.onLnrActuatorClicked()
+    //}
     //this.route.params.subscribe(params => {
     //  console.info(HomeComponent.name, "Parameter", params.motionSystem)
     //  if (params.motionSystem == 'markerphantom') {

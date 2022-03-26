@@ -1,14 +1,13 @@
 // Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
-import { Vector3 } from 'three';
-import { MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service';
-import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service';
-import { LiverEngine3dService } from './liverengine3d.service';
-import { LiverService } from './liver.service';
-import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core'
+import { Vector3 } from 'three'
+import { MotionPatternData, MotionPatternResponse, MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service'
+import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service'
+import { LiverEngine3dService } from './liverengine3d.service'
+import { LiverService } from './liver.service'
+import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
 
 @Component({
   selector: 'app-liver',
@@ -51,18 +50,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     this.gatingEngine3d.createScene(this.gatingRendererCanvas);
     this.gatingEngine3d.animate();
 
-    this.remoteService.getMotionSystemData(this.alias).subscribe(
-      result => {
-        console.info(result.id, result.data.alias, result.data.name)
-        this.motionSystemId = result.id
-
-        this.remoteService.getMotionSystem(this.motionSystemId).subscribe(
-          result => {
-            this.initSystemStatusPullTimer(this.motionSystemId)
-            this.initLiveImageTimer("second-live.jpg")
-          }, err => console.error(err))
-      }, err => console.error(err))
-
+    this.onInit("second-live.jpg")
     this.setVisibilies()
   }
 
@@ -73,16 +61,14 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     }
     this.engine3d.ngOnDestroy()
     this.gatingEngine3d.ngOnDestroy()
-    this.liveImgRefreshTimerSubscription.unsubscribe()
-    this.statusRefreshTimerSubscription.unsubscribe()
-    this.onLetControl()
+    this.onDestroy()
   }
 
   @HostListener('window:beforeunload', ['$event'])
   @HostListener('window:pagehide', ['$event'])
   WindowBeforeUnoad($event) {
     //$event.preventDefault()
-    this.onLetControl()
+    this.onDestroy()
   }
 
   override updateUI(data: MotionSystemData) {
@@ -133,33 +119,38 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     }
   }
 
-  //patterns(): MotionPatternResponse[] { return this.remoteService.patterns }
-
   onStartPattern() {
-  //  console.info(this.selectedPatternId)
-  //  this.phantomService.startPattern(this.selectedPatternId)
-  //  this.executingPatternId = this.selectedPatternId
+    console.info(LiverComponent.name, "onStartPattern", "selected pattern:", this.selectedPatternId)
+    if (this.inUseByMe) {
+      let mp: MotionPatternResponse = this.patterns.find(x => x.id = this.selectedPatternId)
+      if (mp != undefined) {
+        mp.data.executing = true
+        this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
+          result => {
+            console.debug(result)
+            this.executingPatternId = this.selectedPatternId
+          }, err => console.error(err))
+      }
+    }
   }
 
   onStopPattern() {
-//    this.phantomService.stopPattern(this.selectedPatternId).subscribe(
-//      result => {
-//        this.executingPatternId = undefined
-
-//        this.leftLng = result.axes[ServoNumber.LLNG].position
-//        this.leftRtn = result.axes[ServoNumber.LRTN].position
-//        this.rightLng = result.axes[ServoNumber.RLNG].position
-//        this.rightRtn = result.axes[ServoNumber.RRTN].position
-//        this.gatingLng = result.axes[ServoNumber.GALNG].position
-//        this.gatingRtn = result.axes[ServoNumber.GARTN].position
-
-//        console.info(this.gatingLng)
-//      }, err => console.error(err))
-}
+    console.info(LiverComponent.name, "onStopPattern", "executing pattern:", this.executingPatternId)
+    let temp = this.executingPatternId
+    this.executingPatternId = undefined
+    if (this.inUseByMe) {
+      let mp: MotionPatternResponse = this.patterns.find(x => x.id = temp)
+      if (mp != undefined) {
+        mp.data.executing = false
+        this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
+          result => {
+            console.debug(result)
+          }, err => console.error(err))
+      }
+    }
+  }
 
   onLeftLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.engine3d.cylinderLeft.setLng(lng)
     this.engine3d.cylinderLeftCylinder.setLng(lng)
@@ -177,8 +168,6 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onLeftRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value -127) / 100
     this.engine3d.cylinderLeft.setRtn(rtn)
     this.engine3d.cylinderLeftCylinder.setRtn(rtn)
@@ -196,8 +185,6 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onRightLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.engine3d.cylinderRight.setLng(lng)
     this.engine3d.cylinderRightCylinderCenter.setLng(lng)
@@ -215,8 +202,6 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onRightRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value - 127) / 100
     this.engine3d.cylinderRight.setRtn(rtn)
     this.engine3d.cylinderRightCylinderCenter.setRtn(rtn)
@@ -234,8 +219,6 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onGatingLngChanged(event) {
-    console.debug(event.value)
-
     let lng = (event.value - 127) / 10
     this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng*2, 0))
 
@@ -249,8 +232,6 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onGatingRtnChanged(event) {
-    console.debug(event.value)
-
     let rtn = (event.value -127) / 100
     this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
 

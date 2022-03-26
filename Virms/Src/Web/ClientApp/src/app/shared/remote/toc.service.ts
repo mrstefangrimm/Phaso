@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Stefan Grimm. All rights reserved.
+// Copyright (c) 2020-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -18,22 +18,15 @@ export class TocService {
   getTableOfContent(): Observable<TocResponse> {
 
     if (this.isProduction) {
-      //let request = 'https://live-phantoms.dynv6.net:8080/api/toc'
-      //console.info(request)
-      //return this.http.get<TocResponse>(request)
-
       return new Observable<TocResponse>(subscriber => {
         const tocFakeResponse: TocResponse = { hrefs: {} }
         tocFakeResponse.hrefs['motionsystems'] = 'https://webaepp.dynv6.net:50445/api/motionsystems'
+        tocFakeResponse.hrefs['liveimage'] = 'https://webaepp.dynv6.net:50445/images'
         console.info(tocFakeResponse)
         subscriber.next(tocFakeResponse);
       })
     }
     else {
-      //  let request = this.baseUrl + 'api/toc'
-      //  console.info(request)
-      //  return this.http.get<TocResponse>(request)
-
       return new Observable<TocResponse>(subscriber => {
         const tocFakeResponse: TocResponse = { hrefs: {} }
         tocFakeResponse.hrefs['motionsystems'] = this.baseUrl + 'api/motionsystems'

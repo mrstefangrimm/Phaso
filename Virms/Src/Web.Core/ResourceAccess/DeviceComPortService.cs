@@ -21,9 +21,11 @@ namespace Virms.Web.ResourceAccess {
     public IMophAppProxy Proxy { get; }
 
     public void Connect(string comPort) {
-      Proxy.Connect(comPort);
-      // startstream, see https://github.com/mrstefangrimm/Phaso/wiki/API-Developer-Guide
-      Proxy.SetCommandRegister(59);
+      var connected = Proxy.Connect(comPort);
+      if (connected) {
+        // startstream, see https://github.com/mrstefangrimm/Phaso/wiki/API-Developer-Guide
+        Proxy.SetCommandRegister(59);
+      }
     }
     
     public void Disconnect() {

@@ -1,25 +1,19 @@
 ﻿// Copyright (c) 2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-namespace Virms.Web.Core {
+namespace Virms.Web {
   using System;
   using Virms.Common;
 
-  public class FakeRandomMophAppProxy : IMophAppProxy {
+  public class FakeEchoMophAppProxy : IMophAppProxy {
 
     private SyncState _syncState = SyncState.Desynced;
-    private Random _randomGenerator = new Random();
 
     public event EventHandler<LogOutputEventArgs> LogOutput;
 
     public SyncState State => _syncState;
-    public byte[] LatestMotorPosition {
-      get {
-        var data = new byte[16];
-        _randomGenerator.NextBytes(data);
-        return data;
-      }
-    }
+    public byte[] LatestMotorPosition { get; private set; } = { 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127 };
+
 
     public bool Connect(string comPort) {
       _syncState = SyncState.Synced;
@@ -32,6 +26,9 @@ namespace Virms.Web.Core {
     }
 
     public void GoTo(MophAppMotorTarget[] positions) {
+      for (int n=0;n< positions.Length; n++) {
+        LatestMotorPosition[positions[n].Channel] = (byte)positions[n].Value;
+      }
     }
 
     public void SetCommandRegister(byte cmd) {

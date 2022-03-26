@@ -39,10 +39,11 @@ import { HomeComponent } from './home/home.component'
     BrowserAnimationsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'a', component: HomeComponent, pathMatch: 'full' },
-      { path: 'b', component: HomeComponent, pathMatch: 'full' },
-      { path: 'c', component: HomeComponent, pathMatch: 'full' },
-      { path: 'd', component: HomeComponent, pathMatch: 'full' },
+      // Paths do not work on github.io
+      //{ path: 'a', component: HomeComponent, pathMatch: 'full' },
+      //{ path: 'b', component: HomeComponent, pathMatch: 'full' },
+      //{ path: 'c', component: HomeComponent, pathMatch: 'full' },
+      //{ path: 'd', component: HomeComponent, pathMatch: 'full' },
       //{
       //  // markerphantom, liverphantom, lungphantom, lnractuator
       //  path: ':motionSystem',

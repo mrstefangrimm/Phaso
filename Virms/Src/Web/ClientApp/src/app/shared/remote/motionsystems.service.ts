@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -20,6 +20,7 @@ export class MotionSystemsService {
   }
 
   clientId: string
+  liveImageUrl: string
 
   getMotionSystems(): Observable<MotionSystemsResponse> {
     let doWork = () => {
@@ -116,17 +117,29 @@ export class MotionSystemsService {
     }
   }
 
-  //patchMotionPattern(motionSystemId: number, patternId, data: MotionPatternData): Observable<any> {
-  //  let request = this.baseUrl + 'api/motionsystems/' + motionSystemId + '/motionpatterns/' + patternId
-  //  console.debug(request)
-  //  return this.http.patch<any>(request, data)
-  //}
+  patchMotionPattern(motionSystemId: number, patternId: number, data: MotionPatternData): Observable<any> {
+
+    let doWork = () => {
+      let request = this.apiBaseUrl + '/' + motionSystemId + '/motionpatterns/' + patternId
+      console.info(request, data)
+      return this.http.patch<any>(request, data)
+    }
+    if (this.apiBaseUrl) {
+      return doWork()
+    }
+    else {
+      this.getApiBaseUrlFromToc().subscribe(null, null, () => {
+        return doWork()
+      })
+    }
+  }
 
   private getApiBaseUrlFromToc(): Observable<any> {
     return new Observable<boolean>(subscriber => {
       this.tocService.getTableOfContent().subscribe(
         result => {
           this.apiBaseUrl = result.hrefs['motionsystems']
+          this.liveImageUrl = result.hrefs['liveimage']
           console.debug(this.apiBaseUrl)
           subscriber.complete()
         },
