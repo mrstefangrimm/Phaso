@@ -2,9 +2,9 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 namespace Virms.Gris5a.UI {
-  using System.Collections.Generic;
   using System.Collections.ObjectModel;
   using System.ComponentModel;
+  using System.Linq;
   using System.Windows.Input;
   using Virms.Common;
   using Virms.Common.UI;
@@ -18,11 +18,10 @@ namespace Virms.Gris5a.UI {
 
   public class Gris5aControlViewModel : Gris5aViewModel, IPlugInControlViewModel {
 
-    private MophAppProxy _mophApp;
+    private IMotionSystem _motionSystem;
     private Gri5aControlViewState _viewState;
     private bool _isRunning;
     private string _selectedProgram;
-    private MotionPatternGenerator _patternGenerator;
     //private MotionPatternEngine _patternEngine;
     static Gris5aControlViewModel() {
       QuickConverter.EquationTokenizer.AddNamespace(typeof(object));
@@ -30,19 +29,14 @@ namespace Virms.Gris5a.UI {
       QuickConverter.EquationTokenizer.AddNamespace("Virms.Gris5a.UI", typeof(Gri5aControlViewState).Assembly);
     }
 
-    public Gris5aControlViewModel(IMophAppProxy mophApp) {
-      _mophApp = mophApp as MophAppProxy;
+    public Gris5aControlViewModel(IMotionSystem motionSystem) {
+      _motionSystem = motionSystem;
       ControlViewState = Gri5aControlViewState.Manual;
 
-      Programs.Add("Program 1");
-      Programs.Add("Program 2");
-      Programs.Add("Program 3");
-      Programs.Add("Program 4");
-      Programs.Add("Program 5");
-      Programs.Add("Program 6");
-      Programs.Add("Program 7");
-      Programs.Add("Program 8");
-      SelectedProgram = "Program 1";
+      foreach(var pattern in motionSystem.MotionPatterns) {
+        Programs.Add(pattern.Name);
+      }
+      SelectedProgram = motionSystem.MotionPatterns.First().Name;
 
       LU.PropertyChanged += LU_PropertyChanged;
       LL.PropertyChanged += LL_PropertyChanged;
@@ -50,7 +44,6 @@ namespace Virms.Gris5a.UI {
       RL.PropertyChanged += RL_PropertyChanged;
       GA.PropertyChanged += GA_PropertyChanged;
 
-      _patternGenerator = new MotionPatternGenerator(OnCylinderPositionsChanged);
       //_patternEngine = new MotionPatternEngine(OnCylinderPositionsChanged);
     }
 
@@ -130,10 +123,10 @@ namespace Virms.Gris5a.UI {
       set {
         if (_isRunning != value) {
           _isRunning = value;
-          if (_isRunning) {
-            string[] progrIds = SelectedProgram.Split(' ');
-            if (progrIds != null && progrIds.Length == 2) {
-              _patternGenerator.Start(int.Parse(progrIds[1]));
+          var runningPattern = _motionSystem.MotionPatterns.FirstOrDefault(x => x.Name == SelectedProgram);
+          if (_isRunning) {           
+            runningPattern.Start();
+            runningPattern.ServoPositionChanged += OnServoPositionChanged;
               /*_patternEngine.Start("Prog", @"
 
 let NAME = 'My Program'
@@ -156,113 +149,128 @@ function Prog() {
   }
 }
 ");*/
-            }
           }
           else {
-            _patternGenerator.Stop();
+            runningPattern.Stop();
+            runningPattern.ServoPositionChanged -= OnServoPositionChanged;
             //_patternEngine.Stop();
           }
           OnPropertyChanged();
         }
       }
     }
-
+       
     private void LU_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var internalProp = !((CylinderPropertyChangedEventArgs)e).External;
-      if (internalProp && _mophApp.State == MophAppProxy.SyncState.Synced) {
+      if (internalProp) {
         CylinderViewModel cy = (CylinderViewModel)sender;
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
-        MophAppMotorPosition[] pos = new [] {
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.LULNG, StepSize = 5, Value = lng },
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.LURTN, StepSize = 5, Value = rtn }
+        MophAppMotorTarget[] pos = new [] {
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.LULNG, StepSize = 5, Value = lng },
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.LURTN, StepSize = 5, Value = rtn }
         };
-        _mophApp.GoTo(pos);
+        _motionSystem.GoTo(pos);
       }
     }
 
     private void LL_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var internalProp = !((CylinderPropertyChangedEventArgs)e).External;
-      if (internalProp && _mophApp.State == MophAppProxy.SyncState.Synced) {
+      if (internalProp) {
         CylinderViewModel cy = (CylinderViewModel)sender;
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
-        MophAppMotorPosition[] pos = new[] {
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.LLLNG, StepSize = 5, Value = lng },
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.LLRTN, StepSize = 5, Value = rtn }
+        MophAppMotorTarget[] pos = new[] {
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.LLLNG, StepSize = 5, Value = lng },
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.LLRTN, StepSize = 5, Value = rtn }
         };
-        _mophApp.GoTo(pos);
+        _motionSystem.GoTo(pos);
       }
     }
 
     private void RU_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var internalProp = !((CylinderPropertyChangedEventArgs)e).External;
-      if (internalProp && _mophApp.State == MophAppProxy.SyncState.Synced) {
+      if (internalProp) {
         CylinderViewModel cy = (CylinderViewModel)sender;
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
-        MophAppMotorPosition[] pos = new[] {
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.RULNG, StepSize = 5, Value = lng },
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.RURTN, StepSize = 5, Value = rtn }
+        MophAppMotorTarget[] pos = new[] {
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.RULNG, StepSize = 5, Value = lng },
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.RURTN, StepSize = 5, Value = rtn }
         };
-        _mophApp.GoTo(pos);
+        _motionSystem.GoTo(pos);
       }
     }
 
     private void RL_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var internalProp = !((CylinderPropertyChangedEventArgs)e).External;
-      if (internalProp && _mophApp.State == MophAppProxy.SyncState.Synced) {
+      if (internalProp) {
         CylinderViewModel cy = (CylinderViewModel)sender;
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
-        MophAppMotorPosition[] pos = new[] {
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.RLLNG, StepSize = 5, Value = lng },
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.RLRTN, StepSize = 5, Value = rtn }
+        MophAppMotorTarget[] pos = new[] {
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.RLLNG, StepSize = 5, Value = lng },
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.RLRTN, StepSize = 5, Value = rtn }
         };
-        _mophApp.GoTo(pos);
+        _motionSystem.GoTo(pos);
       }
     }
 
     private void GA_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var internalProp = !((CylinderPropertyChangedEventArgs)e).External;
-      if (internalProp && _mophApp.State == MophAppProxy.SyncState.Synced) {
+      if (internalProp) {
         CylinderViewModel cy = (CylinderViewModel)sender;
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
-        MophAppMotorPosition[] pos = new[] {
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.GALNG, StepSize = 5, Value = lng },
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.GARTN, StepSize = 5, Value = rtn }
+        MophAppMotorTarget[] pos = new[] {
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.GALNG, StepSize = 5, Value = lng },
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.GARTN, StepSize = 5, Value = rtn }
         };
-        _mophApp.GoTo(pos);
+        _motionSystem.GoTo(pos);
       }
     }
 
-    private void OnCylinderPositionsChanged(IEnumerable<Virms.Common.CylinderPosition> positions) {
-      foreach (var pos in positions) {
-        switch (pos.Cy) {
-        default: break;
-        case Common.Cylinder.LeftUpper:
-          LU.LNGInt = pos.Lng;
-          LU.RTNInt = pos.Rtn;
-          break;
-        case Common.Cylinder.LeftLower:
-          LL.LNGInt = pos.Lng;
-          LL.RTNInt = pos.Rtn;
-          break;
-        case Common.Cylinder.RightUpper:
-          RU.LNGInt = pos.Lng;
-          RU.RTNInt = pos.Rtn;
-          break;
-        case Common.Cylinder.RightLower:
-          RL.LNGInt = pos.Lng;
-          RL.RTNInt = pos.Rtn;
-          break;
-        case Common.Cylinder.Platform:
-          GA.LNGInt = pos.Lng;
-          GA.RTNInt = pos.Rtn;
-          break;
+    private void OnServoPositionChanged(object sender, MotionAxisChangedEventArgs args) {
+      foreach (var target in args.Targets) {
+        switch (target.Channel) {
+          default: break;
+
+          case (byte)ServoNumber.LULNG:
+            LU.LNGInt = target.Value;
+            break;
+          case (byte)ServoNumber.LURTN:
+            LU.RTNInt = target.Value;
+            break;
+
+          case (byte)ServoNumber.LLLNG:
+            LL.LNGInt = target.Value;
+            break;
+          case (byte)ServoNumber.LLRTN:
+            LL.RTNInt = target.Value;
+            break;
+
+          case (byte)ServoNumber.RULNG:
+            RU.LNGInt = target.Value;
+            break;
+          case (byte)ServoNumber.RURTN:
+            RU.RTNInt = target.Value;
+            break;
+
+          case (byte)ServoNumber.RLLNG:
+            RL.LNGInt = target.Value;
+            break;
+          case (byte)ServoNumber.RLRTN:
+            RL.RTNInt = target.Value;
+            break;
+
+          case (byte)ServoNumber.GALNG:
+            GA.LNGInt = target.Value;
+            break;
+          case (byte)ServoNumber.GARTN:
+            GA.RTNInt = target.Value;
+            break;
         }
-      }     
+      }      
     }
   }
 }

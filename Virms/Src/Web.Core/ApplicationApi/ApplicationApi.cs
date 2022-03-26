@@ -73,9 +73,9 @@ namespace Virms.Web.Core {
         if (motionSystem == null) { return AppSericeResult.NotFound; }
 
         // TODO: if pattern not running...
-        MophAppMotorPosition[] pos = new MophAppMotorPosition[data.Length];
+        MophAppMotorTarget[] pos = new MophAppMotorTarget[data.Length];
         for (int n = 0; n < pos.Length; n++) {
-          pos[n] = new MophAppMotorPosition {
+          pos[n] = new MophAppMotorTarget {
             Channel = data[n].ServoNumber,
             Value = data[n].Position,
             StepSize = 10

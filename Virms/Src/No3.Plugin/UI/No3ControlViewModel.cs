@@ -1,9 +1,9 @@
 ﻿// Copyright (c) 2020-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using Virms.Common;
 using Virms.Common.UI;
@@ -19,30 +19,24 @@ namespace Virms.No3.UI {
 
   public class No3ControlViewModel : No3ViewModel, IPlugInControlViewModel {
 
-    private MophAppProxy _mophApp;
+    private IMotionSystem _motionSystem;
     private No3ControlViewState _viewState;
     private bool _isRunning;
     private string _selectedProgram;
-    private MotionPatternGenerator _patternGenerator;
 
     static No3ControlViewModel() {
       QuickConverter.EquationTokenizer.AddNamespace(typeof(No3ControlViewState));
       QuickConverter.EquationTokenizer.AddNamespace(typeof(System.Windows.Visibility));
     }
 
-    public No3ControlViewModel(IMophAppProxy mophApp) {
-      _mophApp = mophApp as MophAppProxy;
+    public No3ControlViewModel(IMotionSystem motionSystem) {
+      _motionSystem = motionSystem;
       ControlViewState = No3ControlViewState.Manual;
 
-      Programs.Add("Program 1");
-      Programs.Add("Program 2");
-      Programs.Add("Program 3");
-      Programs.Add("Program 4");
-      Programs.Add("Program 5");
-      Programs.Add("Program 6");
-      Programs.Add("Program 7");
-      Programs.Add("Program 8");
-      SelectedProgram = "Program 1";
+      foreach (var pattern in motionSystem.MotionPatterns) {
+        Programs.Add(pattern.Name);
+      }
+      SelectedProgram = motionSystem.MotionPatterns.First().Name;
 
       UP.PropertyChanged += UP_PropertyChanged;
       LO.PropertyChanged += LO_PropertyChanged;
@@ -51,8 +45,6 @@ namespace Virms.No3.UI {
       UP.PropertyChanged += (sender, arg) => OnPropertyChanged(arg.PropertyName);
       LO.PropertyChanged += (sender, arg) => OnPropertyChanged(arg.PropertyName);
       GA.PropertyChanged += (sender, arg) => OnPropertyChanged(arg.PropertyName);
-
-      _patternGenerator = new MotionPatternGenerator(OnCylinderPositionsChanged);
     }
 
     public No3ControlViewState ControlViewState {
@@ -133,14 +125,14 @@ namespace Virms.No3.UI {
       set {
         if (_isRunning != value) {
           _isRunning = value;
+          var runningPattern = _motionSystem.MotionPatterns.FirstOrDefault(x => x.Name == SelectedProgram);
           if (_isRunning) {
-            string[] progrIds = SelectedProgram.Split(' ');
-            if (progrIds != null && progrIds.Length == 2) {
-              _patternGenerator.Start(int.Parse(progrIds[1]));
-            }
+            runningPattern.Start();
+            runningPattern.ServoPositionChanged += OnServoPositionChanged;
           }
           else {
-            _patternGenerator.Stop();
+            runningPattern.Stop();
+            runningPattern.ServoPositionChanged -= OnServoPositionChanged;
           }
           OnPropertyChanged();
         }
@@ -149,66 +141,73 @@ namespace Virms.No3.UI {
 
     private void UP_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var internalProp = !((CylinderPropertyChangedEventArgs)e).External;
-      if (internalProp && _mophApp.State == MophAppProxy.SyncState.Synced) {
+      if (internalProp) {
         CylinderViewModel cy = (CylinderViewModel)sender;
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
-        MophAppMotorPosition[] pos = new[] {
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.UPLNG, StepSize = 5, Value = lng },
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.UPRTN, StepSize = 5, Value = rtn }
+        MophAppMotorTarget[] pos = new[] {
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.UPLNG, StepSize = 5, Value = lng },
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.UPRTN, StepSize = 5, Value = rtn }
         };
-        _mophApp.GoTo(pos);
+        _motionSystem.GoTo(pos);
       }
     }
 
     private void LO_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var internalProp = !((CylinderPropertyChangedEventArgs)e).External;
-      if (internalProp && _mophApp.State == MophAppProxy.SyncState.Synced) {
+      if (internalProp) {
         CylinderViewModel cy = (CylinderViewModel)sender;
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
-        MophAppMotorPosition[] pos = new[] {
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.LOLNG, StepSize = 5, Value = lng },
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.LORTN, StepSize = 5, Value = rtn }
+        MophAppMotorTarget[] pos = new[] {
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.LOLNG, StepSize = 5, Value = lng },
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.LORTN, StepSize = 5, Value = rtn }
         };
-        _mophApp.GoTo(pos);
+        _motionSystem.GoTo(pos);
       }
     }
 
     private void GA_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var internalProp = !((CylinderPropertyChangedEventArgs)e).External;
-      if (internalProp && _mophApp.State == MophAppProxy.SyncState.Synced) {
+      if (internalProp) {
         CylinderViewModel cy = (CylinderViewModel)sender;
         var lng = (ushort)cy.LNGInt;
         var rtn = (ushort)cy.RTNInt;
-        MophAppMotorPosition[] pos = new[] {
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.GALNG, StepSize = 5, Value = lng },
-          new MophAppMotorPosition { Channel = (byte)ServoNumber.GARTN, StepSize = 5, Value = rtn }
+        MophAppMotorTarget[] pos = new[] {
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.GALNG, StepSize = 5, Value = lng },
+          new MophAppMotorTarget { Channel = (byte)ServoNumber.GARTN, StepSize = 5, Value = rtn }
         };
-        _mophApp.GoTo(pos);
+        _motionSystem.GoTo(pos);
       }
     }
 
-    private void OnCylinderPositionsChanged(IEnumerable<CylinderPosition> positions) {
-      foreach (var pos in positions) {
-        switch (pos.Cy) {
-        default:
-          break;
-        case Cylinder.Upper:
-          UP.LNGInt = pos.Lng;
-          UP.RTNInt = pos.Rtn;
-          break;
-        case Cylinder.Lower:
-          LO.LNGInt = pos.Lng;
-          LO.RTNInt = pos.Rtn;
-          break;
-        case Cylinder.Platform:
-          GA.LNGInt = pos.Lng;
-          GA.RTNInt = pos.Rtn;
-          break;
+    private void OnServoPositionChanged(object sender, MotionAxisChangedEventArgs args) {
+      foreach (var target in args.Targets) {
+        switch (target.Channel) {
+          default: break;
+
+          case (byte)ServoNumber.UPLNG:
+            UP.LNGInt = target.Value;
+            break;
+          case (byte)ServoNumber.UPRTN:
+            UP.RTNInt = target.Value;
+            break;
+
+          case (byte)ServoNumber.LOLNG:
+            LO.LNGInt = target.Value;
+            break;
+          case (byte)ServoNumber.LORTN:
+            LO.RTNInt = target.Value;
+            break;
+
+          case (byte)ServoNumber.GALNG:
+            GA.LNGInt = target.Value;
+            break;
+          case (byte)ServoNumber.GARTN:
+            GA.RTNInt = target.Value;
+            break;
         }
       }
     }
-
   }
 }

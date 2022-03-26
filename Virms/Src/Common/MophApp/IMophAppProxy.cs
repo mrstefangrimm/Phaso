@@ -4,14 +4,17 @@
 namespace Virms.Common {
   using System;
 
+  public enum SyncState { Desynced, Synced }
+
   public interface IMophAppProxy {
     event EventHandler<LogOutputEventArgs> LogOutput;
 
+    SyncState State { get; }
     byte[] LatestMotorPosition { get; }
 
     bool Connect(string comPort);
     void Disconnect();
-    void GoTo(MophAppMotorPosition[] positions);
+    void GoTo(MophAppMotorTarget[] positions);
     void SetCommandRegister(byte cmd);
   }
 }

@@ -9,8 +9,8 @@
 
   public class ZeroPluginBuilder : IPluginBuilder {
 
-    public IPluginPhantom BuildPluginPhantom(IMophAppProxy mophApp) {
-      return new PluginPhantom("Zero Phantom", new ZeroPhantomViewModel(), new ZeroControlViewModel(mophApp));
+    public IPluginPhantom BuildPluginPhantom(IMotionSystem motionSystem) {
+      return new PluginPhantom("Zero Phantom", new ZeroPhantomViewModel(), new ZeroControlViewModel());
     }
 
     public DataTemplate BuildPhantomTemplate() {

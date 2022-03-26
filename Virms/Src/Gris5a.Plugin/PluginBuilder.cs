@@ -12,8 +12,8 @@ namespace Virms.Gris5a {
 
   public class PluginBuilder : IPluginBuilder {
 
-    public IPluginPhantom BuildPluginPhantom(IMophAppProxy mophApp) {
-      return new PluginPhantom("Marker Phantom", new Gris5aPhantomViewModel(), new Gris5aControlViewModel(mophApp));
+    public IPluginPhantom BuildPluginPhantom(IMotionSystem motionSystem) {
+      return new PluginPhantom(motionSystem.Name, new Gris5aPhantomViewModel(), new Gris5aControlViewModel(motionSystem));
     }
 
     public DataTemplate BuildPhantomTemplate() {

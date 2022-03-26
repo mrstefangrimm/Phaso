@@ -67,7 +67,6 @@ namespace Virms.Common {
 
     private const int _portBaudRate = 9600; // 9600, 38400, 115200;
 
-    public enum SyncState { Desynced, Synced }
     public SyncState State { get; private set; } = SyncState.Desynced;
     public byte[] LatestMotorPosition { get; private set; } = new byte[16];
 
@@ -119,7 +118,7 @@ namespace Virms.Common {
       SerialDisconnect();
     }
     
-    public void GoTo(MophAppMotorPosition[] positions) {
+    public void GoTo(MophAppMotorTarget[] positions) {
       SerialOutMessage cmd = new SerialOutMessage();
       foreach (var pos in positions) {
         cmd.Add(pos.Channel, pos.Value, pos.StepSize);

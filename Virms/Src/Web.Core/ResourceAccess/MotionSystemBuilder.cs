@@ -6,12 +6,11 @@ namespace Virms.Web.Core {
   using Virms.Common;
   using Virms.Web.ResourceAccess;
 
-
   public class MotionSystemBuilder {
 
-    public MotionSystem Create(IWebPluginBuilder pluginBuilder, IIdCreator idCreator, DeviceComPortService deviceService) {
+    public MotionSystem Create(IMotionSystemBuilder pluginBuilder, IIdCreator idCreator, DeviceComPortService deviceService) {
 
-      var pluginMotionSystem = pluginBuilder.BuildPluginWebMotionSystem(deviceService.Proxy);
+      var pluginMotionSystem = pluginBuilder.BuildMotionSystem(deviceService.Proxy);
 
       var entityMotionSystem = new MotionSystem(pluginMotionSystem, deviceService);
       entityMotionSystem.Id = idCreator.CreateId();

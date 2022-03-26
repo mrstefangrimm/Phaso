@@ -30,18 +30,18 @@ namespace Virms.Web.Core {
 #endif
       }
 
-      var pluginFactory = new WebPluginFactory();
-      var gris5aPluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.Gris5a.dll", pluginPath));
-      var no2PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No2.dll", pluginPath));
-      var no3PluginBulder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.dll", pluginPath));
+      var pluginFactory = new MotionSystemFactory();
+      var gris5aPluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.Gris5a.dll", pluginPath));
+      var no2PluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No2.dll", pluginPath));
+      var no3PluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.dll", pluginPath));
 
       var gris5aConnection = new DeviceComPortService(proxyFactory.Create());
       var no2Connection = new DeviceComPortService(proxyFactory.Create());
       var no3Connection = new DeviceComPortService(proxyFactory.Create());
 
-      var marker = new MotionSystemBuilder().Create(gris5aPluginBulder, this, gris5aConnection);
-      var liver = new MotionSystemBuilder().Create(no2PluginBulder, this, no2Connection);
-      var lung = new MotionSystemBuilder().Create(no3PluginBulder, this, no3Connection);
+      var marker = new MotionSystemBuilder().Create(gris5aPluginBuilder, this, gris5aConnection);
+      var liver = new MotionSystemBuilder().Create(no2PluginBuilder, this, no2Connection);
+      var lung = new MotionSystemBuilder().Create(no3PluginBuilder, this, no3Connection);
 
       //var dbOptBuilder = new DbContextOptionsBuilder();
       //var dbOptBuilderSqlite = dbOptBuilder.UseSqlite("DefaultConnection");

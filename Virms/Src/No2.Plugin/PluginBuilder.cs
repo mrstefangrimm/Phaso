@@ -12,8 +12,8 @@ namespace Virms.No2 {
 
   public class PluginBuilder : IPluginBuilder {
 
-    public IPluginPhantom BuildPluginPhantom(IMophAppProxy mophApp) {
-      return new PluginPhantom("Liver Phantom", new No2PhantomViewModel(), new No2ControlViewModel(mophApp));
+    public IPluginPhantom BuildPluginPhantom(IMotionSystem motionSystem) {
+      return new PluginPhantom("Liver Phantom", new No2PhantomViewModel(), new No2ControlViewModel(motionSystem));
     }
 
     public DataTemplate BuildPhantomTemplate() {

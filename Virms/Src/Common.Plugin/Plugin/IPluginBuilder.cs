@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Virms.Common.Plugin {
   public interface IPluginBuilder {
-    IPluginPhantom BuildPluginPhantom(IMophAppProxy mophApp);
+    IPluginPhantom BuildPluginPhantom(IMotionSystem motionSystem);
     DataTemplate BuildPhantomTemplate();
     DataTemplate BuildControlTemplate();
   }

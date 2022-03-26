@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 namespace Virms.Web.Core {
@@ -9,10 +9,10 @@ namespace Virms.Web.Core {
 
   public class MotionSystem : Entity<MotionSystemData> {
 
-    private readonly IWebPluginMotionSystem _plugin;
+    private readonly IMotionSystem _plugin;
     private readonly DeviceComPortService _deviceService;
 
-    public MotionSystem(IWebPluginMotionSystem plugin, DeviceComPortService deviceService) {
+    public MotionSystem(IMotionSystem plugin, DeviceComPortService deviceService) {
       _plugin = plugin;
       _deviceService = deviceService;
       _plugin.LogOutput += OnLogOutput;
@@ -28,7 +28,7 @@ namespace Virms.Web.Core {
       _deviceService.Connect(comPort);
     }
 
-    public void GoTo(MophAppMotorPosition[] data) {
+    public void GoTo(MophAppMotorTarget[] data) {
       _plugin.GoTo(data);
     }
 

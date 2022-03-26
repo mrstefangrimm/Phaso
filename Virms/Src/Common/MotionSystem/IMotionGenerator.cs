@@ -2,7 +2,13 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 namespace Virms.Common {
-  public interface IWebPluginBuilder {
-    IWebPluginMotionSystem BuildPluginWebMotionSystem(IMophAppProxy mophApp);
+  using System;
+
+  public interface IMotionGenerator {
+
+    event EventHandler<MotionAxisChangedEventArgs> ServoPositionUpdated;
+
+    void Start(int programId);
+    void Stop();
   }
 }

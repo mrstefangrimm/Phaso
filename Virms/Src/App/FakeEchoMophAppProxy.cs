@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-namespace Virms.Web.Core {
+namespace Virms.App {
   using System;
   using Virms.Common;
 
@@ -11,9 +11,9 @@ namespace Virms.Web.Core {
 
     public event EventHandler<LogOutputEventArgs> LogOutput;
 
-    public SyncState State => _syncState;
     public byte[] LatestMotorPosition { get; private set; } = { 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127 };
 
+    public SyncState State => _syncState;
 
     public bool Connect(string comPort) {
       _syncState = SyncState.Synced;

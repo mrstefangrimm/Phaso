@@ -5,16 +5,16 @@ namespace Virms.Common {
   using System;
   using System.Collections.Generic;
 
-  public class  WebPluginMotionSystem : IWebPluginMotionSystem { 
+  public class  MotionSystem : IMotionSystem { 
 
     private readonly IMophAppProxy _proxy;
 
     public event EventHandler<LogOutputEventArgs> LogOutput;
 
-    public WebPluginMotionSystem(string name, string alias,
+    public MotionSystem(string name, string alias,
                                  IMophAppProxy mophApp, 
-                                 IEnumerable<WebMotionPattern> motionPatterns,
-                                 IEnumerable<WebMotionAxis> axes) {
+                                 IEnumerable<MotionPattern> motionPatterns,
+                                 IEnumerable<MotionAxis> axes) {
       Name = name;
       Alias = alias;
       _proxy = mophApp;
@@ -26,12 +26,14 @@ namespace Virms.Common {
 
     public string Name { get; }
     public string Alias { get; }
-    public IEnumerable<WebMotionPattern> MotionPatterns { get; }
-    public IEnumerable<WebMotionAxis> MotionAxes { get; }
+    public IEnumerable<MotionPattern> MotionPatterns { get; }
+    public IEnumerable<MotionAxis> MotionAxes { get; }
 
     
-    public void GoTo(MophAppMotorPosition[] positions) {
-      _proxy.GoTo(positions);
+    public void GoTo(MophAppMotorTarget[] positions) {
+      if (_proxy.State == SyncState.Synced) {
+        _proxy.GoTo(positions);
+      }
     }
 
     private void OnLogOutput(object sender, LogOutputEventArgs args) {

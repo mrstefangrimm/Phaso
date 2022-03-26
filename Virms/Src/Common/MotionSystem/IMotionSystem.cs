@@ -5,16 +5,16 @@ namespace Virms.Common {
   using System;
   using System.Collections.Generic;
 
-  public interface IWebPluginMotionSystem {
+  public interface IMotionSystem {
 
     event EventHandler<LogOutputEventArgs> LogOutput;
 
     string Name { get; }
     string Alias { get; }
 
-    IEnumerable<WebMotionPattern> MotionPatterns { get; }
-    IEnumerable<WebMotionAxis> MotionAxes { get; }
+    IEnumerable<MotionPattern> MotionPatterns { get; }
+    IEnumerable<MotionAxis> MotionAxes { get; }
 
-    void GoTo(MophAppMotorPosition[] positions);
+    void GoTo(MophAppMotorTarget[] positions);
   }
 }

@@ -2,7 +2,7 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 namespace Virms.Common {
-  public class MophAppMotorPosition {
+  public class MophAppMotorTarget {
     public byte Channel;
     public ushort Value;
     public ushort StepSize;

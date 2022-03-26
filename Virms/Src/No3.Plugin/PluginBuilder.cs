@@ -12,8 +12,8 @@ namespace Virms.No3 {
 
   public class PluginBuilder : IPluginBuilder {
 
-    public IPluginPhantom BuildPluginPhantom(IMophAppProxy mophApp) {
-      return new PluginPhantom("Lung Phantom", new No3PhantomViewModel(), new No3ControlViewModel(mophApp));
+    public IPluginPhantom BuildPluginPhantom(IMotionSystem motionSystem) {
+      return new PluginPhantom("Lung Phantom", new No3PhantomViewModel(), new No3ControlViewModel(motionSystem));
     }
 
     public DataTemplate BuildPhantomTemplate() {
