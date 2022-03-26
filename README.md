@@ -13,17 +13,20 @@ All the phantoms come with an Arduino Uno micro controller and an Adafruit Servo
 The client is connected to the device through a USB cable. Only one client at a time is supported. The protocol is open and described in the Wiki.
 Currently the following clients exist:
  - SoftKBb
- - Virms.NET
  - MophDroid
+ - Virms.App
+ - Virms.Web
 
 ## Software Toolchain
 
-| Application | License |
-| ----------- | ------- |
-| mophapp     | GPL     |
-| MophDroid   | LGPL    |
-| SoftDKb     | LGPL    |
-| ViphApp     | LGPL    |
+| Application       | License |
+| ----------------- | ------- |
+| mophapp           | GPL     |
+| MophDroid         | LGPL    |
+| SoftDKb           | LGPL    |
+| Vims.App          | LGPL    |
+| Virms.Web         | LGPL    |
+| LiveImageProducer | LGPL    |
 
 | Tool             | License           |
 | ---------------- | ----------------- |
@@ -44,9 +47,11 @@ Libraries
 | Arduino.h       | LGPL              |
 | qpn.h           | GPL               |
 | Processing Core | LPGL              |
-| .NET 4.6.2      | Microsoft license |
-| Helix toolkit   | MIT               |
+| .NET 5.0        | Microsoft license |
+| ASP.NET         | Apache License    |
+| Helix toolkit   | MIT license       |
 | Android SDK     | Google license    |
+| angular         | MIT license       |
 
 ## License
 
