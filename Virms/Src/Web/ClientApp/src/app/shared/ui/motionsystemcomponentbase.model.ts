@@ -113,10 +113,10 @@ export class MotionsystemComponentBaseModel  {
     if (this.state == UIState.NotInControl) {
       let data = new MotionSystemData
       data.inUse = true
+      this.state = UIState.InControl
+      this.inUseByMe = true
       this.remoteService.patch(this.motionSystemId, data).subscribe(
         result => {
-          this.inUseByMe = true
-          this.state = UIState.InControl
         }, err => console.error(err))
     }
   }
@@ -138,7 +138,7 @@ export class MotionsystemComponentBaseModel  {
 
       this.remoteService.getMotionSystem(id).subscribe(
         result => {
-          console.debug(result)
+          //console.debug(result)
           this.updateStatus(result.data)
         }, err => console.error(err))
     })

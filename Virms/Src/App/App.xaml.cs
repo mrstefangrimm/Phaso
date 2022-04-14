@@ -25,10 +25,10 @@ namespace Virms.App {
 
       string pluginPath = Environment.CurrentDirectory;
 
-      var motionSystemFac = new MotionSystemFactory();
-      var gris5aMsBuilder = motionSystemFac.CreatePluginBuilder(string.Format(@"{0}\Virms.Gris5a.dll", pluginPath));
-      var no2MsBuilder = motionSystemFac.CreatePluginBuilder(string.Format(@"{0}\Virms.No2.dll", pluginPath));
-      var no3MsBuilder = motionSystemFac.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.dll", pluginPath));
+      var motionSystemFac = new GenericReflectionFactory();
+      var gris5aMsBuilder = motionSystemFac.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.Gris5a.dll");
+      var no2MsBuilder = motionSystemFac.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No2.dll");
+      var no3MsBuilder = motionSystemFac.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No3.dll");
 
       var pluginFactory = new PluginFactory();
       //var zeroPluginBuilder = new Zero.ZeroPluginBuilder();

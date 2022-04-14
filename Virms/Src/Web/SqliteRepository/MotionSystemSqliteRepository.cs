@@ -30,10 +30,10 @@ namespace Virms.Web.Core {
 #endif
       }
 
-      var pluginFactory = new MotionSystemFactory();
-      var gris5aPluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.Gris5a.dll", pluginPath));
-      var no2PluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No2.dll", pluginPath));
-      var no3PluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.dll", pluginPath));
+      var pluginFactory = new GenericReflectionFactory();
+      var gris5aPluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.Gris5a.dll");
+      var no2PluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No2.dll");
+      var no3PluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No3.dll");
 
       var gris5aConnection = new DeviceComPortService(proxyFactory.Create());
       var no2Connection = new DeviceComPortService(proxyFactory.Create());

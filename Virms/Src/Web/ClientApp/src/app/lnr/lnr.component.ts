@@ -6,7 +6,6 @@ import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Vector3 } from 'three';
-import { MotionSystemsService } from '../shared/remote/motionsystems.service';
 import { LnrService } from './lnr.service';
 import { LnrEngine3dService } from './lnrengine3d.service';
 
@@ -31,7 +30,6 @@ export class LnrComponent implements OnInit, OnDestroy {
 
   constructor(
     public context: LnrService,
-    public remoteService: MotionSystemsService,
     private readonly engine3d: LnrEngine3dService) {
     console.info(LnrComponent.name, "c'tor")
   }

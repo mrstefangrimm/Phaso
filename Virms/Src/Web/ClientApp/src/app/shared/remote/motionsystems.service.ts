@@ -68,7 +68,7 @@ export class MotionSystemsService {
 
     let doWork = () => {
       let request = this.apiBaseUrl + '/' + id
-      console.debug(request)
+      //console.debug(request)
       return this.http.get<MotionSystemResponse>(request)
     }
     if (this.apiBaseUrl) {
