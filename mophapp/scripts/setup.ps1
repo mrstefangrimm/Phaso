@@ -61,3 +61,5 @@ if ($confirmation -eq 'y') {
 
 "Complete"
 $port.Close()
+
+Read-Host -Prompt "Press any key to exit"

@@ -5,7 +5,7 @@ namespace Virms.Common {
   using System;
   using System.Reflection;
 
-  public class GenericReflectionFactory {
+  public class InstanceFactory {
 
     public T Create<T>(string assemblyPath) {
       var ass = Assembly.LoadFile(assemblyPath);

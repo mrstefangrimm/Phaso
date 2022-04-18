@@ -1,0 +1,12 @@
+bin/
+lib/
+mophapp.ino
+constants.h
+events.h
+FreeMemory.h
+models.h
+/device/no3.h
+/device/no2.h
+/device/gris5a.h
+/device/device.h
+/device/mathex.h

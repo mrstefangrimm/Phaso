@@ -137,7 +137,7 @@ var stepsz = 10
 var lulng = 0, lurtn = 0, rulng = 0, rurtn = 0, lllng = 0, llrtn = 0, rllng = 0, rlrtn = 0, galng = 0, gartn = 0
 
 function Prog() {
-  let target = 127 + 80 * Math.sin((preSetTimer - 3000) / 2500.0 * Math.PI);
+  let target = 127 + 80 * MathEx.Sin4((preSetTimer - 3000) / 2500.0 * Math.PI);
 
   lulng = target;
 
