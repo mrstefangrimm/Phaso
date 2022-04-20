@@ -30,7 +30,7 @@ namespace Virms.Web.Core {
 #endif
       }
 
-      var pluginFactory = new GenericReflectionFactory();
+      var pluginFactory = new InstanceFactory();
       var gris5aPluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.Gris5a.dll");
       var no2PluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No2.dll");
       var no3PluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No3.dll");
