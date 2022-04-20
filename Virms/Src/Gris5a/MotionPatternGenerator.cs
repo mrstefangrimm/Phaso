@@ -135,7 +135,7 @@ namespace Virms.Gris5a {
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double targetDeltaSmall = 15 * MathEx.Sin4((_preSetTimer - 3000) / 3000d * Math.PI);
         double targetDeltaLarge = 40 * MathEx.Sin4((_preSetTimer - 3000) / 3000d * Math.PI);
 
@@ -168,7 +168,7 @@ namespace Virms.Gris5a {
         handler(pos);
       }
       else if (_preSetTimer >= 2960) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double target = 47 + 160 * MathEx.Sin4((_preSetTimer - 2960) / 2480.0 * Math.PI);
 
         CylinderPosition[] pos = new CylinderPosition[5];
@@ -201,7 +201,7 @@ namespace Virms.Gris5a {
         handler(pos);
       }
       else if (_preSetTimer >= 3000 && _preSetTimer < 28000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double target = 10 + 100 * MathEx.Sin4((_preSetTimer - 3000) / 3000d * Math.PI);
 
         CylinderPosition[] pos = new CylinderPosition[5];
@@ -259,7 +259,7 @@ namespace Virms.Gris5a {
       }
       else if (_preSetTimer >= 2960) {
 
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double targetDeltaSmall = 15 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
         double targetDeltaLarge = 40 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
         double targetGating = 47 + 160 * MathEx.Sin4((_preSetTimer - 2960) / 2480.0 * Math.PI);
@@ -295,7 +295,7 @@ namespace Virms.Gris5a {
         handler(pos);
       }
       else if (_preSetTimer >= 2960) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double target = 47 + 160 * MathEx.Sin4((_preSetTimer - 2960) / 2480.0 * Math.PI);
 
         ushort rtnMP = 127;
@@ -332,7 +332,7 @@ namespace Virms.Gris5a {
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double baseline = 60 + 20 * Math.Sin((_preSetTimer - 3000) / 30000.0 * Math.PI);
         double target = baseline + 100 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
 

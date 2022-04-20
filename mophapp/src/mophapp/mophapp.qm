@@ -1361,7 +1361,7 @@ void prog3(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
 
     float targetUpper = 127 + 80 * sin4((preSetTimer - 3000) / 3000.0 * PI);
     float targetLoLng = 127 + 60 * sin4((preSetTimer - 3000) / 3000.0 * PI);
@@ -1404,7 +1404,7 @@ void prog4(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
 
     float target = 47 + 160 * sin4((preSetTimer - 3000) / 2500.0 * PI);
 
@@ -1443,7 +1443,7 @@ void prog5(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000 &amp;&amp; preSetTimer &lt; 28000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
     float target = 10 + 100 * sin4((preSetTimer - 3000) / 3000.0 * PI);
 
     MotorEvArgs uplng(UPLNG, target, STEPSZ);
@@ -1502,7 +1502,7 @@ void prog6(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
 
     float targetUpper = 127 + 80 * sin4((preSetTimer - 3000) / 3000.0 * PI);
     float targetLoLng = 127 + 60 * sin4((preSetTimer - 3000) / 3000.0 * PI);
@@ -1537,11 +1537,11 @@ void prog7(QMActive* recv, uint16_t&amp; preSetTimer) {
 
   if (preSetTimer == 0) {
     static const uint8_t PROGMEM STEPSZ = 2;
-    MotorEvArgs uplng(UPLNG, 127, STEPSZ);
+    MotorEvArgs uplng(UPLNG, 47, STEPSZ);
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uplng.raw);
     MotorEvArgs uprtn(UPRTN, 127, STEPSZ);
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, uprtn.raw);
-    MotorEvArgs lolng(LOLNG, 127, STEPSZ);
+    MotorEvArgs lolng(LOLNG, 47, STEPSZ);
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lolng.raw);
     MotorEvArgs lortn(LORTN, 127, STEPSZ);
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, lortn.raw);
@@ -1551,7 +1551,7 @@ void prog7(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
     float target = 47 + 160 * sin4((preSetTimer - 3000) / 2500.0 * PI);
 
     MotorEvArgs uplng(UPLNG, target, STEPSZ);
@@ -1600,7 +1600,7 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
     float baseline = 60 + 20 * sin((preSetTimer - 3000) / 30000.0 * PI);
     float target = baseline + 100 * sin4((preSetTimer - 3000) / 3000.0 * PI);
     MotorEvArgs uplng(UPLNG, target, STEPSZ);
@@ -1935,7 +1935,7 @@ void prog3(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
 
     float targetLlng = 128 - 127 * sin4((preSetTimer - 3000) / 3000.0 * PI);
     float targetLrtn = 127 + 127 * sin4((preSetTimer - 3000) / 3000.0 * PI);
@@ -1979,7 +1979,7 @@ void prog4(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
 
     float target = 47 + 160 * sin4((preSetTimer - 3000) / 2500.0 * PI);
 
@@ -2018,7 +2018,7 @@ void prog5(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
   }
   else if (preSetTimer &gt;= 3000 &amp;&amp; preSetTimer &lt; 28000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
     float target = 10 + 100 * sin4((preSetTimer - 3000) / 3000.0 * PI);
 
     MotorEvArgs llng(LLNG, target, STEPSZ);
@@ -2077,7 +2077,7 @@ void prog6(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
 
     float targetLlng = 128 + 127 * sin4((preSetTimer - 3000) / 3000.0 * PI);
     float targetLrtn = 127 + 127 * sin4((preSetTimer - 3000) / 3000.0 * PI);
@@ -2127,7 +2127,7 @@ void prog7(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
     float target = 47 + 160 * sin4((preSetTimer - 3000) / 2500.0 * PI);
 
     MotorEvArgs llng(LLNG, target, STEPSZ);
@@ -2176,7 +2176,7 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
     QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, grtn.raw);
   }
   else if (preSetTimer &gt;= 3000) {
-    static const uint8_t PROGMEM STEPSZ = 8;
+    static const uint8_t PROGMEM STEPSZ = 4;
     float baseline = 60 + 20 * sin((preSetTimer - 3000) / 30000.0 * PI);
     float target = baseline + 100 * sin4((preSetTimer - 3000) / 3000.0 * PI);
     MotorEvArgs llng(LLNG, target, STEPSZ);
@@ -2764,7 +2764,7 @@ void prog3(QMActive* recv, uint16_t&amp; preSetTimer) {
       QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
     }
     else if (preSetTimer &gt;= 3000) {
-      static const uint8_t PROGMEM STEPSZ = 8;
+      static const uint8_t PROGMEM STEPSZ = 4;
       float targetDeltaSmall = 15 * sin4((preSetTimer - 3000) / 3000.0 * PI);
       float targetDeltaLarge = 40 * sin4((preSetTimer - 3000) / 3000.0 * PI);
 
@@ -2821,7 +2821,7 @@ void prog4(QMActive* recv, uint16_t&amp; preSetTimer) {
       QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
     }
     else if (preSetTimer &gt;= 2960) {
-      static const uint8_t PROGMEM STEPSZ = 8;
+      static const uint8_t PROGMEM STEPSZ = 4;
       float target = 47 + 160 * sin4((preSetTimer - 2960) / 2480.0 * PI);
 
       MotorEvArgs lulng(LULNG, target, STEPSZ);
@@ -2871,7 +2871,7 @@ void prog5(QMActive* recv, uint16_t&amp; preSetTimer) {
       QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
     }
     else if (preSetTimer &gt;= 3000 &amp;&amp; preSetTimer &lt; 28000) {
-      static const uint8_t PROGMEM STEPSZ = 8;
+      static const uint8_t PROGMEM STEPSZ = 4;
       float target = 10 + 100 * sin4((preSetTimer - 3000) / 3000.0 * PI);
 
       MotorEvArgs lulng(LULNG, target, STEPSZ);
@@ -2950,7 +2950,7 @@ void prog6(QMActive* recv, uint16_t&amp; preSetTimer) {
     }
     else if (preSetTimer &gt;= 3000) {
 
-      static const uint8_t PROGMEM STEPSZ = 8;
+      static const uint8_t PROGMEM STEPSZ = 4;
       float targetDeltaSmall = 15 * sin4((preSetTimer - 3000) / 3000.0 * PI);
       float targetDeltaLarge = 40 * sin4((preSetTimer - 3000) / 3000.0 * PI);
       float targetGating = 127 + 80 * sin4((preSetTimer - 3000) / 3000.0 * PI);
@@ -3011,7 +3011,7 @@ void prog7(QMActive* recv, uint16_t&amp; preSetTimer) {
       QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
     }
     else if (preSetTimer &gt;= 3000) {
-      static const uint8_t PROGMEM STEPSZ = 8;
+      static const uint8_t PROGMEM STEPSZ = 4;
       float target = 127 + 80 * sin4((preSetTimer - 3000) / 2500.0 * PI);
 
       MotorEvArgs lulng(LULNG, target, STEPSZ);
@@ -3074,7 +3074,7 @@ void prog8(QMActive* recv, uint16_t&amp; preSetTimer) {
       QACTIVE_POST(recv, MOTOR_MOVE_ASOLUTE_SIG, gartn.raw);
     }
     else if (preSetTimer &gt;= 3000) {
-      static const uint8_t PROGMEM STEPSZ = 8;
+      static const uint8_t PROGMEM STEPSZ = 4;
       float baseline = 60 + 30 * sin4((preSetTimer - 3000) / 30000.0 * PI);
       float target = baseline + 50 * sin4((preSetTimer - 3000) / 3000.0 * PI);
 
@@ -3352,7 +3352,7 @@ float cos4(float f) {
 #define MAJORVERSION 1
 #define MINORVERSION 0
 #define IFVERSION    1
-#define BUILDVERSION 3
+#define BUILDVERSION 4
 
 //#define Q_PARAM_SIZE 2
 

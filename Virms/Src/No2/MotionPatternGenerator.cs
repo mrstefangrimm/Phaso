@@ -99,7 +99,7 @@ namespace Virms.No2 {
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double targetLlng = 128 - 127 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
         double targetLrtn = 127 + 127 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
         double targetRlng = 128 - 88 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
@@ -131,7 +131,7 @@ namespace Virms.No2 {
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double target = 47 + 160 * MathEx.Sin4((_preSetTimer - 3000) / 2500d * Math.PI);
 
         CylinderPosition[] pos = new CylinderPosition[3];
@@ -160,7 +160,7 @@ namespace Virms.No2 {
         handler(pos);
       }
       else if (_preSetTimer >= 3000 && _preSetTimer < 28000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double target = 10 + 100 * MathEx.Sin4((_preSetTimer - 3000) / 3000d * Math.PI);
 
         CylinderPosition[] pos = new CylinderPosition[3];
@@ -208,7 +208,7 @@ namespace Virms.No2 {
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double targetLlng = 128 - 127 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
         double targetLrtn = 127 + 127 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
         double targetRlng = 128 - 88 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
@@ -242,7 +242,7 @@ namespace Virms.No2 {
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double target = 47 + 160 * MathEx.Sin4((_preSetTimer - 3000) / 2500.0 * Math.PI);
 
         ushort rtnGP = 127;
@@ -273,7 +273,7 @@ namespace Virms.No2 {
         handler(pos);
       }
       else if (_preSetTimer >= 3000) {
-        const ushort STEPSZ = 8;
+        const ushort STEPSZ = 4;
         double baseline = 60 + 20 * Math.Sin((_preSetTimer - 3000) / 30000.0 * Math.PI);
         double target = baseline + 100 * MathEx.Sin4((_preSetTimer - 3000) / 3000.0 * Math.PI);
 
