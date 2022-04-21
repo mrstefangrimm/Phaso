@@ -1,14 +1,16 @@
 ﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-namespace Virms.Web.Core {
+namespace Virms.Web {
   using Microsoft.EntityFrameworkCore;
   using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Linq.Expressions;
   using Virms.Common;
+  using Virms.Web.Core;
   using Virms.Web.ResourceAccess;
+  using MotionSystem = Core.MotionSystem;
 
   public class MotionSystemSqliteRepository : IRepository<MotionSystem>, IIdCreator {
 

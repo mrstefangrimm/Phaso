@@ -1,17 +1,16 @@
 // Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Virms.Common;
-using Virms.Web.Core;
-
 namespace Virms.Web {
+  using Microsoft.AspNetCore.Builder;
+  using Microsoft.AspNetCore.Hosting;
+  using Microsoft.AspNetCore.SpaServices.AngularCli;
+  using Microsoft.Extensions.Configuration;
+  using Microsoft.Extensions.DependencyInjection;
+  using Microsoft.Extensions.Hosting;
+  using Virms.Common;
+  using Virms.Web.Core;
+
   public class Startup {
 
     private readonly IWebHostEnvironment _env;
@@ -26,7 +25,7 @@ namespace Virms.Web {
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
       services.AddControllersWithViews();
-            
+
       services.AddSingleton<ApplicationApi>();
 
       services.AddSingleton(
@@ -58,8 +57,9 @@ namespace Virms.Web {
       app.UseStaticFiles();
 
       // CORS, e.g. UseCors before UseRouting: https://stackoverflow.com/questions/44379560/how-to-enable-cors-in-asp-net-core-webapi
+      var cors = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AppSettings")["CORS"];
       app.UseCors(
-        options => options.WithOrigins("https://virms.github.io").AllowAnyMethod().AllowAnyHeader()
+        options => options.WithOrigins(cors).AllowAnyMethod().AllowAnyHeader()
        );
 
       app.UseRouting();
