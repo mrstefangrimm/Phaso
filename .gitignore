@@ -1,5 +1,1 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/Virms/Src/Web/ClientApp/src/app/liver/liverphantom.service.js.map
+﻿/.vs

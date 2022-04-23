@@ -1,14 +1,16 @@
 ﻿// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-namespace Virms.Web.Core {
+namespace Virms.Web {
   using Microsoft.EntityFrameworkCore;
   using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Linq.Expressions;
   using Virms.Common;
+  using Virms.Web.Core;
   using Virms.Web.ResourceAccess;
+  using MotionSystem = Core.MotionSystem;
 
   public class MotionSystemSqliteRepository : IRepository<MotionSystem>, IIdCreator {
 
@@ -30,7 +32,7 @@ namespace Virms.Web.Core {
 #endif
       }
 
-      var pluginFactory = new GenericReflectionFactory();
+      var pluginFactory = new InstanceFactory();
       var gris5aPluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.Gris5a.dll");
       var no2PluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No2.dll");
       var no3PluginBuilder = pluginFactory.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No3.dll");

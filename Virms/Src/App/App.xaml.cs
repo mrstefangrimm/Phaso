@@ -25,7 +25,7 @@ namespace Virms.App {
 
       string pluginPath = Environment.CurrentDirectory;
 
-      var motionSystemFac = new GenericReflectionFactory();
+      var motionSystemFac = new InstanceFactory();
       var gris5aMsBuilder = motionSystemFac.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.Gris5a.dll");
       var no2MsBuilder = motionSystemFac.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No2.dll");
       var no3MsBuilder = motionSystemFac.Create<IMotionSystemBuilder>($@"{pluginPath}\Virms.No3.dll");
