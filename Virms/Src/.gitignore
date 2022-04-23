@@ -1,0 +1,7 @@
+packages/
+.vs
+bin/
+obj/
+lib/
+*.csproj.user
+*.pem
