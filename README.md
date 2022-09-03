@@ -32,7 +32,9 @@ Currently the following clients exist:
 | ---------------- | ----------------- |
 | Arduino IDE      | GPL               |
 | avrdude          | GPL               |
+| Arduino CLI      | GPL               |
 | QM               | GPL               |
+| QPN_AVR          | GPL               |
 | Processing       | GPL               |
 | gcc              | GPL               |
 | VS2019 community | Microsoft license |
