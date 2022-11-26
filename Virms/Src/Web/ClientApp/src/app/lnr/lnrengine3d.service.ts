@@ -35,10 +35,10 @@ export class LnrEngine3dService implements OnDestroy {
   groupStaticBaseGold: LoadableObject
   groupStaticBaseAnthracite: LoadableObject
   groupStaticBaseBlue: LoadableObject
-  groupSliderSilver: LoadableObject
-  groupSliderBlue: LoadableObject
-  groupSliderGold: LoadableObject
-  groupSliderAnthracite: LoadableObject
+  groupCarriageSilver: LoadableObject
+  groupCarriageBlue: LoadableObject
+  groupCarriageGold: LoadableObject
+  groupCarriageAnthracite: LoadableObject
   groupServoArmGold: LoadableObject
   groupServoArmSilver: LoadableObject
   groupServoArmAnthracite: LoadableObject
@@ -238,68 +238,68 @@ export class LnrEngine3dService implements OnDestroy {
             console.warn(LnrEngine3dService.name, "createScene", "base not shown")
           })
       })
-    LoadedObject.tryAdd(this.groupSliderSilver).subscribe(existing => this.scene.add(existing),
+    LoadedObject.tryAdd(this.groupCarriageSilver).subscribe(existing => this.scene.add(existing),
       () => {
-        this.groupSliderSilver = new LoadedObject()
-        this.groupSliderSilver.origin = new Vector3(0, 0, 0)
-        this.groupSliderSilver.normal = new Vector3(0, -1, 0)
-        this.groupSliderSilver.position = originOffset
-        this.groupSliderSilver.material = this.materialSilver
-        this.groupSliderSilver.load(this.baseUrl + 'assets/LnR-VirmsGroupSliderSilver.obj').subscribe(
+        this.groupCarriageSilver = new LoadedObject()
+        this.groupCarriageSilver.origin = new Vector3(0, 0, 0)
+        this.groupCarriageSilver.normal = new Vector3(0, -1, 0)
+        this.groupCarriageSilver.position = originOffset
+        this.groupCarriageSilver.material = this.materialSilver
+        this.groupCarriageSilver.load(this.baseUrl + 'assets/LnR-VirmsGroupCarriageSilver.obj').subscribe(
           object3d => {
             this.scene.add(object3d);
           },
           () => {
-            this.groupSliderSilver = new NotLoadedObject()
-            console.warn(LnrEngine3dService.name, "createScene", "slider is not shown")
+            this.groupCarriageSilver = new NotLoadedObject()
+            console.warn(LnrEngine3dService.name, "createScene", "carriage is not shown")
           })
       })
-    LoadedObject.tryAdd(this.groupSliderBlue).subscribe(existing => this.scene.add(existing),
+    LoadedObject.tryAdd(this.groupCarriageBlue).subscribe(existing => this.scene.add(existing),
       () => {
-        this.groupSliderBlue = new LoadedObject()
-        this.groupSliderBlue.origin = new Vector3(0, 0, 0)
-        this.groupSliderBlue.normal = new Vector3(0, -1, 0)
-        this.groupSliderBlue.position = originOffset
-        this.groupSliderBlue.material = this.materialBlue
-        this.groupSliderBlue.load(this.baseUrl + 'assets/LnR-VirmsGroupSliderBlue.obj').subscribe(
+        this.groupCarriageBlue = new LoadedObject()
+        this.groupCarriageBlue.origin = new Vector3(0, 0, 0)
+        this.groupCarriageBlue.normal = new Vector3(0, -1, 0)
+        this.groupCarriageBlue.position = originOffset
+        this.groupCarriageBlue.material = this.materialBlue
+        this.groupCarriageBlue.load(this.baseUrl + 'assets/LnR-VirmsGroupCarriageBlue.obj').subscribe(
           object3d => {
             this.scene.add(object3d);
           },
           () => {
-            this.groupSliderBlue = new NotLoadedObject()
-            console.warn(LnrEngine3dService.name, "createScene", "slider is not shown")
+            this.groupCarriageBlue = new NotLoadedObject()
+            console.warn(LnrEngine3dService.name, "createScene", "carriage is not shown")
           })
       })
-    LoadedObject.tryAdd(this.groupSliderGold).subscribe(existing => this.scene.add(existing),
+    LoadedObject.tryAdd(this.groupCarriageGold).subscribe(existing => this.scene.add(existing),
       () => {
-        this.groupSliderGold = new LoadedObject()
-        this.groupSliderGold.origin = new Vector3(0, 0, 0)
-        this.groupSliderGold.normal = new Vector3(0, -1, 0)
-        this.groupSliderGold.position = originOffset
-        this.groupSliderGold.material = this.materialGold
-        this.groupSliderGold.load(this.baseUrl + 'assets/LnR-VirmsGroupSliderGold.obj').subscribe(
+        this.groupCarriageGold = new LoadedObject()
+        this.groupCarriageGold.origin = new Vector3(0, 0, 0)
+        this.groupCarriageGold.normal = new Vector3(0, -1, 0)
+        this.groupCarriageGold.position = originOffset
+        this.groupCarriageGold.material = this.materialGold
+        this.groupCarriageGold.load(this.baseUrl + 'assets/LnR-VirmsGroupCarriageGold.obj').subscribe(
           object3d => {
             this.scene.add(object3d);
           },
           () => {
-            this.groupSliderGold = new NotLoadedObject()
-            console.warn(LnrEngine3dService.name, "createScene", "slider is not shown")
+            this.groupCarriageGold = new NotLoadedObject()
+            console.warn(LnrEngine3dService.name, "createScene", "carriage is not shown")
           })
       })
-    LoadedObject.tryAdd(this.groupSliderAnthracite).subscribe(existing => this.scene.add(existing),
+    LoadedObject.tryAdd(this.groupCarriageAnthracite).subscribe(existing => this.scene.add(existing),
       () => {
-        this.groupSliderAnthracite = new LoadedObject()
-        this.groupSliderAnthracite.origin = new Vector3(0, 0, 0)
-        this.groupSliderAnthracite.normal = new Vector3(0, -1, 0)
-        this.groupSliderAnthracite.position = originOffset
-        this.groupSliderAnthracite.material = this.materialAnthracite
-        this.groupSliderAnthracite.load(this.baseUrl + 'assets/LnR-VirmsGroupSliderAnthracite.obj').subscribe(
+        this.groupCarriageAnthracite = new LoadedObject()
+        this.groupCarriageAnthracite.origin = new Vector3(0, 0, 0)
+        this.groupCarriageAnthracite.normal = new Vector3(0, -1, 0)
+        this.groupCarriageAnthracite.position = originOffset
+        this.groupCarriageAnthracite.material = this.materialAnthracite
+        this.groupCarriageAnthracite.load(this.baseUrl + 'assets/LnR-VirmsGroupCarriageAnthracite.obj').subscribe(
           object3d => {
             this.scene.add(object3d);
           },
           () => {
-            this.groupSliderAnthracite = new NotLoadedObject()
-            console.warn(LnrEngine3dService.name, "createScene", "slider is not shown")
+            this.groupCarriageAnthracite = new NotLoadedObject()
+            console.warn(LnrEngine3dService.name, "createScene", "carriage is not shown")
           })
       })
     LoadedObject.tryAdd(this.groupServoArmGold).subscribe(existing => this.scene.add(existing),
@@ -495,10 +495,10 @@ export class LnrEngine3dService implements OnDestroy {
       this.groupStaticBaseGold.setMaterial(this.materialXray)
       this.groupStaticBaseAnthracite.setMaterial(this.materialXray)
       this.groupStaticBaseBlue.setMaterial(this.materialXray)
-      this.groupSliderSilver.setMaterial(this.materialXray)
-      this.groupSliderBlue.setMaterial(this.materialXray)
-      this.groupSliderGold.setMaterial(this.materialXray)
-      this.groupSliderAnthracite.setMaterial(this.materialXray)
+      this.groupCarriageSilver.setMaterial(this.materialXray)
+      this.groupCarriageBlue.setMaterial(this.materialXray)
+      this.groupCarriageGold.setMaterial(this.materialXray)
+      this.groupCarriageAnthracite.setMaterial(this.materialXray)
       this.groupServoArmGold.setMaterial(this.materialXray)
       this.groupServoArmSilver.setMaterial(this.materialXray)
       this.groupServoArmAnthracite.setMaterial(this.materialXray)
@@ -518,10 +518,10 @@ export class LnrEngine3dService implements OnDestroy {
       this.groupStaticBaseGold.setMaterial(this.materialGold)
       this.groupStaticBaseAnthracite.setMaterial(this.materialAnthracite)
       this.groupStaticBaseBlue.setMaterial(this.materialBlue)
-      this.groupSliderSilver.setMaterial(this.materialSilver)
-      this.groupSliderBlue.setMaterial(this.materialBlue)
-      this.groupSliderGold.setMaterial(this.materialGold)
-      this.groupSliderAnthracite.setMaterial(this.materialAnthracite)
+      this.groupCarriageSilver.setMaterial(this.materialSilver)
+      this.groupCarriageBlue.setMaterial(this.materialBlue)
+      this.groupCarriageGold.setMaterial(this.materialGold)
+      this.groupCarriageAnthracite.setMaterial(this.materialAnthracite)
       this.groupServoArmGold.setMaterial(this.materialGold)
       this.groupServoArmSilver.setMaterial(this.materialSilver)
       this.groupServoArmAnthracite.setMaterial(this.materialAnthracite)

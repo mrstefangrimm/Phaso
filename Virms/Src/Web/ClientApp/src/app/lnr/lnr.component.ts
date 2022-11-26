@@ -62,10 +62,10 @@ export class LnrComponent implements OnInit, OnDestroy {
     let lng = magicNum + b + Math.cos(alpha) * -26
     let beta = magicAng - Math.asin(a / 52)
 
-    this.engine3d.groupSliderBlue.setLng(lng)
-    this.engine3d.groupSliderSilver.setLng(lng)
-    this.engine3d.groupSliderGold.setLng(lng)
-    this.engine3d.groupSliderAnthracite.setLng(lng)
+    this.engine3d.groupCarriageBlue.setLng(lng)
+    this.engine3d.groupCarriageSilver.setLng(lng)
+    this.engine3d.groupCarriageGold.setLng(lng)
+    this.engine3d.groupCarriageAnthracite.setLng(lng)
     this.engine3d.groupRotationWhite.setLng(lng)
     this.engine3d.groupRotationWood.setLng(lng)
     this.engine3d.groupRotationBlue.setLng(lng)
