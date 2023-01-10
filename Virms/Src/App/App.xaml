@@ -9,11 +9,12 @@
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Virms.Common.Plugin;component/UI/Views/ComboboxStylesAndTemplates.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Virms.Common.Plugin;component/UI/Views/ButtonStylesAndTemplates.xaml" />
-        <!--<ResourceDictionary Source="pack://application:,,,/Virms.Zero.Plugin;component/UI/Views/ZeroDictionary.xaml" />
-        <ResourceDictionary Source="/Virms.Zero.Plugin;component/UI/Views/ZeroDictionary.xaml" />-->
+        <!--<ResourceDictionary Source="pack://application:,,,/Virms.Zero.Plugin;component/UI/Views/ZeroDictionary.xaml" />-->
+        <ResourceDictionary Source="/Virms.Zero.Plugin;component/UI/Views/ZeroDictionary.xaml" />
         <ResourceDictionary Source="/Virms.Gris5a.Plugin;component/UI/Views/Gris5aDictionary.xaml" />
         <ResourceDictionary Source="/Virms.No2.Plugin;component/UI/Views/No2Dictionary.xaml" />
         <ResourceDictionary Source="/Virms.No3.Plugin;component/UI/Views/No3Dictionary.xaml" />
+        <ResourceDictionary Source="/Virms.Isocal.Plugin;component/UI/Views/IsocalDictionary.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>

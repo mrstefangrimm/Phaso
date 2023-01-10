@@ -1,27 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Virms.Gris5a.Plugin</AssemblyName>
     <RootNamespace>Virms.Gris5a</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.20.0" />
+    <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.23.0" />
     <PackageReference Include="QuickConverter-NetCore3_1" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Plugin\Common.Plugin.csproj" />
     <ProjectReference Include="..\Gris5a\Gris5a.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="UI\Views\Gris5aDictionary.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 
 </Project>

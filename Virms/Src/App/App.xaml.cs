@@ -36,11 +36,13 @@ namespace Virms.App {
       var gris5aPluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.Gris5a.Plugin.dll", pluginPath));
       var no2PluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No2.Plugin.dll", pluginPath));
       var no3PluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.No3.Plugin.dll", pluginPath));
+      var isocalPluginBuilder = pluginFactory.CreatePluginBuilder(string.Format(@"{0}\Virms.Isocal.Plugin.dll", pluginPath));
 
       ObservableCollection<IPluginPhantom> availablePhantoms = new ObservableCollection<IPluginPhantom>() {
         gris5aPluginBuilder.BuildPluginPhantom(gris5aMsBuilder.BuildMotionSystem(_mophApp)),
         no2PluginBuilder.BuildPluginPhantom(no2MsBuilder.BuildMotionSystem(_mophApp)),
         no3PluginBuilder.BuildPluginPhantom(no3MsBuilder.BuildMotionSystem(_mophApp)),
+        isocalPluginBuilder.BuildPluginPhantom(null),
         zeroPluginBuilder.BuildPluginPhantom(null),
       };
 
@@ -76,9 +78,14 @@ namespace Virms.App {
       app.Resources.Add(templ.DataTemplateKey, templ);
       templ = no3PluginBuilder.BuildControlTemplate();
       app.Resources.Add(templ.DataTemplateKey, templ);
+      templ = isocalPluginBuilder.BuildPhantomTemplate();
+      app.Resources.Add(templ.DataTemplateKey, templ);
+      templ = isocalPluginBuilder.BuildControlTemplate();
+      app.Resources.Add(templ.DataTemplateKey, templ);
+
       app.Closing += mainViewModel.OnClosing;
 
-      //var aaasss = AppDomain.CurrentDomain.GetAssemblies();
+      //var amblies = AppDomain.CurrentDomain.GetAssemblies();
       app.Show();
     }
 

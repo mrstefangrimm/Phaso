@@ -1,4 +1,5 @@
 ﻿namespace Virms.Zero.UI {
+
   using System.ComponentModel;
   using Virms.Common.UI;
 
@@ -14,9 +15,6 @@
     static ZeroControlViewModel() {
       QuickConverter.EquationTokenizer.AddNamespace(typeof(ZeroControlViewState));
       QuickConverter.EquationTokenizer.AddNamespace(typeof(System.Windows.Visibility));
-    }
-
-    public ZeroControlViewModel() {
     }
 
     INotifyPropertyChanged IPlugInControlViewModel.GA => GA;

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Virms.App</AssemblyName>
   </PropertyGroup>
@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common.Plugin\Common.Plugin.csproj" />
     <ProjectReference Include="..\Gris5a.Plugin\Gris5a.Plugin.csproj" />
+    <ProjectReference Include="..\Isocal.Plugin\Isocal.Plugin.csproj" />
     <ProjectReference Include="..\No2.Plugin\No2.Plugin.csproj" />
     <ProjectReference Include="..\No3.Plugin\No3.Plugin.csproj" />
     <ProjectReference Include="..\Zero.Plugin\Zero.Plugin.csproj" />

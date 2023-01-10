@@ -1,27 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Virms.No3.Plugin</AssemblyName>
     <RootNamespace>Virms.No3</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.20.0" />
+    <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.23.0" />
     <PackageReference Include="QuickConverter-NetCore3_1" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Plugin\Common.Plugin.csproj" />
     <ProjectReference Include="..\No3\No3.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="UI\Views\No3Dictionary.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 
 </Project>
