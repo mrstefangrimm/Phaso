@@ -1,0 +1,58 @@
+<!-- Copyright (c) 2023 Stefan Grimm. All rights reserved.
+     Licensed under the GPL. See LICENSE file in the project root for full license information.
+-->
+
+<h1>Isocal Phantom</h1>
+
+<mat-sidenav-container>
+  <mat-sidenav *ngIf="!context.sideNavOpen"
+               opened
+               mode="side"
+               position="end">
+    <div>
+      <button mat-button (click)="context.sideNavOpen = true"><</button>
+    </div>
+    <div align="center">
+      <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav *ngIf="context.sideNavOpen"
+               opened
+               mode="side"
+               position="end">
+    <div align="left">
+      <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
+      <button mat-button (click)="context.sideNavOpen = false">></button>
+    </div>
+
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-sidenav-container hasBackdrop="false">
+      <mat-sidenav *ngIf="context.visiblitiesOpen"
+                   opened
+                   mode="over"
+                   position="end">
+        <div>
+          <mat-checkbox [checked]="context.showAsXray"
+                        (change)="onXrayChecked($event.checked)">
+            X-Ray
+          </mat-checkbox>
+        </div>
+      </mat-sidenav>
+      <mat-sidenav-content>
+
+        <div class="stack-horz">
+          <div class="content">
+            <canvas #rendererCanvas
+                    id="renderCanvas"
+                    width="500"
+                    height="500">
+            </canvas>
+          </div>
+        </div>
+
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

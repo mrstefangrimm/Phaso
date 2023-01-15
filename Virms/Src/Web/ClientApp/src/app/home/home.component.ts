@@ -1,9 +1,7 @@
-// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
 import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
 
 @Component({
   selector: 'app-home',
@@ -16,12 +14,13 @@ export class HomeComponent implements OnInit {
   markerPhantomActive: boolean
   liverPhantomActive: boolean
   lungPhantomActive: boolean
+  isocalPhantomActive: boolean
   lnrActuatorActive: boolean
 
-  constructor(
-    private readonly router: Router,
-    private readonly route: ActivatedRoute) {
+  constructor() {
     console.info(HomeComponent.name, "c'tor")
+
+    this.onIsocalPhantomClicked()
   }
 
   ngOnInit() {
@@ -57,7 +56,7 @@ export class HomeComponent implements OnInit {
   }
 
   showHome(): boolean {
-    return !this.markerPhantomActive && !this.liverPhantomActive && !this.lungPhantomActive && !this.lnrActuatorActive
+    return !this.markerPhantomActive && !this.liverPhantomActive && !this.lungPhantomActive && !this.isocalPhantomActive && !this.lnrActuatorActive
   }
 
   onMarkerPhantomClicked() {
@@ -65,6 +64,7 @@ export class HomeComponent implements OnInit {
     this.markerPhantomActive = true
     this.liverPhantomActive = false
     this.lungPhantomActive = false
+    this.isocalPhantomActive = false
     this.lnrActuatorActive = false
     this.sideNavOpen = false
   }
@@ -74,6 +74,7 @@ export class HomeComponent implements OnInit {
     this.markerPhantomActive = false
     this.liverPhantomActive = true
     this.lungPhantomActive = false
+    this.isocalPhantomActive = false
     this.lnrActuatorActive = false
     this.sideNavOpen = false
   }
@@ -83,6 +84,17 @@ export class HomeComponent implements OnInit {
     this.markerPhantomActive = false
     this.liverPhantomActive = false
     this.lungPhantomActive = true
+    this.isocalPhantomActive = false
+    this.lnrActuatorActive = false
+    this.sideNavOpen = false
+  }
+
+  onIsocalPhantomClicked() {
+    console.info(HomeComponent.name, "onIsocalPhantomClicked")
+    this.markerPhantomActive = false
+    this.liverPhantomActive = false
+    this.lungPhantomActive = false
+    this.isocalPhantomActive = true
     this.lnrActuatorActive = false
     this.sideNavOpen = false
   }
@@ -92,7 +104,8 @@ export class HomeComponent implements OnInit {
     this.markerPhantomActive = false
     this.liverPhantomActive = false
     this.lungPhantomActive = false
+    this.isocalPhantomActive = false
     this.lnrActuatorActive = true
     this.sideNavOpen = false
-  }  
+  }
 }

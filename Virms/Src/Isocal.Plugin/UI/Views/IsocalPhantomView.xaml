@@ -17,26 +17,34 @@
     <h:HelixViewport3D 
           Width="{Binding ActualWidth, ElementName=PhantomView}"
           Height="{Binding ActualHeight, ElementName=PhantomView}"
-          Background="Transparent" 
+          Background="Black"
           ShowCoordinateSystem="True"
           ShowViewCube="True"
           x:Name="MainView"
-          ZoomAroundMouseDownPoint="True">
+          ZoomAroundMouseDownPoint="False"
+          IsHeadLightEnabled="True">
+      <!--Background="#F8F8F8"-->
 
       <h:HelixViewport3D.DefaultCamera>
-        <OrthographicCamera Position="0 -1000 0" LookDirection="0 1000 0" Width="600" UpDirection="0 0 1"/>
+        <OrthographicCamera Position="0 -300 0" LookDirection="0 300 0" UpDirection="0 0 1" Width="300" />
       </h:HelixViewport3D.DefaultCamera>
 
-      <ModelVisual3D>
+      <!--<h:SpotHeadLight Position="0 -1000 0" Brightness="0.8"/>-->
+      <!--<h:SpotHeadLight Position="{Binding Headlight2}" Brightness="{Binding Brightness}"/>-->
+
+      <!--<ModelVisual3D>
         <ModelVisual3D.Content>
           <AmbientLight Color="White"/>
         </ModelVisual3D.Content>
-      </ModelVisual3D>
+      </ModelVisual3D>-->
       <!-- h:DefaultLights/ -->
       <!-- local:GridLines/ -->
 
-      <local:MarkersModel3D Fill="White" />
-      <local:DrumModel3D Fill="#10FFFFFF" />
+      <local:MarkersModel3D Fill="#050505" />
+      <local:DrumModel3D Fill="#33FFFFFF" />
+
+      <h:BoxVisual3D x:Name="Detector" Transform="{h:Translate 0, 200, 0}" Height="400" Width="100" Length="400"  Fill="White"/>
+      <!--<h:BindableRotateManipulator Position="-25 25 0" Axis="0 0 -1"  Value="{Binding LU.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Detector, Path=Transform}"/>-->
 
     </h:HelixViewport3D>
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -18,11 +18,12 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatDividerModule } from '@angular/material/divider'
 
-import { SharedModule } from './shared/shared.module';
-import { MarkerComponent } from './marker/marker.component';
-import { LiverComponent } from './liver/liver.component';
-import { LungComponent } from './lung/lung.component';
-import { LnrComponent } from './lnr/lnr.component';
+import { SharedModule } from './shared/shared.module'
+import { MarkerComponent } from './marker/marker.component'
+import { LiverComponent } from './liver/liver.component'
+import { LungComponent } from './lung/lung.component'
+import { LnrComponent } from './lnr/lnr.component'
+import { IsocalComponent } from './isocal/isocal.component'
 import { HomeComponent } from './home/home.component'
 
 @NgModule({
@@ -32,6 +33,7 @@ import { HomeComponent } from './home/home.component'
     LiverComponent,
     LungComponent,
     LnrComponent,
+    IsocalComponent,
     HomeComponent,
   ],
   imports: [

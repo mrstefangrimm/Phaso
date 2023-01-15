@@ -10,33 +10,4 @@ import { Component } from '@angular/core'
 })
 export class AppComponent {
 
-  sideNavOpen: boolean
-  markerPhantomActive: boolean = true
-  liverPhantomActive: boolean
-  lungPhantomActive: boolean
-
-  onMarkerPhantomClicked() {
-    console.info(AppComponent.name, "onMarkerPhantomClicked")
-    this.markerPhantomActive = true
-    this.liverPhantomActive = false
-    this.lungPhantomActive = false
-    this.sideNavOpen = false
-  }
-
-  onLiverPhantomClicked() {
-    console.info(AppComponent.name, "onLiverPhantomClicked")
-    this.markerPhantomActive = false
-    this.liverPhantomActive = true
-    this.lungPhantomActive = false
-    this.sideNavOpen = false
-  }
-
-  onLungPhantomClicked() {
-    console.info(AppComponent.name, "onLungPhantomClicked")
-    this.markerPhantomActive = false
-    this.liverPhantomActive = false
-    this.lungPhantomActive = true
-    this.sideNavOpen = false
-  }
-
 }
