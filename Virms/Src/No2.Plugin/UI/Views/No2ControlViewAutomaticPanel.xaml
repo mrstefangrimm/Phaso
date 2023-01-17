@@ -1,4 +1,4 @@
-﻿<!-- Copyright (c) 2020-2021 Stefan Grimm. All rights reserved.
+﻿<!-- Copyright (c) 2020-2023 Stefan Grimm. All rights reserved.
      Licensed under the GPL. See LICENSE file in the project root for full license information. -->
 
 <UserControl x:Class="Virms.No2.UI.Views.No2ControlViewAutomaticPanel"
@@ -7,8 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:qc="clr-namespace:QuickConverter;assembly=QuickConverter"
-             mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="200">
+             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="200">
 
   <Control.Resources>
     <ResourceDictionary>

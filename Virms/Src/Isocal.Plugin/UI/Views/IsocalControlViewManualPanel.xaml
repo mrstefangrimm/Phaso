@@ -1,19 +1,27 @@
-﻿<!-- Copyright (c) 2020-2023 Stefan Grimm. All rights reserved.
+﻿<!-- Copyright (c) 2023 Stefan Grimm. All rights reserved.
      Licensed under the GPL. See LICENSE file in the project root for full license information. -->
 
-<UserControl x:Class="Virms.No2.UI.Views.No2ControlViewManualPanel"
+<UserControl x:Class="Virms.Isocal.UI.Views.IsocalControlViewManualPanel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="200">
   <StackPanel>
-    <GroupBox Header="Left" Foreground="White" BorderThickness="0" FontWeight="Bold">
+    <GroupBox Header="X1/X2" Foreground="White" BorderThickness="0" FontWeight="Bold">
       <StackPanel>
-        <TextBox Text="{Binding L.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
-        <Slider Minimum="0" Maximum="255" Value="{Binding L.LNGInt}"/>
-        <TextBox Text="{Binding L.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
-        <Slider Minimum="0" Maximum="255" Value="{Binding L.RTNInt}" />
+        <TextBox Text="{Binding X1.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="21" Value="{Binding X1.LNGInt}"/>
+        <TextBox Text="{Binding X2.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="21" Value="{Binding X2.LNGInt}" />
+      </StackPanel>
+    </GroupBox>
+    <GroupBox Header="Y1/Y2" Foreground="White" BorderThickness="0" FontWeight="Bold">
+      <StackPanel>
+        <TextBox Text="{Binding Y1.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="21" Value="{Binding Y1.LNGInt}"/>
+        <TextBox Text="{Binding Y2.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="21" Value="{Binding Y2.LNGInt}" />
       </StackPanel>
     </GroupBox>
     <GroupBox Header="Right" Foreground="White" BorderThickness="0" FontWeight="Bold">

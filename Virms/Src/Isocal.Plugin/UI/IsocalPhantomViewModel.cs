@@ -6,4 +6,5 @@ namespace Virms.Isocal.UI {
 
   public class IsocalPhantomViewModel : IsocalViewModel, IPlugInPhantomViewModel {
   }
+
 }
