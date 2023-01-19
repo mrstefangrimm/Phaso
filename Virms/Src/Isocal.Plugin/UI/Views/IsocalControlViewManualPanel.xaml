@@ -24,20 +24,22 @@
         <Slider Minimum="0" Maximum="21" Value="{Binding Y2.LNGInt}" />
       </StackPanel>
     </GroupBox>
-    <GroupBox Header="Right" Foreground="White" BorderThickness="0" FontWeight="Bold">
+    <GroupBox Header="Coll Rtn" Foreground="White" BorderThickness="0" FontWeight="Bold">
       <StackPanel>
-        <TextBox Text="{Binding R.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
-        <Slider Minimum="0" Maximum="255" Value="{Binding R.LNGInt}"/>
-        <TextBox Text="{Binding R.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
-        <Slider Minimum="0" Maximum="255" Value="{Binding R.RTNInt}" />
+        <TextBox Text="{Binding CollRtn.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="360" Value="{Binding CollRtn.RTNInt}"/>
       </StackPanel>
     </GroupBox>
-    <GroupBox Header="Gating Platform" Foreground="White" BorderThickness="0" FontWeight="Bold">
+    <GroupBox Header="Gantry Rtn" Foreground="White" BorderThickness="0" FontWeight="Bold">
       <StackPanel>
-        <TextBox Text="{Binding GA.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
-        <Slider Minimum="0" Maximum="255" Value="{Binding GA.LNGInt}"/>
-        <TextBox Text="{Binding GA.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
-        <Slider Minimum="0" Maximum="255" Value="{Binding GA.RTNInt}" />
+        <TextBox Text="{Binding GantryRtn.RTNInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="0" Maximum="360" Value="{Binding GantryRtn.RTNInt}"/>
+      </StackPanel>
+    </GroupBox>
+    <GroupBox Header="Couch Lng" Foreground="White" BorderThickness="0" FontWeight="Bold">
+      <StackPanel>
+        <TextBox Text="{Binding CouchLng.LNGInt, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="White" />
+        <Slider Minimum="-130" Maximum="10" Value="{Binding CouchLng.LNGInt}"/>
       </StackPanel>
     </GroupBox>
   </StackPanel>

@@ -17,11 +17,9 @@ namespace Virms.Common.UI {
   }
 
   public class ScalarViewModel : INotifyPropertyChanged {
-    private readonly bool _negate;
     private int _lng = 0;
 
-    public ScalarViewModel(bool negate, int lng) {
-      _negate = negate;
+    public ScalarViewModel(int lng) {
       _lng = lng;
     }
 
