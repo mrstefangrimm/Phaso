@@ -15,8 +15,6 @@
   <UserControl.Resources>
     <SolidColorBrush x:Key="BlackCol" Color="Black"/>
     <DiffuseMaterial x:Key="CollMat" Brush="{StaticResource BlackCol}"/>
-    <!--<SolidColorBrush x:Key="CouchCol" Color="Transparent"/>
-    <DiffuseMaterial x:Key="CouchMat" Brush="{StaticResource CouchCol}"/>-->
   </UserControl.Resources>
   
   <Grid>
@@ -41,7 +39,6 @@
           UpDirection="0 0 1" />
       </h:HelixViewport3D.Camera>
 
-
       <ModelVisual3D>
         <ModelVisual3D.Content>
           <AmbientLight Color="White"/>
@@ -53,11 +50,11 @@
       <local:DrumModel3D x:Name="Drum" Fill="#99FFFFFF" />
       <h:BindableTranslateManipulator Direction="0 0 1" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Drum, Path=Transform}"/>
 
-      <h:BoxVisual3D x:Name="Couch" Transform="{h:Translate 0, 125, -300}" Height="1000" Width="20" Length="500"  Fill="#11000000"/>
-      <h:BindableTranslateManipulator Direction="0 0 1" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Couch, Path=Transform}"/>
-      
       <h:BoxVisual3D x:Name="Detector" Transform="{h:Translate 0, 500, 0}" Height="430" Width="100" Length="430"  Fill="DarkBlue"/>
       <h:BindableRotateManipulator Position="0 -500 0" Axis="0 0 1"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Detector, Path=Transform}"/>
+
+      <local:CouchModel3D x:Name="Couch" Transform="{h:Translate 0, 120, 0}" Fill="#44000000" />
+      <h:BindableTranslateManipulator Direction="0 0 1" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Couch, Path=Transform}"/>
 
       <h:BoxVisual3D x:Name="X1" Transform="{h:Translate 0, -570, 110}" Height="100" Width="10" Length="200"  Fill="Black"/>
       <h:BindableTranslateManipulator Direction="0 0 1" Value="{Binding X1.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X1, Path=Transform}"/>
@@ -94,7 +91,7 @@
       <h:HelixViewport3D.Camera>
         <PerspectiveCamera
           Position="0 -1000 0"
-          LookDirection="0 1 0"
+          LookDirection="0 1000 0"
           UpDirection="0 0 1" />
       </h:HelixViewport3D.Camera>
 
@@ -106,10 +103,11 @@
       <h:BindableRotateManipulator Position="0 0 0" Axis="0 0 1"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=DrumXray, Path=Transform}"/>
       <h:BindableTranslateManipulator Direction="0 0 1" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=DrumXray, Path=Transform}"/>
 
-      <!--<h:BoxVisual3D x:Name="CouchXray" Transform="{h:Translate 0, 125, -300}" Height="1000" Width="20" Length="500" Material="{StaticResource CouchMat}" BackMaterial="{StaticResource CouchMat}"/>
-      <h:BindableTranslateManipulator Direction="0 0 1" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=CouchXray, Path=Transform}"/>-->
-
       <h:BoxVisual3D x:Name="DetectorXray" Transform="{h:Translate 0, 500, 0}" Height="430" Width="100" Length="430"  Fill="White"/>
+
+      <local:CouchModel3D x:Name="CouchXray" Transform="{h:Translate 0, 120, 0}" Fill="#11000000" />
+      <h:BindableTranslateManipulator Direction="0 0 1" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=CouchXray, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="0 -120 0" Axis="0 0 1"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=CouchXray, Path=Transform}"/>
 
       <h:BoxVisual3D x:Name="X1Xray" Transform="{h:Translate 0, -570, 110}" Height="100" Width="10" Length="200"  Material="{StaticResource CollMat}" BackMaterial="{StaticResource CollMat}"/>
       <h:BindableTranslateManipulator Direction="0 0 1" Value="{Binding X1.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X1Xray, Path=Transform}"/>
