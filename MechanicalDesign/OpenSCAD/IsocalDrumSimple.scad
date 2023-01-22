@@ -8,7 +8,7 @@ $fn=200;
 outerRadius = 115;
 innerRadius = 100;
 
-color([0.95, 0.95, 0.95, 0.1])
+rotate([-90, 0 ,0])
   translate([0, 0, 0])
     difference()
     {
