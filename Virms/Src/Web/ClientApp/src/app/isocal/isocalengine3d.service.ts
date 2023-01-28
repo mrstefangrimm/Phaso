@@ -17,18 +17,26 @@ export class IsocalEngine3dService implements OnDestroy {
   private scene: THREE.Scene
   private light: THREE.Light
   private frameId: number = null
+  private orbit: OrbitControls
 
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
 
   private materialDrum: THREE.Material
-  private materialMarkers: THREE.Material
   private materialDrumXray: THREE.Material
+  private materialMarkers: THREE.Material
   private materialMarkersXray: THREE.Material
+  private materialCouch: THREE.Material
+  private materialCouchXray: THREE.Material
 
-  groupStaticDrum: LoadableObject
-  groupStaticMarkers: LoadableObject
+  drum: LoadableObject
+  markers: LoadableObject
+  couch: LoadableObject
   detector: THREE.BufferGeometry
+  x1: THREE.BufferGeometry
+  x2: THREE.BufferGeometry
+  y1: THREE.BufferGeometry
+  y2: THREE.BufferGeometry
 
   public constructor(
     private ngZone: NgZone,
@@ -65,16 +73,13 @@ export class IsocalEngine3dService implements OnDestroy {
     // create the scene
     this.scene = new THREE.Scene()
 
-    //this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera = new THREE.OrthographicCamera(w / - 2, w / 2, h / 2, h / - 2, 1, 1000);
-    this.camera.position.x = 0
-    this.camera.position.y = 0
-    this.camera.position.z = 300
+    this.camera = new THREE.PerspectiveCamera(30, w / h, 1, 3000)
+    this.camera.position.set(0, 0, 1000)
     this.scene.add(this.camera)
 
-    const controls = new OrbitControls(this.camera, this.renderer.domElement)
-    controls.minDistance = 0
-    controls.maxDistance = 500
+    this.orbit = new OrbitControls(this.camera, this.renderer.domElement)
+    this.orbit.minDistance = 0
+    this.orbit.maxDistance = 2500
 
     this.light = new THREE.SpotLight(0xffffff);
     this.light.position.set(0, 0, 600);
@@ -96,10 +101,6 @@ export class IsocalEngine3dService implements OnDestroy {
     this.materialDrum = new THREE.MeshStandardMaterial({
       color: 0xFFFFFF,
     })
-    this.materialMarkers = new THREE.MeshStandardMaterial({
-      color: 0xAAA9AD,
-      metalness: 1.0,
-    })
     this.materialDrumXray = new THREE.MeshPhysicalMaterial({
       color: 0xFFFFFF,
       metalness: 0,
@@ -109,6 +110,10 @@ export class IsocalEngine3dService implements OnDestroy {
       transmission: 0.2,
       opacity: 0.7,
       transparent: true
+    })
+    this.materialMarkers = new THREE.MeshStandardMaterial({
+      color: 0xAAA9AD,
+      metalness: 1.0,
     })
     this.materialMarkersXray = new THREE.MeshPhysicalMaterial({
       color: 0x000000,
@@ -120,48 +125,97 @@ export class IsocalEngine3dService implements OnDestroy {
       opacity: 1,
       transparent: true
     })
-
-    this.detector = new THREE.BoxGeometry(400, 400, 100)
-    this.detector.translate(0, 0, -200)
-    const material = new THREE.MeshStandardMaterial({
+    this.materialCouch = new THREE.MeshStandardMaterial({
+      color: 0xAAA9AD,
+      metalness: 1.0,
+    })
+    this.materialCouchXray = new THREE.MeshPhysicalMaterial({
+      color: 0xFFFFFFF,
+      metalness: 0,
+      roughness: 0,
+      alphaTest: 0.5,
+      depthWrite: false,
+      transmission: 0.0,
+      opacity: 0.5,
+      transparent: true
+    })
+    const materialDetector = new THREE.MeshStandardMaterial({
       color: 0xFFFFFF,
     })
-
-    const mesh = new THREE.Mesh(this.detector, material)
-    this.scene.add(mesh)
+    const materialCollimator = new THREE.MeshStandardMaterial({
+      color: 0x000000,
+    })
 
     const originOffset = new Vector3(0, 0, 0)
 
-    LoadedObject.tryAdd(this.groupStaticDrum).subscribe(existing => this.scene.add(existing),
+    this.detector = new THREE.BoxGeometry(430, 430, 100)
+    this.detector.translate(0, 0, -500)
+    this.detector.translate(originOffset.x, originOffset.y, originOffset.z)
+    this.scene.add(new THREE.Mesh(this.detector, materialDetector))
+
+    this.x1 = new THREE.BoxGeometry(200, 100, 10)
+    this.x1.translate(0, 110, 570)
+    this.x1.translate(originOffset.x, originOffset.y, originOffset.z)
+    this.scene.add(new THREE.Mesh(this.x1, materialCollimator))
+    this.x2 = new THREE.BoxGeometry(200, 100, 10)
+    this.x2.translate(0, -110, 570)
+    this.x2.translate(originOffset.x, originOffset.y, originOffset.z)
+    this.scene.add(new THREE.Mesh(this.x2, materialCollimator))
+    this.y1 = new THREE.BoxGeometry(100, 200, 10)
+    this.y1.translate(-110, 0, 570)
+    this.y1.translate(originOffset.x, originOffset.y, originOffset.z)
+    this.scene.add(new THREE.Mesh(this.y1, materialCollimator))
+    this.y2 = new THREE.BoxGeometry(100, 200, 10)
+    this.y2.translate(110, 0, 570)
+    this.y2.translate(originOffset.x, originOffset.y, originOffset.z)
+    this.scene.add(new THREE.Mesh(this.y2, materialCollimator))
+
+    LoadedObject.tryAdd(this.drum).subscribe(existing => this.scene.add(existing),
       () => {
-        this.groupStaticDrum = new LoadedObject()
-        this.groupStaticDrum.origin = new Vector3(0.65, 2.41, 0)
-        this.groupStaticDrum.normal = new Vector3(0, -1, 0)
-        this.groupStaticDrum.position = originOffset
-        this.groupStaticDrum.material = this.materialDrum
-        this.groupStaticDrum.load(this.baseUrl + 'assets/Isocal-Drum.obj').subscribe(
+        this.drum = new LoadedObject()
+        this.drum.origin = new Vector3(0, 0, 0)
+        this.drum.normal = new Vector3(0, 0, 1)
+        this.drum.position = originOffset
+        this.drum.material = this.materialDrum
+        this.drum.load(this.baseUrl + 'assets/Isocal-Drum.obj').subscribe(
           object3d => {
             this.scene.add(object3d);
           },
           () => {
-            this.groupStaticDrum = new NotLoadedObject()
+            this.drum = new NotLoadedObject()
             console.warn(IsocalEngine3dService.name, "createScene", "drum is not shown")
           })
       })
-    LoadedObject.tryAdd(this.groupStaticMarkers).subscribe(existing => this.scene.add(existing),
+    LoadedObject.tryAdd(this.markers).subscribe(existing => this.scene.add(existing),
       () => {
-        this.groupStaticMarkers = new LoadedObject()
-        this.groupStaticMarkers.origin = new Vector3(0.65, 2.41, 0)
-        this.groupStaticMarkers.normal = new Vector3(0, -1, 0)
-        this.groupStaticMarkers.position = originOffset
-        this.groupStaticMarkers.material = this.materialMarkers
-        this.groupStaticMarkers.load(this.baseUrl + 'assets/Isocal-Markers.obj').subscribe(
+        this.markers = new LoadedObject()
+        this.markers.origin = new Vector3(0, 0, 0)
+        this.markers.normal = new Vector3(0, 0, 1)
+        this.markers.position = originOffset
+        this.markers.material = this.materialMarkers
+        this.markers.load(this.baseUrl + 'assets/Isocal-Markers.obj').subscribe(
           object3d => {
             this.scene.add(object3d);
           },
           () => {
-            this.groupStaticMarkers = new NotLoadedObject()
+            this.markers = new NotLoadedObject()
             console.warn(IsocalEngine3dService.name, "createScene", "markers are not shown")
+          })
+      })
+    LoadedObject.tryAdd(this.couch).subscribe(existing => this.scene.add(existing),
+      () => {
+        this.couch = new LoadedObject()
+        this.couch.origin = new Vector3(0, 200, -115)
+        this.couch.normal = new Vector3(0, 0, 1)
+        this.couch.position = new Vector3(0, 200, -115)
+        this.couch.material = this.materialCouch
+        this.couch.load(this.baseUrl + 'assets/Isocal-Couch.obj').subscribe(
+          object3d => {
+            this.scene.add(object3d);
+          },
+          () => {
+            this.couch = new NotLoadedObject()
+            console.warn(IsocalEngine3dService.name, "createScene", "couch is not shown")
           })
       })
   }
@@ -185,7 +239,7 @@ export class IsocalEngine3dService implements OnDestroy {
     })
   }
 
-  currentX: number = 0
+  //currentX: number = 0
 
   render() {
     this.frameId = requestAnimationFrame(() => {
@@ -195,11 +249,11 @@ export class IsocalEngine3dService implements OnDestroy {
     this.light.position.y = this.camera.position.y
     this.light.position.z = this.camera.position.z
 
-    const delta = this.camera.position.x - this.currentX;
-    this.currentX = this.camera.position.x;
-    var rotX = Math.atan(delta / 300);
+    //const delta = this.camera.position.x - this.currentX;
+    //this.currentX = this.camera.position.x;
+    //var rotX = Math.atan(delta / 300);
     //console.info(this.camera.position.x, delta, -rotX)
-    this.detector.rotateY(rotX)
+    //this.detector.rotateY(rotX)
 
     this.renderer.render(this.scene, this.camera)
   }
@@ -214,19 +268,24 @@ export class IsocalEngine3dService implements OnDestroy {
     this.renderer.setSize(w, h)
   }
 
-  setXray(transparent: boolean) {
-    console.info(IsocalEngine3dService.name, "setTransparent", transparent)
-    if (transparent) {
+  setXray(xray: boolean) {
+    console.info(IsocalEngine3dService.name, "setXray", xray)
+
+    //this.orbit.enabled = !xray
+
+    if (xray) {
       this.scene.background = this.backGroundXray
 
-      this.groupStaticDrum.setMaterial(this.materialDrumXray)
-      this.groupStaticMarkers.setMaterial(this.materialMarkersXray)
+      this.drum.setMaterial(this.materialDrumXray)
+      this.markers.setMaterial(this.materialMarkersXray)
+      this.couch.setMaterial(this.materialCouchXray)
     }
     else {
       this.scene.background = this.backGround
 
-      this.groupStaticDrum.setMaterial(this.materialDrum)
-      this.groupStaticMarkers.setMaterial(this.materialMarkers)
+      this.drum.setMaterial(this.materialDrum)
+      this.markers.setMaterial(this.materialMarkers)
+      this.couch.setMaterial(this.materialCouch)
     }
 
   }

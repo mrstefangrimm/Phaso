@@ -25,6 +25,85 @@
       <button mat-button (click)="context.sideNavOpen = false">></button>
     </div>
 
+    <table>
+      <tr>
+        <td>
+          X1/X2:
+          <br />
+          <mat-slider min="0"
+                      max="21"
+                      step="1"
+                      [thumbLabel]="false"
+                      [value]="x1"
+                      (input)="onX1Changed($event)">
+          </mat-slider>
+          {{x1}}
+          <br />
+          <mat-slider min="0"
+                      max="21"
+                      step="1"
+                      [thumbLabel]="false"
+                      [value]="x2"
+                      (input)="onX2Changed($event)">
+          </mat-slider>
+          {{x2}}
+          <br />
+          Y1/Y2:
+          <br />
+          <mat-slider min="0"
+                      max="21"
+                      step="1"
+                      [thumbLabel]="false"
+                      [value]="y1"
+                      (input)="onY1Changed($event)">
+          </mat-slider>
+          {{y1}}
+          <br />
+          <mat-slider min="0"
+                      max="21"
+                      step="1"
+                      [thumbLabel]="false"
+                      [value]="y2"
+                      (input)="onY2Changed($event)">
+          </mat-slider>
+          {{y2}}
+          <br />
+          Coll Rtn:
+          <br />
+          <mat-slider min="0"
+                      max="360"
+                      step="1"
+                      [thumbLabel]="false"
+                      [value]="collRtn"
+                      (input)="onCollRtnChanged($event)">
+          </mat-slider>
+          {{collRtn}}
+          <br />
+          Gantry Rtn:
+          <br />
+          <mat-slider min="0"
+                      max="360"
+                      step="1"
+                      [thumbLabel]="false"
+                      [value]="gantryRtn"
+                      (input)="onGantryRtnChanged($event)">
+          </mat-slider>
+          {{gantryRtn}}
+          <br />
+          Couch Lng:
+          <br />
+          <mat-slider min="-100"
+                      max="15"
+                      step="1"
+                      [thumbLabel]="false"
+                      [value]="couchLng"
+                      (input)="onCouchLngChanged($event)">
+          </mat-slider>
+          {{couchLng}}
+        </td>
+      </tr>
+    </table>
+
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-sidenav-container hasBackdrop="false">
