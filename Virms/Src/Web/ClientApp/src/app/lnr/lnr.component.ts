@@ -1,13 +1,12 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
-import { ViewChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Vector3 } from 'three';
-import { LnrService } from './lnr.service';
-import { LnrEngine3dService } from './lnrengine3d.service';
+import { ViewChild } from '@angular/core'
+import { ElementRef } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Vector3 } from 'three'
+import { LnrService } from './lnr.service'
+import { LnrEngine3dService } from './lnrengine3d.service'
 
 @Component({
   selector: 'app-lnr',
@@ -18,15 +17,6 @@ export class LnrComponent implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>
-
-  @ViewChild('gatingRendererCanvas', { static: true })
-  gatingRendererCanvas: ElementRef<HTMLCanvasElement>
-
-  selectedPatternId: number
-  executingPatternId: number
-
-  upperLng: number = 127
-  upperRtn: number = 127
 
   constructor(
     public context: LnrService,

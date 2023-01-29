@@ -12,34 +12,121 @@
              xmlns:local="clr-namespace:Virms.Isocal.UI.Models3D"
              mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
 
-  <Canvas>
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="BlackCol" Color="Black"/>
+    <DiffuseMaterial x:Key="CollMat" Brush="{StaticResource BlackCol}"/>
+  </UserControl.Resources>
+  
+  <Grid>
+
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="2*"/>
+    </Grid.ColumnDefinitions>
 
     <h:HelixViewport3D 
-          Width="{Binding ActualWidth, ElementName=PhantomView}"
-          Height="{Binding ActualHeight, ElementName=PhantomView}"
-          Background="Transparent" 
-          ShowCoordinateSystem="True"
-          ShowViewCube="True"
-          x:Name="MainView"
-          ZoomAroundMouseDownPoint="True">
+      Background="LightBlue"
+      ShowCoordinateSystem="True"
+      ShowViewCube="False"
+      x:Name="MainView"
+      ZoomAroundMouseDownPoint="False"
+      IsHeadLightEnabled="False">
 
-      <h:HelixViewport3D.DefaultCamera>
-        <OrthographicCamera Position="0 -1000 0" LookDirection="0 1000 0" Width="600" UpDirection="0 0 1"/>
-      </h:HelixViewport3D.DefaultCamera>
+      <h:HelixViewport3D.Camera>
+        <PerspectiveCamera
+          Position="400 -1000 800"
+          LookDirection="-400 1000 -800"
+          UpDirection="0 0 1" />
+      </h:HelixViewport3D.Camera>
 
       <ModelVisual3D>
         <ModelVisual3D.Content>
           <AmbientLight Color="White"/>
         </ModelVisual3D.Content>
       </ModelVisual3D>
-      <!-- h:DefaultLights/ -->
-      <!-- local:GridLines/ -->
 
-      <local:MarkersModel3D Fill="White" />
-      <local:DrumModel3D Fill="#10FFFFFF" />
+      <local:MarkersModel3D x:Name="Markers" Fill="#050505" />
+      <h:BindableTranslateManipulator Direction="0 1 0" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Markers, Path=Transform}"/>
+      <local:DrumModel3D x:Name="Drum" Fill="#99FFFFFF" />
+      <h:BindableTranslateManipulator Direction="0 1 0" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Drum, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="Detector" Transform="{h:Translate 0, 0, -500}" Height="100" Width="430" Length="430" Fill="DarkBlue"/>
+      <h:BindableRotateManipulator Position="0 0 500" Axis="0 1 0"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Detector, Path=Transform}"/>
+
+      <local:CouchModel3D x:Name="Couch" Transform="{h:Translate 0, 200, -115}" Fill="#44000000" />
+      <h:BindableTranslateManipulator Direction="0 1 0" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Couch, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="X1" Transform="{h:Translate 0, 110, 570}" Height="10" Width="100" Length="200" Fill="Black"/>
+      <h:BindableTranslateManipulator Direction="0 1 0" Value="{Binding X1.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X1, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="0 -110 0" Axis="0 0 -1"  Value="{Binding CollRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X1, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="0 -110 -570" Axis="0 1 0"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X1, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="X2" Transform="{h:Translate 0, -110, 570}" Height="10" Width="100" Length="200" Fill="Black"/>
+      <h:BindableTranslateManipulator Direction="0 -1 0" Value="{Binding X2.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X2, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="0 110 0" Axis="0 0 -1"  Value="{Binding CollRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X2, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="0 110 -570" Axis="0 1 0"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X2, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="Y1" Transform="{h:Translate -110, 0, 570}" Height="10" Width="200" Length="100" Fill="Black"/>
+      <h:BindableTranslateManipulator Direction="-1 0 0" Value="{Binding Y1.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y1, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="110 0 0" Axis="0 0 -1"  Value="{Binding CollRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y1, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="110 0 -570" Axis="0 1 0"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y1, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="Y2" Transform="{h:Translate 110, 0, 570}" Height="10" Width="200" Length="100" Fill="Black"/>
+      <h:BindableTranslateManipulator Direction="1 0 0" Value="{Binding Y2.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y2, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="-110 0 0" Axis="0 0 -1"  Value="{Binding CollRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y2, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="-110 0 -570" Axis="0 1 0"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y2, Path=Transform}"/>
 
     </h:HelixViewport3D>
 
-  </Canvas>
+    <h:HelixViewport3D
+      Grid.Column="1"
+      Background="Black"
+      ShowCoordinateSystem="True"
+      ShowViewCube="False"
+      ZoomAroundMouseDownPoint="False"
+      IsHeadLightEnabled="True"
+      IsRotationEnabled="False"
+      IsZoomEnabled="False">
+
+      <h:HelixViewport3D.Camera>
+        <PerspectiveCamera
+          Position="0 0 1000"
+          LookDirection="0 0 -1000"
+          UpDirection="0 1 0" />
+      </h:HelixViewport3D.Camera>
+
+      <local:MarkersModel3D x:Name="MarkersXray" Fill="#050505" />
+      <h:BindableRotateManipulator Position="0 0 0" Axis="0 -1 0"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=MarkersXray, Path=Transform}"/>
+      <h:BindableTranslateManipulator Direction="0 1 0" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=MarkersXray, Path=Transform}"/>
+
+      <local:DrumModel3D x:Name="DrumXray" Fill="#55FFFFFF" />
+      <h:BindableRotateManipulator Position="0 0 0" Axis="0 -1 0"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=DrumXray, Path=Transform}"/>
+      <h:BindableTranslateManipulator Direction="0 1 0" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=DrumXray, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="DetectorXray" Transform="{h:Translate 0, 0, -500}" Height="100" Width="430" Length="430"  Fill="White"/>
+
+      <local:CouchModel3D x:Name="CouchXray" Transform="{h:Translate 0, 200, -115}" Fill="#11000000" />
+      <h:BindableTranslateManipulator Direction="0 1 0" Value="{Binding CouchLng.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=CouchXray, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="0 0 115" Axis="0 -1 0"  Value="{Binding GantryRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=CouchXray, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="X1Xray" Transform="{h:Translate 0, 110, 570}" Height="10" Width="100" Length="200" Material="{StaticResource CollMat}" BackMaterial="{StaticResource CollMat}"/>
+      <h:BindableTranslateManipulator Direction="0 1 0" Value="{Binding X1.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X1Xray, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="0 -110 0" Axis="0 0 -1"  Value="{Binding CollRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X1Xray, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="X2Xray" Transform="{h:Translate 0, -110, 570}" Height="10" Width="100" Length="200" Material="{StaticResource CollMat}" BackMaterial="{StaticResource CollMat}"/>
+      <h:BindableTranslateManipulator Direction="0 -1 0" Value="{Binding X2.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X2Xray, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="0 110 0" Axis="0 0 -1"  Value="{Binding CollRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=X2Xray, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="Y1Xray" Transform="{h:Translate -110, 0, 570}" Height="10" Width="200" Length="100" Material="{StaticResource CollMat}" BackMaterial="{StaticResource CollMat}"/>
+      <h:BindableTranslateManipulator Direction="-1 0 0" Value="{Binding Y1.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y1Xray, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="110 0 0" Axis="0 0 -1"  Value="{Binding CollRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y1Xray, Path=Transform}"/>
+
+      <h:BoxVisual3D x:Name="Y2Xray" Transform="{h:Translate 110, 0, 570}" Height="10" Width="200" Length="100" Material="{StaticResource CollMat}" BackMaterial="{StaticResource CollMat}"/>
+      <h:BindableTranslateManipulator Direction="1 0 0" Value="{Binding Y2.LNGExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y2Xray, Path=Transform}"/>
+      <h:BindableRotateManipulator Position="-110 0 0" Axis="0 0 -1"  Value="{Binding CollRtn.RTNExt, Mode=OneWay}" TargetTransform="{Binding ElementName=Y2Xray, Path=Transform}"/>
+
+    </h:HelixViewport3D>
+
+  </Grid>
 
 </UserControl>

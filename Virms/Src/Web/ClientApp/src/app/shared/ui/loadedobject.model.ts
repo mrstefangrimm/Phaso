@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -56,14 +56,14 @@ export class LoadedObject implements LoadableObject {
   }
 
   load(url: string): Observable<Object3D> {
-    return this._load(url, true)
+    return this.loadObject(url, true)
   }
 
   loadInvisible(url: string): Observable<Object3D> {
-    return this._load(url, false)
+    return this.loadObject(url, false)
   }
 
-  private _load(url: string, show: boolean): Observable<Object3D> {
+  private loadObject(url: string, show: boolean): Observable<Object3D> {
     return new Observable<Object3D>(subscriber => {
       const loader = new OBJLoader()
       console.info(LoadedObject.name, "load", url)

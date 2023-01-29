@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021 Stefan Grimm. All rights reserved.
+<!-- Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
      Licensed under the GPL. See LICENSE file in the project root for full license information.
 -->
 
@@ -21,6 +21,9 @@
       <button mat-button (click)="onLungPhantomClicked()">Lung Phantom</button>
     </div>
     <div>
+      <button mat-button (click)="onIsocalPhantomClicked()">Isocal Phantom</button>
+    </div>
+    <div>
       <button mat-button (click)="onLnrActuatorClicked()">LnR Actuator</button>
     </div>
   </mat-sidenav>
@@ -28,6 +31,7 @@
     <app-marker *ngIf="markerPhantomActive"></app-marker>
     <app-liver *ngIf="liverPhantomActive"></app-liver>
     <app-lung *ngIf="lungPhantomActive"></app-lung>
+    <app-isocal *ngIf="isocalPhantomActive"></app-isocal>
     <app-lnr *ngIf="lnrActuatorActive"></app-lnr>
     <table *ngIf="showHome()"
            width="100%">
@@ -45,6 +49,11 @@
             <button mat-raised-button (click)="onLungPhantomClicked()"><img src="assets/LungPhantom.jpg" /></button>
           </td>
           <td>
+            <button mat-raised-button (click)="onIsocalPhantomClicked()"><img src="assets/IsocalPhantom.jpg" /></button>
+          </td>
+        </tr>
+        <tr>
+          <td align="right">
             <button mat-raised-button (click)="onLnrActuatorClicked()"><img src="assets/LnrActuator.jpg" /></button>
           </td>
         </tr>

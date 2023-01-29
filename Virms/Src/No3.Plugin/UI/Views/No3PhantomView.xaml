@@ -1,4 +1,4 @@
-﻿<!-- Copyright (c) 2020-2021 Stefan Grimm. All rights reserved.
+﻿<!-- Copyright (c) 2020-2023 Stefan Grimm. All rights reserved.
      Licensed under the GPL. See LICENSE file in the project root for full license information. -->
 
 <UserControl x:Class="Virms.No3.UI.Views.No3PhantomView"
@@ -8,12 +8,11 @@
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:h="http://helix-toolkit.org/wpf"
               xmlns:qc="clr-namespace:QuickConverter;assembly=QuickConverter"
-              mc:Ignorable="d" 
               xmlns:local="clr-namespace:Virms.No3.UI.Models3D"
               x:Name="PhantomView"
               Background="Black"
-              d:DesignHeight="450" d:DesignWidth="800">
-   
+              mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+
   <Canvas>
 
     <h:HelixViewport3D 
