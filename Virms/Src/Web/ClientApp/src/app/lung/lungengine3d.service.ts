@@ -82,9 +82,7 @@ export class LungEngine3dService implements OnDestroy {
     this.scene = new THREE.Scene()
 
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera.position.x = -100
-    this.camera.position.y = 100
-    this.camera.position.z = 180
+    this.camera.position.set(-100, 100, 180)
     this.scene.add(this.camera)
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -151,7 +149,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.chest = new LoadedObject()
         this.chest.origin = new Vector3(0, 0, 0)
-        this.chest.normal = new Vector3(0, -1, 0)
+        this.chest.directionVector = new Vector3(0, -1, 0)
         this.chest.position = originOffset
         this.chest.material = this.materialTissue
         this.chest.load(this.baseUrl + 'assets/No3-ChestPositive.obj').subscribe(
@@ -168,7 +166,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.skeleton = new LoadedObject()
         this.skeleton.origin = new Vector3(0, 0, 0)
-        this.skeleton.normal = new Vector3(0, -1, 0)
+        this.skeleton.directionVector = new Vector3(0, -1, 0)
         this.skeleton.position = originOffset
         this.skeleton.material = this.materialSkeleton
         this.skeleton.load(this.baseUrl + 'assets/No3-Skeleton.obj').subscribe(
@@ -185,7 +183,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.lungRight = new LoadedObject()
         this.lungRight.origin = new Vector3(0, 0, 0)
-        this.lungRight.normal = new Vector3(0, -1, 0)
+        this.lungRight.directionVector = new Vector3(0, -1, 0)
         this.lungRight.position = originOffset
         this.lungRight.material = this.materialLungs
         this.lungRight.load(this.baseUrl + 'assets/No3-LungRight.obj').subscribe(
@@ -202,7 +200,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.lungLeft = new LoadedObject()
         this.lungLeft.origin = new Vector3(0, 0, 0)
-        this.lungLeft.normal = new Vector3(0, -1, 0)
+        this.lungLeft.directionVector = new Vector3(0, -1, 0)
         this.lungLeft.position = originOffset
         this.lungLeft.material = this.materialLungs
         this.lungLeft.load(this.baseUrl + 'assets/No3-LungLeft.obj').subscribe(
@@ -219,7 +217,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.lungLeftInsert = new LoadedObject()
         this.lungLeftInsert.origin = new Vector3(0, 0, 0)
-        this.lungLeftInsert.normal = new Vector3(0, -1, 0)
+        this.lungLeftInsert.directionVector = new Vector3(0, -1, 0)
         this.lungLeftInsert.position = originOffset
         this.lungLeftInsert.material = this.materialTissue
         this.lungLeftInsert.load(this.baseUrl + 'assets/No3-LungLeftInsert.obj').subscribe(
@@ -236,7 +234,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.upperCylinder = new LoadedObject()
         this.upperCylinder.origin = new Vector3(-35.2, 0, -45)
-        this.upperCylinder.normal = new Vector3(0, -1, 0)
+        this.upperCylinder.directionVector = new Vector3(0, -1, 0)
         this.upperCylinder.position = originOffset
         this.upperCylinder.material = this.materialLungs
         this.upperCylinder.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinder.obj').subscribe(
@@ -253,7 +251,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.target = new LoadedObject()
         this.target.origin = new Vector3(-35.2, 0, -45)
-        this.target.normal = new Vector3(0, -1, 0)
+        this.target.directionVector = new Vector3(0, -1, 0)
         this.target.position = originOffset
         this.target.material = this.materialTarget
         this.target.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinderInsert.obj').subscribe(
@@ -270,7 +268,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.lowerCylinder = new LoadedObject()
         this.lowerCylinder.origin = new Vector3(-35.2, 0, 45)
-        this.lowerCylinder.normal = new Vector3(0, -1, 0)
+        this.lowerCylinder.directionVector = new Vector3(0, -1, 0)
         this.lowerCylinder.position = originOffset
         this.lowerCylinder.material = this.materialLungs
         this.lowerCylinder.load(this.baseUrl + 'assets/No3-LungLeftLowerCylinder.obj').subscribe(
@@ -287,7 +285,7 @@ export class LungEngine3dService implements OnDestroy {
       () => {
         this.secondTarget = new LoadedObject()
         this.secondTarget.origin = new Vector3(-35.2, 0, 45)
-        this.secondTarget.normal = new Vector3(0, -1, 0)
+        this.secondTarget.directionVector = new Vector3(0, -1, 0)
         this.secondTarget.position = originOffset
         this.secondTarget.material = this.materialTarget
         this.secondTarget.load(this.baseUrl + 'assets/No3-LungLeftLowerCylinderInsert.obj').subscribe(

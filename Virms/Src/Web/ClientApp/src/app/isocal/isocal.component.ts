@@ -18,8 +18,6 @@ export class IsocalComponent implements OnInit, OnDestroy {
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>
 
-  private currentX1: number = 0
-  private currentX2: number = 0
   private currentY1: number = 0
   private currentY2: number = 0
   private currrentCollRtn: number = 0
@@ -50,19 +48,15 @@ export class IsocalComponent implements OnInit, OnDestroy {
   onX1Changed(event) {
     console.debug(event.value)
 
-    const traslation = (this.currentX1 - event.value) * 2.8
-    this.engine3d.x1.translate(0, traslation, 0)
-
-    this.currentX1 = event.value
+    const pos = event.value * 110 / 37
+    this.engine3d.x1.setPosZ(pos)
   }
 
   onX2Changed(event) {
     console.debug(event.value)
 
-    const traslation = (this.currentX2 - event.value) * -2.8
-    this.engine3d.x2.translate(0, traslation, 0)
-
-    this.currentX2 = event.value
+    const pos = event.value * 110 / 37
+    this.engine3d.x2.setPosZ(-pos)
   }
 
   onY1Changed(event) {
@@ -88,10 +82,13 @@ export class IsocalComponent implements OnInit, OnDestroy {
 
     const rotation = (this.currrentCollRtn - event.value) / 18.5 / Math.PI
 
-    this.engine3d.x1.rotateZ(rotation)
-    this.engine3d.x2.rotateZ(rotation)
     this.engine3d.y1.rotateZ(rotation)
     this.engine3d.y2.rotateZ(rotation)
+
+    const rtn = event.value / 180 * Math.PI
+    this.engine3d.x1.setRtn(new Vector3(0, 1, 0), rtn)
+    this.engine3d.x2.setRtn(new Vector3(0, 1, 0), rtn)
+
 
     this.currrentCollRtn = event.value
   }
@@ -111,11 +108,13 @@ export class IsocalComponent implements OnInit, OnDestroy {
     else {
       const rotation = (this.currrentGantryRtn - event.value) / 18.5 / Math.PI
 
-      this.engine3d.x1.rotateY(rotation)
-      this.engine3d.x2.rotateY(rotation)
       this.engine3d.y1.rotateY(rotation)
       this.engine3d.y2.rotateY(rotation)
-      this.engine3d.detector.rotateY(rotation)
+
+      const rtn = event.value / 180 * Math.PI
+      this.engine3d.detector.setRtnZ(rtn)
+      this.engine3d.x1.setRtnZ(rtn)
+      this.engine3d.x2.setRtnZ(rtn)
 
       this.currrentGantryRtn = event.value
     }

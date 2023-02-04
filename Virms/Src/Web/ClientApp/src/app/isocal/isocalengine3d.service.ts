@@ -6,6 +6,7 @@ import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model'
+import { ThreeObject } from '../shared/ui/threeobject.model'
 
 @Injectable({providedIn: 'root'})
 
@@ -32,9 +33,9 @@ export class IsocalEngine3dService implements OnDestroy {
   drum: LoadableObject
   markers: LoadableObject
   couch: LoadableObject
-  detector: THREE.BufferGeometry
-  x1: THREE.BufferGeometry
-  x2: THREE.BufferGeometry
+  detector: ThreeObject
+  x1: ThreeObject
+  x2: ThreeObject
   y1: THREE.BufferGeometry
   y2: THREE.BufferGeometry
 
@@ -74,12 +75,15 @@ export class IsocalEngine3dService implements OnDestroy {
     this.scene = new THREE.Scene()
 
     this.camera = new THREE.PerspectiveCamera(30, w / h, 1, 3000)
-    this.camera.position.set(0, 0, 1000)
+    this.camera.position.set(0, 1000, 0)
     this.scene.add(this.camera)
 
     this.orbit = new OrbitControls(this.camera, this.renderer.domElement)
     this.orbit.minDistance = 0
     this.orbit.maxDistance = 2500
+
+    var axesHelper = new THREE.AxesHelper(600);
+    this.scene.add(axesHelper);
 
     this.light = new THREE.SpotLight(0xffffff);
     this.light.position.set(0, 0, 600);
@@ -148,33 +152,49 @@ export class IsocalEngine3dService implements OnDestroy {
 
     const originOffset = new Vector3(0, 0, 0)
 
-    this.detector = new THREE.BoxGeometry(430, 430, 100)
-    this.detector.translate(0, 0, -500)
-    this.detector.translate(originOffset.x, originOffset.y, originOffset.z)
-    this.scene.add(new THREE.Mesh(this.detector, materialDetector))
+    this.detector = new ThreeObject()
+    this.detector.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
+    this.detector.position = new Vector3(0, -600, 0)
+    this.detector.geometry = new THREE.BoxGeometry(430, 100, 430)
+    this.detector.material = materialDetector
+    this.detector.build().subscribe(
+      object3d => {
+        this.scene.add(object3d);
+      })
 
-    this.x1 = new THREE.BoxGeometry(200, 100, 10)
-    this.x1.translate(0, 110, 570)
-    this.x1.translate(originOffset.x, originOffset.y, originOffset.z)
-    this.scene.add(new THREE.Mesh(this.x1, materialCollimator))
-    this.x2 = new THREE.BoxGeometry(200, 100, 10)
-    this.x2.translate(0, -110, 570)
-    this.x2.translate(originOffset.x, originOffset.y, originOffset.z)
-    this.scene.add(new THREE.Mesh(this.x2, materialCollimator))
+    this.x1 = new ThreeObject()
+    this.x1.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
+    this.x1.position = new Vector3(0, 570, -110)
+    this.x1.geometry = new THREE.BoxGeometry(200, 10, 100)
+    this.x1.material = materialCollimator
+    this.x1.build().subscribe(
+      object3d => {
+        this.scene.add(object3d);
+      })
+    this.x2 = new ThreeObject()
+    this.x2.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
+    this.x2.position = new Vector3(0, 570, 110)
+    this.x2.geometry = new THREE.BoxGeometry(200, 10, 100)
+    this.x2.material = materialCollimator
+    this.x2.build().subscribe(
+      object3d => {
+        this.scene.add(object3d);
+      })
+
     this.y1 = new THREE.BoxGeometry(100, 200, 10)
     this.y1.translate(-110, 0, 570)
     this.y1.translate(originOffset.x, originOffset.y, originOffset.z)
-    this.scene.add(new THREE.Mesh(this.y1, materialCollimator))
+    //this.scene.add(new THREE.Mesh(this.y1, materialCollimator))
     this.y2 = new THREE.BoxGeometry(100, 200, 10)
     this.y2.translate(110, 0, 570)
     this.y2.translate(originOffset.x, originOffset.y, originOffset.z)
-    this.scene.add(new THREE.Mesh(this.y2, materialCollimator))
+    //this.scene.add(new THREE.Mesh(this.y2, materialCollimator))
 
     LoadedObject.tryAdd(this.drum).subscribe(existing => this.scene.add(existing),
       () => {
         this.drum = new LoadedObject()
         this.drum.origin = new Vector3(0, 0, 0)
-        this.drum.normal = new Vector3(0, 0, 1)
+        this.drum.directionVector = new Vector3(0, -1, 0)
         this.drum.position = originOffset
         this.drum.material = this.materialDrum
         this.drum.load(this.baseUrl + 'assets/Isocal-Drum.obj').subscribe(
@@ -190,7 +210,7 @@ export class IsocalEngine3dService implements OnDestroy {
       () => {
         this.markers = new LoadedObject()
         this.markers.origin = new Vector3(0, 0, 0)
-        this.markers.normal = new Vector3(0, 0, 1)
+        this.markers.directionVector = new Vector3(0, -1, 0)
         this.markers.position = originOffset
         this.markers.material = this.materialMarkers
         this.markers.load(this.baseUrl + 'assets/Isocal-Markers.obj').subscribe(
@@ -206,8 +226,8 @@ export class IsocalEngine3dService implements OnDestroy {
       () => {
         this.couch = new LoadedObject()
         this.couch.origin = new Vector3(0, 200, -115)
-        this.couch.normal = new Vector3(0, 0, 1)
-        this.couch.position = new Vector3(0, 200, -115)
+        this.couch.directionVector = new Vector3(0, -1, 0)
+        this.couch.position = new Vector3(0, -115, -200)
         this.couch.material = this.materialCouch
         this.couch.load(this.baseUrl + 'assets/Isocal-Couch.obj').subscribe(
           object3d => {

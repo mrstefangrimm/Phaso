@@ -10,8 +10,18 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 export interface LoadableObject {
 
   origin: Vector3
-  normal: Vector3
   position: Vector3
+
+  /** to worldSpaceDirectionVector [0, 0, 1] from directionVector
+   *  @example
+   *  ThreeJS <- Sketchup, OpenSCAD
+   *    | y        | z
+   *     - x        - x
+   *   /          /
+   *  z         -y
+   * directionVector = [0, -1, 0]
+   */
+  directionVector: Vector3
   material: Material
 
   object: Object3D
@@ -32,12 +42,12 @@ export interface LoadableObject {
 
 export class LoadedObject implements LoadableObject {
 
-  private readonly worldsNormal: Vector3 = new THREE.Vector3(0, 0, 1);
+  private readonly worldSpaceDirectionVector: Vector3 = new THREE.Vector3(0, 0, 1);
 
   origin: Vector3
-  normal: Vector3
   position: Vector3
-  center: Vector3
+  directionVector: Vector3
+
   material: Material
 
   object: Object3D
@@ -80,16 +90,14 @@ export class LoadedObject implements LoadableObject {
           this.objectAsGroup = group
 
           const q = new Quaternion()
-          q.setFromUnitVectors(this.normal, this.worldsNormal)
+          q.setFromUnitVectors(this.directionVector, this.worldSpaceDirectionVector)
           this.object.setRotationFromQuaternion(q)
 
           this.object.translateX(this.origin.x)
           this.object.translateY(this.origin.y)
           this.object.translateZ(this.origin.z)
 
-          this.object.position.x = this.position.x
-          this.object.position.y = this.position.y
-          this.object.position.z = this.position.z
+          this.object.position.set(this.position.x, this.position.y, this.position.z)
 
           subscriber.next(this.object)
         },
@@ -110,7 +118,7 @@ export class LoadedObject implements LoadableObject {
   }
 
   setRtn(rtn: number) {
-    this.rotate(rtn, this.normal)
+    this.rotate(rtn, this.directionVector)
   }
 
   rotate(rtn: number, axis: Vector3) {
@@ -119,7 +127,7 @@ export class LoadedObject implements LoadableObject {
     this.object.translateZ(-this.origin.z)
 
     const q = new Quaternion()
-    q.setFromUnitVectors(this.normal, this.worldsNormal)
+    q.setFromUnitVectors(this.directionVector, this.worldSpaceDirectionVector)
 
     const qRtn = new Quaternion();
     qRtn.setFromAxisAngle(axis, rtn);
@@ -151,7 +159,7 @@ export class LoadedObject implements LoadableObject {
 export class NotLoadedObject implements LoadableObject {
 
   origin: Vector3
-  normal: Vector3
+  directionVector: Vector3
   position: Vector3
   center: Vector3
   material: Material

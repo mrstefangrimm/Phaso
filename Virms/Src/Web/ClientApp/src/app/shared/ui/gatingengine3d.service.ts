@@ -55,9 +55,7 @@ export class GatingEngine3dService implements OnDestroy {
     this.scene = new THREE.Scene()
 
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera.position.x = 0
-    this.camera.position.y = 10
-    this.camera.position.z = 100
+    this.camera.position.set(0, 10, 100)
     this.scene.add(this.camera)
 
     // soft white light
@@ -83,7 +81,7 @@ export class GatingEngine3dService implements OnDestroy {
       () => {
         this.gatingPlatform = new LoadedObject()
         this.gatingPlatform.origin = new Vector3(0, 0, 0)
-        this.gatingPlatform.normal = new Vector3(0, -1, 0)
+        this.gatingPlatform.directionVector = new Vector3(0, -1, 0)
         this.gatingPlatform.position = worldOffset
         this.gatingPlatform.material = materialGatingPanel
         this.gatingPlatform.load(this.baseUrl + 'assets/Cmn-GatingPlatform.obj').subscribe(
