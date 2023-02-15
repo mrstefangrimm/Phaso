@@ -18,11 +18,6 @@ export class IsocalComponent implements OnInit, OnDestroy {
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>
 
-  private currentY1: number = 0
-  private currentY2: number = 0
-  private currrentCollRtn: number = 0
-  private currrentGantryRtn: number = 0
-
   private shownAsXray: boolean = false
 
   constructor(
@@ -62,40 +57,29 @@ export class IsocalComponent implements OnInit, OnDestroy {
   onY1Changed(event) {
     console.debug(event.value)
 
-    const traslation = (this.currentY1 - event.value) * -2.8
-    this.engine3d.y1.translate(traslation, 0, 0)
-
-    this.currentY1 = event.value
+    const pos = event.value * 110 / 37
+    this.engine3d.y1.setPosX(pos)
   }
 
   onY2Changed(event) {
     console.debug(event.value)
 
-    const traslation = (this.currentY2 - event.value) * 2.8
-    this.engine3d.y2.translate(traslation,0, 0)
-
-    this.currentY2 = event.value
+    const pos = event.value * 110 / 37
+    this.engine3d.y2.setPosX(-pos)
   }
 
   onCollRtnChanged(event) {
     console.debug(event.value)
 
-    const rotation = (this.currrentCollRtn - event.value) / 18.5 / Math.PI
-
-    this.engine3d.y1.rotateZ(rotation)
-    this.engine3d.y2.rotateZ(rotation)
-
     const rtn = event.value / 180 * Math.PI
-    this.engine3d.x1.setRtn(new Vector3(0, 1, 0), rtn)
-    this.engine3d.x2.setRtn(new Vector3(0, 1, 0), rtn)
-
-
-    this.currrentCollRtn = event.value
+    this.engine3d.x1.setRtnY(rtn)
+    this.engine3d.x2.setRtnY(rtn)
+    this.engine3d.y1.setRtnY(rtn)
+    this.engine3d.y2.setRtnY(rtn)
   }
 
   onGantryRtnChanged(event) {
     console.debug(event.value)
-
 
     if (this.shownAsXray) {
       const rotation = event.value / 18.5 / Math.PI
@@ -106,17 +90,12 @@ export class IsocalComponent implements OnInit, OnDestroy {
       this.engine3d.couch.rotate(rotation, axis)
     }
     else {
-      const rotation = (this.currrentGantryRtn - event.value) / 18.5 / Math.PI
-
-      this.engine3d.y1.rotateY(rotation)
-      this.engine3d.y2.rotateY(rotation)
-
       const rtn = event.value / 180 * Math.PI
       this.engine3d.detector.setRtnZ(rtn)
       this.engine3d.x1.setRtnZ(rtn)
       this.engine3d.x2.setRtnZ(rtn)
-
-      this.currrentGantryRtn = event.value
+      this.engine3d.y1.setRtnZ(rtn)
+      this.engine3d.y2.setRtnZ(rtn)
     }
   }
 
@@ -125,10 +104,10 @@ export class IsocalComponent implements OnInit, OnDestroy {
 
     const translation = event.value * 5
 
-    this.engine3d.couch.translate(new Vector3(0, translation, 0))
-    this.engine3d.drum.translate(new Vector3(0, translation, 0))
-    this.engine3d.markers.translate(new Vector3(0, translation, 0))
-}
+    this.engine3d.couch.setLng(-translation)
+    this.engine3d.drum.setLng(-translation)
+    this.engine3d.markers.setLng(-translation)
+  }
 
   onXrayChecked(checked: boolean) {
     this.shownAsXray = checked

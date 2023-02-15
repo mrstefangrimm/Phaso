@@ -36,7 +36,7 @@ export class IsocalEngine3dService implements OnDestroy {
   detector: ThreeObject
   x1: ThreeObject
   x2: ThreeObject
-  y1: THREE.BufferGeometry
+  y1: ThreeObject
   y2: THREE.BufferGeometry
 
   public constructor(
@@ -180,15 +180,24 @@ export class IsocalEngine3dService implements OnDestroy {
       object3d => {
         this.scene.add(object3d);
       })
-
-    this.y1 = new THREE.BoxGeometry(100, 200, 10)
-    this.y1.translate(-110, 0, 570)
-    this.y1.translate(originOffset.x, originOffset.y, originOffset.z)
-    //this.scene.add(new THREE.Mesh(this.y1, materialCollimator))
-    this.y2 = new THREE.BoxGeometry(100, 200, 10)
-    this.y2.translate(110, 0, 570)
-    this.y2.translate(originOffset.x, originOffset.y, originOffset.z)
-    //this.scene.add(new THREE.Mesh(this.y2, materialCollimator))
+    this.y1 = new ThreeObject()
+    this.y1.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
+    this.y1.position = new Vector3(-110, 570, 0)
+    this.y1.geometry = new THREE.BoxGeometry(100, 10, 200)
+    this.y1.material = materialCollimator
+    this.y1.build().subscribe(
+      object3d => {
+        this.scene.add(object3d);
+      })
+    this.y2 = new ThreeObject()
+    this.y2.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
+    this.y2.position = new Vector3(110, 570, 0)
+    this.y2.geometry = new THREE.BoxGeometry(100, 10, 200)
+    this.y2.material = materialCollimator
+    this.y2.build().subscribe(
+      object3d => {
+        this.scene.add(object3d);
+      })
 
     LoadedObject.tryAdd(this.drum).subscribe(existing => this.scene.add(existing),
       () => {

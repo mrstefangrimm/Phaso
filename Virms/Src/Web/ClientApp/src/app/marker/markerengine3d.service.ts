@@ -27,7 +27,8 @@ export class MarkerEngine3dService implements OnDestroy {
   private materialMarkerXray: THREE.Material
 
   body: LoadableObject
-  target: LoadableObject
+  // TODO - target was added for testing, please remove
+  //target: LoadableObject
 
   cylinderLeftUpper: ThreeObject
   markerLeftUpper: ThreeObject
@@ -200,22 +201,22 @@ export class MarkerEngine3dService implements OnDestroy {
         this.scene.add(object3d);
       })
 
-    LoadedObject.tryAdd(this.target).subscribe(existing => this.scene.add(existing),
-      () => {
-        this.target = new LoadedObject()
-        this.target.origin = new Vector3(-35.2, 0, -45)
-        this.target.directionVector = cadDirection
-        this.target.position = new Vector3(-35.2 + 25, -45 + 25, 0)
-        this.target.material = this.materialMarker
-        this.target.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinderInsert.obj').subscribe(
-          object3d => {
-            this.scene.add(object3d);
-          },
-          () => {
-            this.target = new NotLoadedObject()
-            console.warn(MarkerEngine3dService.name, "createScene", "primary target is not shown")
-          })
-      })
+    //LoadedObject.tryAdd(this.target).subscribe(existing => this.scene.add(existing),
+    //  () => {
+    //    this.target = new LoadedObject()
+    //    this.target.origin = new Vector3(-35.2, 0, -45)
+    //    this.target.directionVector = cadDirection
+    //    this.target.position = new Vector3(-35.2 + 25, -45 + 25, 0)
+    //    this.target.material = this.materialMarker
+    //    this.target.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinderInsert.obj').subscribe(
+    //      object3d => {
+    //        this.scene.add(object3d);
+    //      },
+    //      () => {
+    //        this.target = new NotLoadedObject()
+    //        console.warn(MarkerEngine3dService.name, "createScene", "primary target is not shown")
+    //      })
+    //  })
 
     this.cylinderRightLower = new ThreeObject()
     this.cylinderRightLower.fromWorldToLocalOrigin = new Vector3(25, -25, 0)

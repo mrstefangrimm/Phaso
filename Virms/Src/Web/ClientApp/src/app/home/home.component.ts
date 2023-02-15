@@ -19,8 +19,6 @@ export class HomeComponent implements OnInit {
 
   constructor() {
     console.info(HomeComponent.name, "c'tor")
-
-  //  this.onIsocalPhantomClicked()
   }
 
   ngOnInit() {

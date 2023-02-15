@@ -221,7 +221,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
     let lng = (event.value - 127) / 10
     this.engine3d.cylinderRightUpper.setPosZ(lng)
     this.engine3d.markerRightUpper.setPosZ(lng)
-    this.engine3d.target.setLng(lng)
+    //this.engine3d.target.setLng(lng)
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
@@ -236,7 +236,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
     let rtn = (event.value - 127) / 100
     this.engine3d.cylinderRightUpper.setRtnZ(rtn)
     this.engine3d.markerRightUpper.setRtnZ(rtn)
-    this.engine3d.target.setRtn(rtn)
+    //this.engine3d.target.setRtn(rtn)
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition

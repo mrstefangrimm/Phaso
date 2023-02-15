@@ -3,7 +3,7 @@
 //
 import { Observable } from 'rxjs';
 import * as THREE from 'three';
-import { Material, Object3D, Vector3 } from 'three';
+import { Material, Object3D, Quaternion, Vector3 } from 'three';
 
 export class ThreeObject {
 
@@ -12,8 +12,10 @@ export class ThreeObject {
   material: Material
   geometry: THREE.CylinderGeometry
 
-  private pos: number = 0
-  private rtn: number = 0
+  private posX: number = 0
+  private posZ: number = 0
+  private rtnY: number = 0
+  private rtnZ: number = 0
   private object: Object3D
 
   build(): Observable<Object3D> {
@@ -29,44 +31,49 @@ export class ThreeObject {
     })
   }
 
-  setPosZ(pos: number) {
-    const distance = (pos - this.pos)
-    this.object.translateZ(distance)
-    this.pos = pos
+  setPosX(pos: number) {
+    const distance = (pos - this.posX)
+    this.object.translateX(distance)
+    this.posX = pos
   }
 
-  setPos(axis: Vector3, pos: number) {
-    const distance = (pos - this.pos)
-    this.object.translateOnAxis(axis, distance)
-    this.pos = pos
+  setPosZ(pos: number) {
+    const distance = (pos - this.posZ)
+    this.object.translateZ(distance)
+    this.posZ = pos
+  }
+
+  setRtnY(rtn: number) {
+    this.object.translateX(-this.position.x - this.posX)
+    this.object.translateY(-this.position.y)
+    this.object.translateZ(-this.position.z - this.posZ)
+
+    const angle = (rtn - this.rtnY)
+    this.object.rotateY(angle)
+    this.rtnY = rtn
+
+    this.object.translateX(this.position.x + this.posX)
+    this.object.translateY(this.position.y)
+    this.object.translateZ(this.position.z + this.posZ)
   }
 
   setRtnZ(rtn: number) {
-    this.object.translateX(-this.position.x)
+    this.object.translateX(-this.position.x - this.posX)
     this.object.translateY(-this.position.y)
-    this.object.translateZ(-this.position.z)
+    this.object.translateZ(-this.position.z - this.posZ)
 
-    const angle = (rtn - this.rtn)
+    // the object's z axis back to the local cooridate system's z axis, then rotate around z.
+    this.object.rotateY(-this.rtnY)
+
+    const angle = (rtn - this.rtnZ)
     this.object.rotateZ(angle)
-    this.rtn = rtn
+    this.rtnZ = rtn
 
-    this.object.translateX(this.position.x)
+    this.object.rotateY(this.rtnY)
+
+    this.object.translateX(this.position.x + this.posX)
     this.object.translateY(this.position.y)
-    this.object.translateZ(this.position.z)
-  }
-
-  setRtn(axis: Vector3, rtn: number) {
-    this.object.translateX(-this.position.x)
-    this.object.translateY(-this.position.y)
-    this.object.translateZ(-this.position.z)
-
-    const angle = (rtn - this.rtn)
-    this.object.rotateOnAxis(axis, angle)
-    this.rtn = rtn
-
-    this.object.translateX(this.position.x)
-    this.object.translateY(this.position.y)
-    this.object.translateZ(this.position.z)
+    this.object.translateZ(this.position.z + this.posZ)
   }
 
   setVisible(show: boolean) {
