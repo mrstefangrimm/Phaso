@@ -19,6 +19,8 @@ export class MarkerEngine3dService implements OnDestroy {
   private light: THREE.AmbientLight
   private frameId: number = null
 
+  private meshes = []
+
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
   private materialTissue: THREE.Material
@@ -51,6 +53,19 @@ export class MarkerEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.meshes.forEach(m => this.scene.remove(m))
+    this.materialTissue.dispose()
+    this.materialTissueXray.dispose()
+    this.materialMarker.dispose()
+    this.materialMarkerXray.dispose()
+    this.cylinderLeftUpper.dispose()
+    this.markerLeftUpper.dispose()
+    this.cylinderLeftLower.dispose()
+    this.markerLeftLower.dispose()
+    this.cylinderRightUpper.dispose()
+    this.markerRightUpper.dispose()
+    this.cylinderRightLower.dispose()
+    this.markerRightLower.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -127,7 +142,8 @@ export class MarkerEngine3dService implements OnDestroy {
         this.body.material = this.materialTissue
         this.body.load(this.baseUrl + 'assets/Gris5A-Body.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.body = new NotLoadedObject()
@@ -143,7 +159,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.cylinderLeftUpper.material = this.materialTissue
     this.cylinderLeftUpper.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     this.markerLeftUpper = new ThreeObject()
@@ -154,7 +171,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerLeftUpper.material = this.materialMarker
     this.markerLeftUpper.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     this.cylinderLeftLower = new ThreeObject()
@@ -165,7 +183,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.cylinderLeftLower.material = this.materialTissue
     this.cylinderLeftLower.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     this.markerLeftLower = new ThreeObject()
@@ -176,7 +195,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerLeftLower.material = this.materialMarker
     this.markerLeftLower.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     this.cylinderRightUpper = new ThreeObject()
@@ -187,7 +207,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.cylinderRightUpper.material = this.materialTissue
     this.cylinderRightUpper.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     this.markerRightUpper = new ThreeObject()
@@ -198,7 +219,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerRightUpper.material = this.materialMarker
     this.markerRightUpper.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     //LoadedObject.tryAdd(this.target).subscribe(existing => this.scene.add(existing),
@@ -210,7 +232,8 @@ export class MarkerEngine3dService implements OnDestroy {
     //    this.target.material = this.materialMarker
     //    this.target.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinderInsert.obj').subscribe(
     //      object3d => {
-    //        this.scene.add(object3d);
+    //        this.scene.add(object3d)
+    //        this.meshes.push(object3d)
     //      },
     //      () => {
     //        this.target = new NotLoadedObject()
@@ -226,7 +249,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.cylinderRightLower.material = this.materialTissue
     this.cylinderRightLower.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     this.markerRightLower = new ThreeObject()
@@ -237,7 +261,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerRightLower.material = this.materialMarker
     this.markerRightLower.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
   }
 

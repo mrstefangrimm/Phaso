@@ -6,6 +6,7 @@ import * as THREE from 'three'
 import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
 import { LoadableObject, LoadedObject, NotLoadedObject } from './loadedobject.model';
+import { tick } from '@angular/core/testing';
 
 @Injectable({providedIn: 'root'})
 export class GatingEngine3dService implements OnDestroy {
@@ -16,6 +17,8 @@ export class GatingEngine3dService implements OnDestroy {
   private scene: THREE.Scene
   private light: THREE.AmbientLight
   private frameId: number = null
+
+  private mesh: undefined
 
   gatingPlatform: LoadableObject
 
@@ -31,6 +34,8 @@ export class GatingEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.scene.remove(this.mesh)
+    this.gatingPlatform.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -86,7 +91,8 @@ export class GatingEngine3dService implements OnDestroy {
         this.gatingPlatform.material = materialGatingPanel
         this.gatingPlatform.load(this.baseUrl + 'assets/Cmn-GatingPlatform.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.mesh = object3d
           },
           () => {
             this.gatingPlatform = new NotLoadedObject()

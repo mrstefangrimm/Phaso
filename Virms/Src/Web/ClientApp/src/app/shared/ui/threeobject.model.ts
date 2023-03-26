@@ -10,7 +10,7 @@ export class ThreeObject {
   fromWorldToLocalOrigin: Vector3 // From world space origin to the local orign
   position: Vector3 // From the local origin to the center of the object
   material: Material
-  geometry: THREE.CylinderGeometry
+  geometry: THREE.BufferGeometry
 
   private posX: number = 0
   private posZ: number = 0
@@ -29,6 +29,11 @@ export class ThreeObject {
 
       subscriber.next(this.object)
     })
+  }
+
+  dispose() {
+    this.material.dispose()
+    this.geometry.dispose()
   }
 
   setPosX(pos: number) {

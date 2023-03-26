@@ -20,6 +20,8 @@ export class IsocalEngine3dService implements OnDestroy {
   private frameId: number = null
   private orbit: OrbitControls
 
+  private meshes = []
+
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
 
@@ -37,7 +39,7 @@ export class IsocalEngine3dService implements OnDestroy {
   x1: ThreeObject
   x2: ThreeObject
   y1: ThreeObject
-  y2: THREE.BufferGeometry
+  y2: ThreeObject
 
   public constructor(
     private ngZone: NgZone,
@@ -51,6 +53,21 @@ export class IsocalEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.meshes.forEach(m => this.scene.remove(m))
+    this.materialDrum.dispose()
+    this.materialDrumXray.dispose()
+    this.materialMarkers.dispose()
+    this.materialMarkersXray.dispose()
+    this.materialCouch.dispose()
+    this.materialCouchXray.dispose()
+    this.drum.dispose()
+    this.markers.dispose()
+    this.couch.dispose()
+    this.detector.dispose()
+    this.x1.dispose()
+    this.x2.dispose()
+    this.y1.dispose()
+    this.y2.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -159,7 +176,8 @@ export class IsocalEngine3dService implements OnDestroy {
     this.detector.material = materialDetector
     this.detector.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     this.x1 = new ThreeObject()
@@ -169,7 +187,8 @@ export class IsocalEngine3dService implements OnDestroy {
     this.x1.material = materialCollimator
     this.x1.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
     this.x2 = new ThreeObject()
     this.x2.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
@@ -178,7 +197,8 @@ export class IsocalEngine3dService implements OnDestroy {
     this.x2.material = materialCollimator
     this.x2.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
     this.y1 = new ThreeObject()
     this.y1.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
@@ -187,7 +207,8 @@ export class IsocalEngine3dService implements OnDestroy {
     this.y1.material = materialCollimator
     this.y1.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
     this.y2 = new ThreeObject()
     this.y2.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
@@ -196,7 +217,8 @@ export class IsocalEngine3dService implements OnDestroy {
     this.y2.material = materialCollimator
     this.y2.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     LoadedObject.tryAdd(this.drum).subscribe(existing => this.scene.add(existing),
@@ -208,7 +230,8 @@ export class IsocalEngine3dService implements OnDestroy {
         this.drum.material = this.materialDrum
         this.drum.load(this.baseUrl + 'assets/Isocal-Drum.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.drum = new NotLoadedObject()
@@ -224,7 +247,8 @@ export class IsocalEngine3dService implements OnDestroy {
         this.markers.material = this.materialMarkers
         this.markers.load(this.baseUrl + 'assets/Isocal-Markers.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.markers = new NotLoadedObject()
@@ -240,7 +264,8 @@ export class IsocalEngine3dService implements OnDestroy {
         this.couch.material = this.materialCouch
         this.couch.load(this.baseUrl + 'assets/Isocal-Couch.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.couch = new NotLoadedObject()
@@ -267,8 +292,6 @@ export class IsocalEngine3dService implements OnDestroy {
       })
     })
   }
-
-  //currentX: number = 0
 
   render() {
     this.frameId = requestAnimationFrame(() => {

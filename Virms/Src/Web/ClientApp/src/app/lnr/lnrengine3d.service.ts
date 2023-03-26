@@ -17,6 +17,8 @@ export class LnrEngine3dService implements OnDestroy {
   private scene: THREE.Scene
   private frameId: number = null
 
+  private meshes = []
+
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
 
@@ -28,12 +30,12 @@ export class LnrEngine3dService implements OnDestroy {
   private materialWood: THREE.Material
   private materialXray: THREE.Material
 
+  private groupStaticBaseSilver: LoadableObject
+  private groupStaticBaseGold: LoadableObject
+  private groupStaticBaseAnthracite: LoadableObject
+  private groupStaticBaseBlue: LoadableObject
   groupStaticCoverBlue: LoadableObject
   groupStaticCoverSilver: LoadableObject
-  groupStaticBaseSilver: LoadableObject
-  groupStaticBaseGold: LoadableObject
-  groupStaticBaseAnthracite: LoadableObject
-  groupStaticBaseBlue: LoadableObject
   groupCarriageSilver: LoadableObject
   groupCarriageBlue: LoadableObject
   groupCarriageGold: LoadableObject
@@ -60,6 +62,33 @@ export class LnrEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.meshes.forEach(m => this.scene.remove(m))
+    this.materialBlue.dispose()
+    this.materialWhite.dispose()
+    this.materialAnthracite.dispose()
+    this.materialSilver.dispose()
+    this.materialGold.dispose()
+    this.materialWood.dispose()
+    this.materialXray.dispose()
+    this.groupStaticCoverBlue.dispose()
+    this.groupStaticCoverSilver.dispose()
+    this.groupStaticBaseSilver.dispose()
+    this.groupStaticBaseGold.dispose()
+    this.groupStaticBaseAnthracite.dispose()
+    this.groupStaticBaseBlue.dispose()
+    this.groupCarriageSilver.dispose()
+    this.groupCarriageBlue.dispose()
+    this.groupCarriageGold.dispose()
+    this.groupCarriageAnthracite.dispose()
+    this.groupServoArmGold.dispose()
+    this.groupServoArmSilver.dispose()
+    this.groupServoArmAnthracite.dispose()
+    this.groupServoArmBlue.dispose()
+    this.groupRotationWhite.dispose()
+    this.groupRotationWood.dispose()
+    this.groupRotationBlue.dispose()
+    this.groupRotationSilver.dispose()
+    this.groupExtensionArm.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {

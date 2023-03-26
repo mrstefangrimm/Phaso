@@ -19,6 +19,9 @@ export class LungEngine3dService implements OnDestroy {
   private light: THREE.AmbientLight
   private frameId: number = null
 
+  private meshes = []
+
+
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
 
@@ -58,6 +61,24 @@ export class LungEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.meshes.forEach(m => this.scene.remove(m))
+    this.materialTissue.dispose()
+    this.materialTissueXray.dispose()
+    this.materialSkeleton.dispose()
+    this.materialSkeletonXray.dispose()
+    this.materialLungs.dispose()
+    this.materialLungsXray.dispose()
+    this.materialTarget.dispose()
+    this.materialTargetXray.dispose()
+    this.chest.dispose()
+    this.skeleton.dispose()
+    this.lungRight.dispose()
+    this.lungLeft.dispose()
+    this.lungLeftInsert.dispose()
+    this.upperCylinder.dispose()
+    this.lowerCylinder.dispose()
+    this.target.dispose()
+    this.secondTarget.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -154,7 +175,8 @@ export class LungEngine3dService implements OnDestroy {
         this.chest.material = this.materialTissue
         this.chest.load(this.baseUrl + 'assets/No3-ChestPositive.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.chest = new NotLoadedObject()
@@ -171,7 +193,8 @@ export class LungEngine3dService implements OnDestroy {
         this.skeleton.material = this.materialSkeleton
         this.skeleton.load(this.baseUrl + 'assets/No3-Skeleton.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.skeleton = new NotLoadedObject()
@@ -188,7 +211,8 @@ export class LungEngine3dService implements OnDestroy {
         this.lungRight.material = this.materialLungs
         this.lungRight.load(this.baseUrl + 'assets/No3-LungRight.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.lungRight = new NotLoadedObject()
@@ -205,7 +229,8 @@ export class LungEngine3dService implements OnDestroy {
         this.lungLeft.material = this.materialLungs
         this.lungLeft.load(this.baseUrl + 'assets/No3-LungLeft.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.lungLeft = new NotLoadedObject()
@@ -222,7 +247,8 @@ export class LungEngine3dService implements OnDestroy {
         this.lungLeftInsert.material = this.materialTissue
         this.lungLeftInsert.load(this.baseUrl + 'assets/No3-LungLeftInsert.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.lungLeftInsert = new NotLoadedObject()
@@ -239,7 +265,8 @@ export class LungEngine3dService implements OnDestroy {
         this.upperCylinder.material = this.materialLungs
         this.upperCylinder.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinder.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.upperCylinder = new NotLoadedObject()
@@ -256,7 +283,8 @@ export class LungEngine3dService implements OnDestroy {
         this.target.material = this.materialTarget
         this.target.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinderInsert.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.target = new NotLoadedObject()
@@ -273,7 +301,8 @@ export class LungEngine3dService implements OnDestroy {
         this.lowerCylinder.material = this.materialLungs
         this.lowerCylinder.load(this.baseUrl + 'assets/No3-LungLeftLowerCylinder.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.lowerCylinder = new NotLoadedObject()
@@ -290,14 +319,14 @@ export class LungEngine3dService implements OnDestroy {
         this.secondTarget.material = this.materialTarget
         this.secondTarget.load(this.baseUrl + 'assets/No3-LungLeftLowerCylinderInsert.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.secondTarget = new NotLoadedObject()
             console.warn(LungEngine3dService.name, "createScene", "secondary target is not shown")
           })
       })
-
   }
 
   animate() {

@@ -19,6 +19,8 @@ export class LiverEngine3dService implements OnDestroy {
   private light: THREE.AmbientLight
   private frameId: number = null
 
+  private meshes = []
+
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
   private materialLiver: THREE.Material
@@ -61,6 +63,30 @@ export class LiverEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.meshes.forEach(m => this.scene.remove(m))
+    this.materialLiver.dispose()
+    this.materialLiver2.dispose()
+    this.materialLiverXray.dispose()
+    this.materialLiverXray2.dispose()
+    this.materialSecondTarget.dispose()
+    this.materialSecondTargetXray.dispose()
+    this.materialMarker.dispose()
+    this.materialMarkerXray.dispose()
+    this.materialTissue.dispose()
+    this.materialTissueXray.dispose()
+    this.body.dispose()
+    this.bodyInsertCenter.dispose()
+    this.bodyInsertBack.dispose()
+    this.cylinderLeft.dispose()
+    this.cylinderLeftCylinder.dispose()
+    this.cylinderLeftInsertCenter.dispose()
+    this.cylinderLeftInsertBack.dispose()
+    this.cylinderLeftMarkers.dispose()
+    this.cylinderRight.dispose()
+    this.cylinderRightCylinderCenter.dispose()
+    this.cylinderRightCylinderBack.dispose()
+    this.cylinderRightInsertCenter.dispose()
+    this.cylinderRightInsertBack.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -148,7 +174,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.body.material = this.materialTissue
         this.body.load(this.baseUrl + 'assets/No2-Body.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.body = new NotLoadedObject()
@@ -165,7 +192,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.bodyInsertCenter.material = this.materialLiver
         this.bodyInsertCenter.load(this.baseUrl + 'assets/No2-BodyInsertCenter.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.bodyInsertCenter = new NotLoadedObject()
@@ -182,7 +210,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.bodyInsertBack.material = this.materialTissue
         this.bodyInsertBack.load(this.baseUrl + 'assets/No2-BodyInsertBack.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.bodyInsertBack = new NotLoadedObject()
@@ -199,7 +228,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderLeft.material = this.materialTissue
         this.cylinderLeft.load(this.baseUrl + 'assets/No2-CylinderLeft.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeft = new NotLoadedObject()
@@ -216,7 +246,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderLeftCylinder.material = this.materialLiver2
         this.cylinderLeftCylinder.load(this.baseUrl + 'assets/No2-CylinderLeftCylinder.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeftCylinder = new NotLoadedObject()
@@ -233,7 +264,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderLeftInsertCenter.material = this.materialLiver
         this.cylinderLeftInsertCenter.load(this.baseUrl + 'assets/No2-CylinderLeftInsertCenter.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeftInsertCenter = new NotLoadedObject()
@@ -250,7 +282,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderLeftInsertBack.material = this.materialTissue
         this.cylinderLeftInsertBack.load(this.baseUrl + 'assets/No2-CylinderLeftInsertBack.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeftInsertBack = new NotLoadedObject()
@@ -267,7 +300,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderLeftMarkers.material = this.materialMarker
         this.cylinderLeftMarkers.load(this.baseUrl + 'assets/No2-CylinderLeftMarkers.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeftMarkers = new NotLoadedObject()
@@ -284,7 +318,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderRight.material = this.materialTissue
         this.cylinderRight.load(this.baseUrl + 'assets/No2-CylinderRight.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRight = new NotLoadedObject()
@@ -301,7 +336,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderRightCylinderCenter.material = this.materialSecondTarget
         this.cylinderRightCylinderCenter.load(this.baseUrl + 'assets/No2-CylinderRightCylinderCenter.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRightCylinderCenter = new NotLoadedObject()
@@ -318,7 +354,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderRightCylinderBack.material = this.materialTissue
         this.cylinderRightCylinderBack.load(this.baseUrl + 'assets/No2-CylinderRightCylinderBack.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRightCylinderBack = new NotLoadedObject()
@@ -335,7 +372,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderRightInsertCenter.material = this.materialLiver
         this.cylinderRightInsertCenter.load(this.baseUrl + 'assets/No2-CylinderRightInsertCenter.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRightInsertCenter = new NotLoadedObject()
@@ -352,7 +390,8 @@ export class LiverEngine3dService implements OnDestroy {
         this.cylinderRightInsertBack.material = this.materialTissue
         this.cylinderRightInsertBack.load(this.baseUrl + 'assets/No2-CylinderRightInsertBack.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRightInsertBack = new NotLoadedObject()

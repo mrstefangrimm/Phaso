@@ -29,6 +29,8 @@ export interface LoadableObject {
   load(url: string): Observable<Object3D>
   loadInvisible(url: string): Observable<Object3D>
 
+  dispose()
+
   setLng(lng: number)
   translate(value: Vector3)
   setRtn(rtn: number)
@@ -109,6 +111,10 @@ export class LoadedObject implements LoadableObject {
     })
   }
 
+  dispose() {
+    this.material.dispose()
+  }
+
   setLng(lng: number) {
     this.object.position.z = this.position.z + lng
   }
@@ -171,11 +177,14 @@ export class NotLoadedObject implements LoadableObject {
       subscriber.error()
     })
   }
+
   loadInvisible(url: string): Observable<Object3D> {
     return new Observable<Object3D>(subscriber => {
       subscriber.error()
     })
   }
+
+  dispose() { }
 
   setLng(lng: number) {
   }
