@@ -21,12 +21,13 @@ export class LungEngine3dService implements OnDestroy {
 
   private meshes = []
 
-
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
 
   private materialTissue: THREE.Material
   private materialTissueXray: THREE.Material
+  private materialLeftLungInsertXray: THREE.Material
+
   private materialSkeleton: THREE.Material
   private materialSkeletonXray: THREE.Material
   private materialLungs: THREE.Material
@@ -64,6 +65,7 @@ export class LungEngine3dService implements OnDestroy {
     this.meshes.forEach(m => this.scene.remove(m))
     this.materialTissue.dispose()
     this.materialTissueXray.dispose()
+    this.materialLeftLungInsertXray.dispose()
     this.materialSkeleton.dispose()
     this.materialSkeletonXray.dispose()
     this.materialLungs.dispose()
@@ -96,31 +98,48 @@ export class LungEngine3dService implements OnDestroy {
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
-    });
+    })
     this.renderer.setSize(w, h)
 
     // create the scene
     this.scene = new THREE.Scene()
 
-    this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera.position.set(-100, 100, 180)
+    this.camera = new THREE.PerspectiveCamera(30, w / h, 1, 3000)
+    this.camera.position.set(0, 1000, 0)
     this.scene.add(this.camera)
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement)
     controls.minDistance = 0
     controls.maxDistance = 2000
 
-    // soft white light
-    this.light = new THREE.AmbientLight(0x404040)
-    this.light.position.y = 1000
-    this.light.position.z = 1000
+    this.light = new THREE.SpotLight(0xFFFFFF)
+    this.light.position.set(0, 1000, 0)
+
+    this.light.castShadow = true
+
+    this.light.shadow.mapSize.width = 1024
+    this.light.shadow.mapSize.height = 1024
+
+    this.light.shadow.camera.near = 5000
+    this.light.shadow.camera.far = 4000
+    this.light.shadow.camera.fov = 300
+
     this.scene.add(this.light)
 
     this.backGround = null
     this.backGroundXray = new THREE.Color(0x000000)
 
     this.materialSkeleton = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.6, transparent: true })
-    this.materialSkeletonXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.6, transparent: true })
+    this.materialSkeletonXray = new THREE.MeshPhysicalMaterial({
+      color: 0xFDFDFD,
+      metalness: 0,
+      roughness: 0,
+      alphaTest: 0.5,
+      depthWrite: false,
+      transmission: 0,
+      opacity: 0.6,
+      transparent: false
+    })
     this.materialTarget = new THREE.MeshBasicMaterial({ color: 0xFF0000, opacity: 0.2, transparent: true })
     this.materialTargetXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.4, transparent: true })
     this.materialTissue = new THREE.MeshPhysicalMaterial({
@@ -139,8 +158,18 @@ export class LungEngine3dService implements OnDestroy {
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.4,
-      opacity: 1,
+      transmission: 0.1,
+      opacity: 0.6,
+      transparent: true
+    })
+    this.materialLeftLungInsertXray = new THREE.MeshPhysicalMaterial({
+      color: 0xFFFFFF,
+      metalness: 0,
+      roughness: 0,
+      alphaTest: 0.5,
+      depthWrite: false,
+      transmission: 0.1,
+      opacity: 0.5,
       transparent: true
     })
     this.materialLungs = new THREE.MeshPhysicalMaterial({
@@ -159,8 +188,8 @@ export class LungEngine3dService implements OnDestroy {
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.9,
-      opacity: 1,
+      transmission: 0,
+      opacity: 0.4,
       transparent: true
     })
 
@@ -244,7 +273,7 @@ export class LungEngine3dService implements OnDestroy {
         this.lungLeftInsert.origin = new Vector3(0, 0, 0)
         this.lungLeftInsert.directionVector = new Vector3(0, -1, 0)
         this.lungLeftInsert.position = originOffset
-        this.lungLeftInsert.material = this.materialTissue
+        this.lungLeftInsert.material = this.materialLeftLungInsertXray
         this.lungLeftInsert.load(this.baseUrl + 'assets/No3-LungLeftInsert.obj').subscribe(
           object3d => {
             this.scene.add(object3d)
@@ -352,6 +381,11 @@ export class LungEngine3dService implements OnDestroy {
     this.frameId = requestAnimationFrame(() => {
       this.render()
     })
+
+    this.light.position.x = this.camera.position.x
+    this.light.position.y = this.camera.position.y
+    this.light.position.z = this.camera.position.z
+
     this.renderer.render(this.scene, this.camera)
   }
 
@@ -374,7 +408,7 @@ export class LungEngine3dService implements OnDestroy {
       this.skeleton.setMaterial(this.materialSkeletonXray)
       this.lungRight.setMaterial(this.materialLungsXray)
       this.lungLeft.setMaterial(this.materialLungsXray)
-      this.lungLeftInsert.setMaterial(this.materialTissueXray)
+      this.lungLeftInsert.setMaterial(this.materialLeftLungInsertXray)
       this.upperCylinder.setMaterial(this.materialLungsXray)
       this.target.setMaterial(this.materialTargetXray)
       this.lowerCylinder.setMaterial(this.materialLungsXray)
@@ -387,7 +421,7 @@ export class LungEngine3dService implements OnDestroy {
       this.skeleton.setMaterial(this.materialSkeleton)
       this.lungRight.setMaterial(this.materialLungs)
       this.lungLeft.setMaterial(this.materialLungs)
-      this.lungLeftInsert.setMaterial(this.materialTissue)
+      this.lungLeftInsert.setMaterial(this.materialLeftLungInsertXray)
       this.upperCylinder.setMaterial(this.materialLungs)
       this.target.setMaterial(this.materialTarget)
       this.lowerCylinder.setMaterial(this.materialLungs)
