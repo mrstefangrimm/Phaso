@@ -273,7 +273,7 @@ export class LungEngine3dService implements OnDestroy {
         this.lungLeftInsert.origin = new Vector3(0, 0, 0)
         this.lungLeftInsert.directionVector = new Vector3(0, -1, 0)
         this.lungLeftInsert.position = originOffset
-        this.lungLeftInsert.material = this.materialLeftLungInsertXray
+        this.lungLeftInsert.material = this.materialTissue
         this.lungLeftInsert.load(this.baseUrl + 'assets/No3-LungLeftInsert.obj').subscribe(
           object3d => {
             this.scene.add(object3d)
@@ -421,7 +421,7 @@ export class LungEngine3dService implements OnDestroy {
       this.skeleton.setMaterial(this.materialSkeleton)
       this.lungRight.setMaterial(this.materialLungs)
       this.lungLeft.setMaterial(this.materialLungs)
-      this.lungLeftInsert.setMaterial(this.materialLeftLungInsertXray)
+      this.lungLeftInsert.setMaterial(this.materialTissue)
       this.upperCylinder.setMaterial(this.materialLungs)
       this.target.setMaterial(this.materialTarget)
       this.lowerCylinder.setMaterial(this.materialLungs)
