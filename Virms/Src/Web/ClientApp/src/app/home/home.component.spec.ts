@@ -7,8 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { HomeComponent } from './home.component'
 
 describe('HomeComponent', () => {
-  let component: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
+  let component: HomeComponent
+  let fixture: ComponentFixture<HomeComponent>
   const routerSpy = jasmine.createSpyObj('Router', [''])
   const activeRouteSpy = jasmine.createSpyObj('ActivatedRoute', [''])
 

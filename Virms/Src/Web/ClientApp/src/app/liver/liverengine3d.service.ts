@@ -6,7 +6,7 @@ import * as THREE from 'three'
 import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model';
+import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model'
 
 @Injectable({providedIn: 'root'})
 
@@ -18,6 +18,8 @@ export class LiverEngine3dService implements OnDestroy {
   private scene: THREE.Scene
   private light: THREE.AmbientLight
   private frameId: number = null
+
+  private meshes = []
 
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
@@ -61,6 +63,30 @@ export class LiverEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.meshes.forEach(m => this.scene.remove(m))
+    this.materialLiver.dispose()
+    this.materialLiver2.dispose()
+    this.materialLiverXray.dispose()
+    this.materialLiverXray2.dispose()
+    this.materialSecondTarget.dispose()
+    this.materialSecondTargetXray.dispose()
+    this.materialMarker.dispose()
+    this.materialMarkerXray.dispose()
+    this.materialTissue.dispose()
+    this.materialTissueXray.dispose()
+    this.body.dispose()
+    this.bodyInsertCenter.dispose()
+    this.bodyInsertBack.dispose()
+    this.cylinderLeft.dispose()
+    this.cylinderLeftCylinder.dispose()
+    this.cylinderLeftInsertCenter.dispose()
+    this.cylinderLeftInsertBack.dispose()
+    this.cylinderLeftMarkers.dispose()
+    this.cylinderRight.dispose()
+    this.cylinderRightCylinderCenter.dispose()
+    this.cylinderRightCylinderBack.dispose()
+    this.cylinderRightInsertCenter.dispose()
+    this.cylinderRightInsertBack.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -78,16 +104,14 @@ export class LiverEngine3dService implements OnDestroy {
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
-    });
+    })
     this.renderer.setSize(w, h)
 
     // create the scene
     this.scene = new THREE.Scene()
 
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera.position.x = -100
-    this.camera.position.y = 100
-    this.camera.position.z = 130
+    this.camera.position.set(-100, 100, 130)
     this.scene.add(this.camera)
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -145,12 +169,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.body = new LoadedObject()
         this.body.origin = new Vector3(0, 0, 0)
-        this.body.normal = new Vector3(0, -1, 0)
+        this.body.directionVector = new Vector3(0, -1, 0)
         this.body.position = originOffset
         this.body.material = this.materialTissue
         this.body.load(this.baseUrl + 'assets/No2-Body.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.body = new NotLoadedObject()
@@ -162,12 +187,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.bodyInsertCenter = new LoadedObject()
         this.bodyInsertCenter.origin = new Vector3(0, 0, 0)
-        this.bodyInsertCenter.normal = new Vector3(0, -1, 0)
+        this.bodyInsertCenter.directionVector = new Vector3(0, -1, 0)
         this.bodyInsertCenter.position = originOffset
         this.bodyInsertCenter.material = this.materialLiver
         this.bodyInsertCenter.load(this.baseUrl + 'assets/No2-BodyInsertCenter.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.bodyInsertCenter = new NotLoadedObject()
@@ -179,12 +205,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.bodyInsertBack = new LoadedObject()
         this.bodyInsertBack.origin = new Vector3(0, 0, 0)
-        this.bodyInsertBack.normal = new Vector3(0, -1, 0)
+        this.bodyInsertBack.directionVector = new Vector3(0, -1, 0)
         this.bodyInsertBack.position = originOffset
         this.bodyInsertBack.material = this.materialTissue
         this.bodyInsertBack.load(this.baseUrl + 'assets/No2-BodyInsertBack.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.bodyInsertBack = new NotLoadedObject()
@@ -196,12 +223,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderLeft = new LoadedObject()
         this.cylinderLeft.origin = new Vector3(0, 0, 0)
-        this.cylinderLeft.normal = new Vector3(0, -1, 0)
+        this.cylinderLeft.directionVector = new Vector3(0, -1, 0)
         this.cylinderLeft.position = originOffset
         this.cylinderLeft.material = this.materialTissue
         this.cylinderLeft.load(this.baseUrl + 'assets/No2-CylinderLeft.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeft = new NotLoadedObject()
@@ -213,12 +241,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderLeftCylinder = new LoadedObject()
         this.cylinderLeftCylinder.origin = new Vector3(0, 0, 0)
-        this.cylinderLeftCylinder.normal = new Vector3(0, -1, 0)
+        this.cylinderLeftCylinder.directionVector = new Vector3(0, -1, 0)
         this.cylinderLeftCylinder.position = originOffset
         this.cylinderLeftCylinder.material = this.materialLiver2
         this.cylinderLeftCylinder.load(this.baseUrl + 'assets/No2-CylinderLeftCylinder.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeftCylinder = new NotLoadedObject()
@@ -230,12 +259,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderLeftInsertCenter = new LoadedObject()
         this.cylinderLeftInsertCenter.origin = new Vector3(0, 0, 0)
-        this.cylinderLeftInsertCenter.normal = new Vector3(0, -1, 0)
+        this.cylinderLeftInsertCenter.directionVector = new Vector3(0, -1, 0)
         this.cylinderLeftInsertCenter.position = originOffset
         this.cylinderLeftInsertCenter.material = this.materialLiver
         this.cylinderLeftInsertCenter.load(this.baseUrl + 'assets/No2-CylinderLeftInsertCenter.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeftInsertCenter = new NotLoadedObject()
@@ -247,12 +277,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderLeftInsertBack = new LoadedObject()
         this.cylinderLeftInsertBack.origin = new Vector3(0, 0, 0)
-        this.cylinderLeftInsertBack.normal = new Vector3(0, -1, 0)
+        this.cylinderLeftInsertBack.directionVector = new Vector3(0, -1, 0)
         this.cylinderLeftInsertBack.position = originOffset
         this.cylinderLeftInsertBack.material = this.materialTissue
         this.cylinderLeftInsertBack.load(this.baseUrl + 'assets/No2-CylinderLeftInsertBack.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeftInsertBack = new NotLoadedObject()
@@ -264,12 +295,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderLeftMarkers = new LoadedObject()
         this.cylinderLeftMarkers.origin = new Vector3(0, 0, 0)
-        this.cylinderLeftMarkers.normal = new Vector3(0, -1, 0)
+        this.cylinderLeftMarkers.directionVector = new Vector3(0, -1, 0)
         this.cylinderLeftMarkers.position = originOffset
         this.cylinderLeftMarkers.material = this.materialMarker
         this.cylinderLeftMarkers.load(this.baseUrl + 'assets/No2-CylinderLeftMarkers.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderLeftMarkers = new NotLoadedObject()
@@ -281,12 +313,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderRight = new LoadedObject()
         this.cylinderRight.origin = new Vector3(-60, 0, 0)
-        this.cylinderRight.normal = new Vector3(0, -1, 0)
+        this.cylinderRight.directionVector = new Vector3(0, -1, 0)
         this.cylinderRight.position = originOffset
         this.cylinderRight.material = this.materialTissue
         this.cylinderRight.load(this.baseUrl + 'assets/No2-CylinderRight.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRight = new NotLoadedObject()
@@ -298,12 +331,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderRightCylinderCenter = new LoadedObject()
         this.cylinderRightCylinderCenter.origin = new Vector3(-60, 0, 0)
-        this.cylinderRightCylinderCenter.normal = new Vector3(0, -1, 0)
+        this.cylinderRightCylinderCenter.directionVector = new Vector3(0, -1, 0)
         this.cylinderRightCylinderCenter.position = originOffset
         this.cylinderRightCylinderCenter.material = this.materialSecondTarget
         this.cylinderRightCylinderCenter.load(this.baseUrl + 'assets/No2-CylinderRightCylinderCenter.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRightCylinderCenter = new NotLoadedObject()
@@ -315,12 +349,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderRightCylinderBack = new LoadedObject()
         this.cylinderRightCylinderBack.origin = new Vector3(-60, 0, 0)
-        this.cylinderRightCylinderBack.normal = new Vector3(0, -1, 0)
+        this.cylinderRightCylinderBack.directionVector = new Vector3(0, -1, 0)
         this.cylinderRightCylinderBack.position = originOffset
         this.cylinderRightCylinderBack.material = this.materialTissue
         this.cylinderRightCylinderBack.load(this.baseUrl + 'assets/No2-CylinderRightCylinderBack.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRightCylinderBack = new NotLoadedObject()
@@ -332,12 +367,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderRightInsertCenter = new LoadedObject()
         this.cylinderRightInsertCenter.origin = new Vector3(-60, 0, 0)
-        this.cylinderRightInsertCenter.normal = new Vector3(0, -1, 0)
+        this.cylinderRightInsertCenter.directionVector = new Vector3(0, -1, 0)
         this.cylinderRightInsertCenter.position = originOffset
         this.cylinderRightInsertCenter.material = this.materialLiver
         this.cylinderRightInsertCenter.load(this.baseUrl + 'assets/No2-CylinderRightInsertCenter.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRightInsertCenter = new NotLoadedObject()
@@ -349,12 +385,13 @@ export class LiverEngine3dService implements OnDestroy {
       () => {
         this.cylinderRightInsertBack = new LoadedObject()
         this.cylinderRightInsertBack.origin = new Vector3(-60, 0, 0)
-        this.cylinderRightInsertBack.normal = new Vector3(0, -1, 0)
+        this.cylinderRightInsertBack.directionVector = new Vector3(0, -1, 0)
         this.cylinderRightInsertBack.position = originOffset
         this.cylinderRightInsertBack.material = this.materialTissue
         this.cylinderRightInsertBack.load(this.baseUrl + 'assets/No2-CylinderRightInsertBack.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.cylinderRightInsertBack = new NotLoadedObject()

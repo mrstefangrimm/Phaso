@@ -6,7 +6,7 @@ import { MotionPatternResponse, MotionSystemData, MotionSystemsService } from ".
 
 export class MotionsystemComponentBaseModel  {
 
-  motionSystemId: number;
+  motionSystemId: number
   patterns: MotionPatternResponse[]
 
   inUseByMe: boolean
@@ -15,10 +15,10 @@ export class MotionsystemComponentBaseModel  {
   hasLiveImage: boolean
   state: UIState = UIState.DeviceNotReady
 
-  statusRefreshTimer: Observable<number> = timer(1000, 500);
+  statusRefreshTimer: Observable<number> = timer(1000, 500)
   statusRefreshTimerSubscription: Subscription
 
-  liveImgRefreshTimer: Observable<number> = timer(1000, 500);
+  liveImgRefreshTimer: Observable<number> = timer(1000, 500)
   liveImgRefreshTimerSubscription: Subscription
   linkPicture: string
   timeStamp: number
@@ -99,14 +99,14 @@ export class MotionsystemComponentBaseModel  {
 
   getLivePicture() {
     if (this.timeStamp) {
-      return this.linkPicture + '?' + this.timeStamp;
+      return this.linkPicture + '?' + this.timeStamp
     }
-    return this.linkPicture;
+    return this.linkPicture
   }
 
   setLivePicture(url: string) {
-    this.linkPicture = url;
-    this.timeStamp = (new Date()).getTime();
+    this.linkPicture = url
+    this.timeStamp = (new Date()).getTime()
   }
 
   onTakeControl() {

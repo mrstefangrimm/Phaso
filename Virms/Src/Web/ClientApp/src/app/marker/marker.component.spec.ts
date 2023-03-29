@@ -13,8 +13,8 @@ import { MarkerComponent } from './marker.component'
 import { MarkerEngine3dService } from './markerengine3d.service'
 
 describe('MarkerComponent', () => {
-  let component: MarkerComponent;
-  let fixture: ComponentFixture<MarkerComponent>;
+  let component: MarkerComponent
+  let fixture: ComponentFixture<MarkerComponent>
   const routerSpy = jasmine.createSpyObj('Router', [''])
   const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post'])
   const tocServiceSpy = jasmine.createSpyObj('TocService', ['getTableOfContent'])
@@ -54,9 +54,9 @@ describe('MarkerComponent', () => {
   })
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MarkerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    fixture = TestBed.createComponent(MarkerComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
   })
 
   it('should create', () => {

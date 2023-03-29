@@ -13,8 +13,8 @@ import { LungComponent } from './lung.component'
 import { LungEngine3dService } from './lungengine3d.service'
 
 describe('LungComponent', () => {
-  let component: LungComponent;
-  let fixture: ComponentFixture<LungComponent>;
+  let component: LungComponent
+  let fixture: ComponentFixture<LungComponent>
   const routerSpy = jasmine.createSpyObj('Router', [''])
   const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post'])
   const tocServiceSpy = jasmine.createSpyObj('TocService', ['getTableOfContent'])

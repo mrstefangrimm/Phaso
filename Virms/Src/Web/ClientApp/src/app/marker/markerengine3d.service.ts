@@ -1,13 +1,12 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-
 import * as THREE from 'three'
 import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model';
-import { ThreeCylinder } from '../shared/ui/threecylinder.model';
+import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model'
+import { ThreeObject } from '../shared/ui/threeobject.model'
 
 @Injectable({providedIn: 'root'})
 
@@ -20,6 +19,8 @@ export class MarkerEngine3dService implements OnDestroy {
   private light: THREE.AmbientLight
   private frameId: number = null
 
+  private meshes = []
+
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
   private materialTissue: THREE.Material
@@ -28,15 +29,17 @@ export class MarkerEngine3dService implements OnDestroy {
   private materialMarkerXray: THREE.Material
 
   body: LoadableObject
+  // TODO - target was added for testing, please remove
+  //target: LoadableObject
 
-  cylinderLeftUpper: ThreeCylinder
-  markerLeftUpper: ThreeCylinder
-  cylinderLeftLower: ThreeCylinder
-  markerLeftLower: ThreeCylinder
-  cylinderRightUpper: ThreeCylinder
-  markerRightUpper: ThreeCylinder
-  cylinderRightLower: ThreeCylinder
-  markerRightLower: ThreeCylinder
+  cylinderLeftUpper: ThreeObject
+  markerLeftUpper: ThreeObject
+  cylinderLeftLower: ThreeObject
+  markerLeftLower: ThreeObject
+  cylinderRightUpper: ThreeObject
+  markerRightUpper: ThreeObject
+  cylinderRightLower: ThreeObject
+  markerRightLower: ThreeObject
 
   public constructor(
     private ngZone: NgZone,
@@ -50,6 +53,19 @@ export class MarkerEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.meshes.forEach(m => this.scene.remove(m))
+    this.materialTissue.dispose()
+    this.materialTissueXray.dispose()
+    this.materialMarker.dispose()
+    this.materialMarkerXray.dispose()
+    this.cylinderLeftUpper.dispose()
+    this.markerLeftUpper.dispose()
+    this.cylinderLeftLower.dispose()
+    this.markerLeftLower.dispose()
+    this.cylinderRightUpper.dispose()
+    this.markerRightUpper.dispose()
+    this.cylinderRightLower.dispose()
+    this.markerRightLower.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -67,21 +83,22 @@ export class MarkerEngine3dService implements OnDestroy {
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
-    });
+    })
     this.renderer.setSize(w, h)
 
     // create the scene
     this.scene = new THREE.Scene()
 
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera.position.x = -100
-    this.camera.position.y = 100
-    this.camera.position.z = 120
+    this.camera.position.set(-100, 100, 120)
     this.scene.add(this.camera)
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement)
     controls.minDistance = 0
     controls.maxDistance = 2000
+
+    var axesHelper = new THREE.AxesHelper(50)
+    this.scene.add(axesHelper)
 
     // soft white light
     this.light = new THREE.AmbientLight(0x404040)
@@ -114,18 +131,19 @@ export class MarkerEngine3dService implements OnDestroy {
       transparent: true
     })
 
-    const worldOffset = new Vector3(0, 0, 0)
+    const cadDirection = new Vector3(0, -1, 0)
 
     LoadedObject.tryAdd(this.body).subscribe(existing => this.scene.add(existing),
       () => {
         this.body = new LoadedObject()
         this.body.origin = new Vector3(0, 0, 0)
-        this.body.normal = new Vector3(0, -1, 0)
-        this.body.position = worldOffset
+        this.body.directionVector = cadDirection
+        this.body.position = new Vector3(0, 0, 0)
         this.body.material = this.materialTissue
         this.body.load(this.baseUrl + 'assets/Gris5A-Body.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
           },
           () => {
             this.body = new NotLoadedObject()
@@ -133,92 +151,118 @@ export class MarkerEngine3dService implements OnDestroy {
           })
       })
 
-    this.cylinderLeftUpper = new ThreeCylinder()
-    this.cylinderLeftUpper.origin = new Vector3(0, 0, 0)
-    this.cylinderLeftUpper.normal = new Vector3(0, -1, 0)
-    this.cylinderLeftUpper.position = new Vector3(-25, 0, 25)
+    this.cylinderLeftUpper = new ThreeObject()
+    this.cylinderLeftUpper.fromWorldToLocalOrigin = new Vector3(-25, 25, 0)
+    this.cylinderLeftUpper.position = new Vector3(0, 0, 0)
     this.cylinderLeftUpper.geometry = new THREE.CylinderGeometry(15, 15, 96, 32)
+    this.cylinderLeftUpper.geometry.rotateX(Math.PI / 2)
     this.cylinderLeftUpper.material = this.materialTissue
     this.cylinderLeftUpper.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
-    this.markerLeftUpper = new ThreeCylinder()
-    this.markerLeftUpper.origin = new Vector3(10.606, 0, -10.606)
-    this.markerLeftUpper.normal = new Vector3(0, -1, 0)
-    this.markerLeftUpper.position = new Vector3(-25, -2, 25)
+    this.markerLeftUpper = new ThreeObject()
+    this.markerLeftUpper.fromWorldToLocalOrigin = new Vector3(-25, 25, 0)
+    this.markerLeftUpper.position = new Vector3(10.606, -10.606, 2)
     this.markerLeftUpper.geometry = new THREE.CylinderGeometry(1, 1, 4, 32)
+    this.markerLeftUpper.geometry.rotateX(Math.PI / 2)
     this.markerLeftUpper.material = this.materialMarker
     this.markerLeftUpper.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
-    this.cylinderLeftLower = new ThreeCylinder()
-    this.cylinderLeftLower.origin = new Vector3(0, 0, 0)
-    this.cylinderLeftLower.normal = new Vector3(0, -1, 0)
-    this.cylinderLeftLower.position = new Vector3(-25, 0, -25)
+    this.cylinderLeftLower = new ThreeObject()
+    this.cylinderLeftLower.fromWorldToLocalOrigin = new Vector3(-25, -25, 0)
+    this.cylinderLeftLower.position = new Vector3(0, 0, 0)
     this.cylinderLeftLower.geometry = new THREE.CylinderGeometry(15, 15, 96, 32)
+    this.cylinderLeftLower.geometry.rotateX(Math.PI / 2)
     this.cylinderLeftLower.material = this.materialTissue
     this.cylinderLeftLower.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
-    this.markerLeftLower = new ThreeCylinder()
-    this.markerLeftLower.origin = new Vector3(10.606, 0, 10.606)
-    this.markerLeftLower.normal = new Vector3(0, -1, 0)
-    this.markerLeftLower.position = new Vector3(-25, -22, -25)
+    this.markerLeftLower = new ThreeObject()
+    this.markerLeftLower.fromWorldToLocalOrigin = new Vector3(-25, -25, 0)
+    this.markerLeftLower.position = new Vector3(10.606, 10.606, 22)
     this.markerLeftLower.geometry = new THREE.CylinderGeometry(1, 1, 4, 32)
+    this.markerLeftLower.geometry.rotateX(Math.PI / 2)
     this.markerLeftLower.material = this.materialMarker
     this.markerLeftLower.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
-    this.cylinderRightUpper = new ThreeCylinder()
-    this.cylinderRightUpper.origin = new Vector3(0, 0, 0)
-    this.cylinderRightUpper.normal = new Vector3(0, -1, 0)
-    this.cylinderRightUpper.position = new Vector3(25, 0, 25)
+    this.cylinderRightUpper = new ThreeObject()
+    this.cylinderRightUpper.fromWorldToLocalOrigin = new Vector3(25, 25, 0)
+    this.cylinderRightUpper.position = new Vector3(0, 0, 0)
     this.cylinderRightUpper.geometry = new THREE.CylinderGeometry(15, 15, 96, 32)
+    this.cylinderRightUpper.geometry.rotateX(Math.PI / 2)
     this.cylinderRightUpper.material = this.materialTissue
     this.cylinderRightUpper.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
-    this.markerRightUpper = new ThreeCylinder()
-    this.markerRightUpper.origin = new Vector3(-10.606, 0, -10.606)
-    this.markerRightUpper.normal = new Vector3(0, -1, 0)
-    this.markerRightUpper.position = new Vector3(25, 18, 25)
+    this.markerRightUpper = new ThreeObject()
+    this.markerRightUpper.fromWorldToLocalOrigin = new Vector3(25, 25, 0)
+    this.markerRightUpper.position = new Vector3(-10.606, -10.606, -18)
     this.markerRightUpper.geometry = new THREE.CylinderGeometry(1, 1, 4, 32)
+    this.markerRightUpper.geometry.rotateX(Math.PI / 2)
     this.markerRightUpper.material = this.materialMarker
     this.markerRightUpper.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
-    this.cylinderRightLower = new ThreeCylinder()
-    this.cylinderRightLower.origin = new Vector3(0, 0, 0)
-    this.cylinderRightLower.normal = new Vector3(0, -1, 0)
-    this.cylinderRightLower.position = new Vector3(25, 0, -25)
+    //LoadedObject.tryAdd(this.target).subscribe(existing => this.scene.add(existing),
+    //  () => {
+    //    this.target = new LoadedObject()
+    //    this.target.origin = new Vector3(-35.2, 0, -45)
+    //    this.target.directionVector = cadDirection
+    //    this.target.position = new Vector3(-35.2 + 25, -45 + 25, 0)
+    //    this.target.material = this.materialMarker
+    //    this.target.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinderInsert.obj').subscribe(
+    //      object3d => {
+    //        this.scene.add(object3d)
+    //        this.meshes.push(object3d)
+    //      },
+    //      () => {
+    //        this.target = new NotLoadedObject()
+    //        console.warn(MarkerEngine3dService.name, "createScene", "primary target is not shown")
+    //      })
+    //  })
+
+    this.cylinderRightLower = new ThreeObject()
+    this.cylinderRightLower.fromWorldToLocalOrigin = new Vector3(25, -25, 0)
+    this.cylinderRightLower.position = new Vector3(0, 0, 0)
     this.cylinderRightLower.geometry = new THREE.CylinderGeometry(15, 15, 96, 32)
+    this.cylinderRightLower.geometry.rotateX(Math.PI / 2)
     this.cylinderRightLower.material = this.materialTissue
     this.cylinderRightLower.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
-    this.markerRightLower = new ThreeCylinder()
-    this.markerRightLower.origin = new Vector3(-10.606, 0, 10.606)
-    this.markerRightLower.normal = new Vector3(0, -1, 0)
-    this.markerRightLower.position = new Vector3(25, -2, -25)
+    this.markerRightLower = new ThreeObject()
+    this.markerRightLower.fromWorldToLocalOrigin = new Vector3(25, -25, 0)
+    this.markerRightLower.position = new Vector3(-10.606, 10.606, -2)
     this.markerRightLower.geometry = new THREE.CylinderGeometry(1, 1, 4, 32)
+    this.markerRightLower.geometry.rotateX(Math.PI / 2)
     this.markerRightLower.material = this.materialMarker
     this.markerRightLower.build().subscribe(
       object3d => {
-        this.scene.add(object3d);
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
   }
 

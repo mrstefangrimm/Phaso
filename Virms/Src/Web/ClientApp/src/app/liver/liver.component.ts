@@ -44,11 +44,11 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   ngOnInit() {
     console.info(LiverComponent.name, "ngOnInit")
 
-    this.engine3d.createScene(this.rendererCanvas);
-    this.engine3d.animate();
+    this.engine3d.createScene(this.rendererCanvas)
+    this.engine3d.animate()
 
-    this.gatingEngine3d.createScene(this.gatingRendererCanvas);
-    this.gatingEngine3d.animate();
+    this.gatingEngine3d.createScene(this.gatingRendererCanvas)
+    this.gatingEngine3d.animate()
 
     this.onInit("second-live.jpg")
     this.setVisibilies()
@@ -160,8 +160,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.LLNG;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.LLNG
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -177,8 +177,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.LRTN;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.LRTN
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -194,8 +194,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.RLNG;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.RLNG
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -211,8 +211,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.RRTN;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.RRTN
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -224,8 +224,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.GALNG;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.GALNG
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -237,8 +237,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.GARTN;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.GARTN
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }

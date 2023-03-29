@@ -44,11 +44,11 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
   ngOnInit() {
     console.info(LungComponent.name, "ngOnInit")
 
-    this.engine3d.createScene(this.rendererCanvas);
-    this.engine3d.animate();
+    this.engine3d.createScene(this.rendererCanvas)
+    this.engine3d.animate()
 
-    this.gatingEngine3d.createScene(this.gatingRendererCanvas);
-    this.gatingEngine3d.animate();
+    this.gatingEngine3d.createScene(this.gatingRendererCanvas)
+    this.gatingEngine3d.animate()
 
     this.onInit("third-live.jpg")
     this.setVisibilies()
@@ -142,8 +142,8 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.UPLNG;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.UPLNG
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -156,8 +156,8 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.UPRTN;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.UPRTN
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -170,8 +170,8 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.LOLNG;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.LOLNG
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -184,8 +184,8 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.LORTN;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.LORTN
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -197,8 +197,8 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.GALNG;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.GALNG
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }
@@ -210,8 +210,8 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
     if (this.inUseByMe) {
       let servoPos = new ServoPosition
-      servoPos.servoNumber = ServoNumber.GARTN;
-      servoPos.position = event.value;
+      servoPos.servoNumber = ServoNumber.GARTN
+      servoPos.position = event.value
 
       if (this.motionSystemId) this.remoteService.patchServoPositions(this.motionSystemId, [servoPos])
     }

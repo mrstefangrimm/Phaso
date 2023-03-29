@@ -5,7 +5,8 @@
 import * as THREE from 'three'
 import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
-import { LoadableObject, LoadedObject, NotLoadedObject } from './loadedobject.model';
+import { LoadableObject, LoadedObject, NotLoadedObject } from './loadedobject.model'
+import { tick } from '@angular/core/testing'
 
 @Injectable({providedIn: 'root'})
 export class GatingEngine3dService implements OnDestroy {
@@ -16,6 +17,8 @@ export class GatingEngine3dService implements OnDestroy {
   private scene: THREE.Scene
   private light: THREE.AmbientLight
   private frameId: number = null
+
+  private mesh: undefined
 
   gatingPlatform: LoadableObject
 
@@ -31,6 +34,8 @@ export class GatingEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.scene.remove(this.mesh)
+    this.gatingPlatform.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -48,16 +53,14 @@ export class GatingEngine3dService implements OnDestroy {
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
-    });
+    })
     this.renderer.setSize(w, h)
 
     // create the scene
     this.scene = new THREE.Scene()
 
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera.position.x = 0
-    this.camera.position.y = 10
-    this.camera.position.z = 100
+    this.camera.position.set(0, 10, 100)
     this.scene.add(this.camera)
 
     // soft white light
@@ -83,12 +86,13 @@ export class GatingEngine3dService implements OnDestroy {
       () => {
         this.gatingPlatform = new LoadedObject()
         this.gatingPlatform.origin = new Vector3(0, 0, 0)
-        this.gatingPlatform.normal = new Vector3(0, -1, 0)
+        this.gatingPlatform.directionVector = new Vector3(0, -1, 0)
         this.gatingPlatform.position = worldOffset
         this.gatingPlatform.material = materialGatingPanel
         this.gatingPlatform.load(this.baseUrl + 'assets/Cmn-GatingPlatform.obj').subscribe(
           object3d => {
-            this.scene.add(object3d);
+            this.scene.add(object3d)
+            this.mesh = object3d
           },
           () => {
             this.gatingPlatform = new NotLoadedObject()

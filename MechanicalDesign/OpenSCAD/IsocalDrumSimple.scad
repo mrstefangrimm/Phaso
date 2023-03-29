@@ -15,8 +15,8 @@ rotate([-90, 0 ,0])
       cylinder(r=outerRadius, h=240, center=true);
       {
         cylinder(r=innerRadius, h=240, center=true);
-        translate([outerRadius-1.5, 0, 0]) cube([2, 2, 240], center=true);
-        translate([-outerRadius+1.5, 0, 0]) cube([2, 3, 240], center=true);
+        translate([outerRadius-1.5, 0, 0]) cube([3, 2, 240], center=true);
+        translate([-outerRadius+1.5, 0, 0]) cube([3, 2, 240], center=true);
         translate([0, outerRadius-1.5, 0]) cube([2, 3, 240], center=true);
         translate([0, -outerRadius+1.5, 0]) cube([2, 3, 240], center=true);
         difference()

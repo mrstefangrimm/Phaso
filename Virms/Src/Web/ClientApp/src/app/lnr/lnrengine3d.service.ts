@@ -17,6 +17,8 @@ export class LnrEngine3dService implements OnDestroy {
   private scene: THREE.Scene
   private frameId: number = null
 
+  private meshes = []
+
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
 
@@ -28,12 +30,12 @@ export class LnrEngine3dService implements OnDestroy {
   private materialWood: THREE.Material
   private materialXray: THREE.Material
 
+  private groupStaticBaseSilver: LoadableObject
+  private groupStaticBaseGold: LoadableObject
+  private groupStaticBaseAnthracite: LoadableObject
+  private groupStaticBaseBlue: LoadableObject
   groupStaticCoverBlue: LoadableObject
   groupStaticCoverSilver: LoadableObject
-  groupStaticBaseSilver: LoadableObject
-  groupStaticBaseGold: LoadableObject
-  groupStaticBaseAnthracite: LoadableObject
-  groupStaticBaseBlue: LoadableObject
   groupCarriageSilver: LoadableObject
   groupCarriageBlue: LoadableObject
   groupCarriageGold: LoadableObject
@@ -60,6 +62,33 @@ export class LnrEngine3dService implements OnDestroy {
       cancelAnimationFrame(this.frameId)
     }
     this.frameId = null
+    this.meshes.forEach(m => this.scene.remove(m))
+    this.materialBlue.dispose()
+    this.materialWhite.dispose()
+    this.materialAnthracite.dispose()
+    this.materialSilver.dispose()
+    this.materialGold.dispose()
+    this.materialWood.dispose()
+    this.materialXray.dispose()
+    this.groupStaticCoverBlue.dispose()
+    this.groupStaticCoverSilver.dispose()
+    this.groupStaticBaseSilver.dispose()
+    this.groupStaticBaseGold.dispose()
+    this.groupStaticBaseAnthracite.dispose()
+    this.groupStaticBaseBlue.dispose()
+    this.groupCarriageSilver.dispose()
+    this.groupCarriageBlue.dispose()
+    this.groupCarriageGold.dispose()
+    this.groupCarriageAnthracite.dispose()
+    this.groupServoArmGold.dispose()
+    this.groupServoArmSilver.dispose()
+    this.groupServoArmAnthracite.dispose()
+    this.groupServoArmBlue.dispose()
+    this.groupRotationWhite.dispose()
+    this.groupRotationWood.dispose()
+    this.groupRotationBlue.dispose()
+    this.groupRotationSilver.dispose()
+    this.groupExtensionArm.dispose()
   }
 
   createScene(canvas: ElementRef<HTMLCanvasElement>) {
@@ -84,9 +113,7 @@ export class LnrEngine3dService implements OnDestroy {
     this.scene = new THREE.Scene()
 
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera.position.x = 100
-    this.camera.position.y = 150
-    this.camera.position.z = 150
+    this.camera.position.set(100, 150, 150)
     this.scene.add(this.camera)
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -145,7 +172,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupStaticCoverBlue = new LoadedObject()
         this.groupStaticCoverBlue.origin = new Vector3(0, 0, 0)
-        this.groupStaticCoverBlue.normal = new Vector3(0, -1, 0)
+        this.groupStaticCoverBlue.directionVector = new Vector3(0, -1, 0)
         this.groupStaticCoverBlue.position = originOffset
         this.groupStaticCoverBlue.material = this.materialBlue
         this.groupStaticCoverBlue.loadInvisible(this.baseUrl + 'assets/LnR-VirmsGroupStaticCoverBlue.obj').subscribe(
@@ -161,7 +188,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupStaticCoverSilver = new LoadedObject()
         this.groupStaticCoverSilver.origin = new Vector3(0, 0, 0)
-        this.groupStaticCoverSilver.normal = new Vector3(0, -1, 0)
+        this.groupStaticCoverSilver.directionVector = new Vector3(0, -1, 0)
         this.groupStaticCoverSilver.position = originOffset
         this.groupStaticCoverSilver.material = this.materialSilver
         this.groupStaticCoverSilver.loadInvisible(this.baseUrl + 'assets/LnR-VirmsGroupStaticCoverSilver.obj').subscribe(
@@ -177,7 +204,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupStaticBaseSilver = new LoadedObject()
         this.groupStaticBaseSilver.origin = new Vector3(0, 0, 0)
-        this.groupStaticBaseSilver.normal = new Vector3(0, -1, 0)
+        this.groupStaticBaseSilver.directionVector = new Vector3(0, -1, 0)
         this.groupStaticBaseSilver.position = originOffset
         this.groupStaticBaseSilver.material = this.materialSilver
         this.groupStaticBaseSilver.load(this.baseUrl + 'assets/LnR-VirmsGroupStaticBaseSilver.obj').subscribe(
@@ -193,7 +220,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupStaticBaseGold = new LoadedObject()
         this.groupStaticBaseGold.origin = new Vector3(0, 0, 0)
-        this.groupStaticBaseGold.normal = new Vector3(0, -1, 0)
+        this.groupStaticBaseGold.directionVector = new Vector3(0, -1, 0)
         this.groupStaticBaseGold.position = originOffset
         this.groupStaticBaseGold.material = this.materialGold
         this.groupStaticBaseGold.load(this.baseUrl + 'assets/LnR-VirmsGroupStaticBaseGold.obj').subscribe(
@@ -209,7 +236,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupStaticBaseAnthracite = new LoadedObject()
         this.groupStaticBaseAnthracite.origin = new Vector3(0, 0, 0)
-        this.groupStaticBaseAnthracite.normal = new Vector3(0, -1, 0)
+        this.groupStaticBaseAnthracite.directionVector = new Vector3(0, -1, 0)
         this.groupStaticBaseAnthracite.position = originOffset
         this.groupStaticBaseAnthracite.material = this.materialAnthracite
         this.groupStaticBaseAnthracite.load(this.baseUrl + 'assets/LnR-VirmsGroupStaticBaseAnthracite.obj').subscribe(
@@ -225,7 +252,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupStaticBaseBlue = new LoadedObject()
         this.groupStaticBaseBlue.origin = new Vector3(0, 0, 0)
-        this.groupStaticBaseBlue.normal = new Vector3(0, -1, 0)
+        this.groupStaticBaseBlue.directionVector = new Vector3(0, -1, 0)
         this.groupStaticBaseBlue.position = originOffset
         this.groupStaticBaseBlue.material = this.materialBlue
         this.groupStaticBaseBlue.load(this.baseUrl + 'assets/LnR-VirmsGroupStaticBaseBlue.obj').subscribe(
@@ -241,7 +268,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupCarriageSilver = new LoadedObject()
         this.groupCarriageSilver.origin = new Vector3(0, 0, 0)
-        this.groupCarriageSilver.normal = new Vector3(0, -1, 0)
+        this.groupCarriageSilver.directionVector = new Vector3(0, -1, 0)
         this.groupCarriageSilver.position = originOffset
         this.groupCarriageSilver.material = this.materialSilver
         this.groupCarriageSilver.load(this.baseUrl + 'assets/LnR-VirmsGroupCarriageSilver.obj').subscribe(
@@ -257,7 +284,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupCarriageBlue = new LoadedObject()
         this.groupCarriageBlue.origin = new Vector3(0, 0, 0)
-        this.groupCarriageBlue.normal = new Vector3(0, -1, 0)
+        this.groupCarriageBlue.directionVector = new Vector3(0, -1, 0)
         this.groupCarriageBlue.position = originOffset
         this.groupCarriageBlue.material = this.materialBlue
         this.groupCarriageBlue.load(this.baseUrl + 'assets/LnR-VirmsGroupCarriageBlue.obj').subscribe(
@@ -273,7 +300,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupCarriageGold = new LoadedObject()
         this.groupCarriageGold.origin = new Vector3(0, 0, 0)
-        this.groupCarriageGold.normal = new Vector3(0, -1, 0)
+        this.groupCarriageGold.directionVector = new Vector3(0, -1, 0)
         this.groupCarriageGold.position = originOffset
         this.groupCarriageGold.material = this.materialGold
         this.groupCarriageGold.load(this.baseUrl + 'assets/LnR-VirmsGroupCarriageGold.obj').subscribe(
@@ -289,7 +316,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupCarriageAnthracite = new LoadedObject()
         this.groupCarriageAnthracite.origin = new Vector3(0, 0, 0)
-        this.groupCarriageAnthracite.normal = new Vector3(0, -1, 0)
+        this.groupCarriageAnthracite.directionVector = new Vector3(0, -1, 0)
         this.groupCarriageAnthracite.position = originOffset
         this.groupCarriageAnthracite.material = this.materialAnthracite
         this.groupCarriageAnthracite.load(this.baseUrl + 'assets/LnR-VirmsGroupCarriageAnthracite.obj').subscribe(
@@ -305,7 +332,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupServoArmGold = new LoadedObject()
         this.groupServoArmGold.origin = new Vector3(10.14, -46.93, 0)
-        this.groupServoArmGold.normal = new Vector3(0, -1, 0)
+        this.groupServoArmGold.directionVector = new Vector3(0, -1, 0)
         this.groupServoArmGold.position = originOffset
         this.groupServoArmGold.material = this.materialGold
         this.groupServoArmGold.load(this.baseUrl + 'assets/LnR-VirmsGroupServoArmGold.obj').subscribe(
@@ -321,7 +348,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupServoArmSilver = new LoadedObject()
         this.groupServoArmSilver.origin = new Vector3(10.14, -46.93, 0)
-        this.groupServoArmSilver.normal = new Vector3(0, -1, 0)
+        this.groupServoArmSilver.directionVector = new Vector3(0, -1, 0)
         this.groupServoArmSilver.position = originOffset
         this.groupServoArmSilver.material = this.materialSilver
         this.groupServoArmSilver.load(this.baseUrl + 'assets/LnR-VirmsGroupServoArmSilver.obj').subscribe(
@@ -337,7 +364,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupServoArmAnthracite = new LoadedObject()
         this.groupServoArmAnthracite.origin = new Vector3(10.14, -46.93, 0)
-        this.groupServoArmAnthracite.normal = new Vector3(0, -1, 0)
+        this.groupServoArmAnthracite.directionVector = new Vector3(0, -1, 0)
         this.groupServoArmAnthracite.position = originOffset
         this.groupServoArmAnthracite.material = this.materialAnthracite
         this.groupServoArmAnthracite.load(this.baseUrl + 'assets/LnR-VirmsGroupServoArmAnthracite.obj').subscribe(
@@ -353,7 +380,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupServoArmBlue = new LoadedObject()
         this.groupServoArmBlue.origin = new Vector3(10.14, -46.93, 0)
-        this.groupServoArmBlue.normal = new Vector3(0, -1, 0)
+        this.groupServoArmBlue.directionVector = new Vector3(0, -1, 0)
         this.groupServoArmBlue.position = originOffset
         this.groupServoArmBlue.material = this.materialBlue
         this.groupServoArmBlue.load(this.baseUrl + 'assets/LnR-VirmsGroupServoArmBlue.obj').subscribe(
@@ -369,7 +396,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupRotationWhite = new LoadedObject()
         this.groupRotationWhite.origin = new Vector3(8.43, 0, -19)
-        this.groupRotationWhite.normal = new Vector3(0, -1, 0)
+        this.groupRotationWhite.directionVector = new Vector3(0, -1, 0)
         this.groupRotationWhite.position = originOffset
         this.groupRotationWhite.material = this.materialWhite
         this.groupRotationWhite.load(this.baseUrl + 'assets/LnR-VirmsGroupRotationWhite.obj').subscribe(
@@ -385,7 +412,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupRotationWood = new LoadedObject()
         this.groupRotationWood.origin = new Vector3(8.43, 0, -19)
-        this.groupRotationWood.normal = new Vector3(0, -1, 0)
+        this.groupRotationWood.directionVector = new Vector3(0, -1, 0)
         this.groupRotationWood.position = originOffset
         this.groupRotationWood.material = this.materialWood
         this.groupRotationWood.load(this.baseUrl + 'assets/LnR-VirmsGroupRotationWood.obj').subscribe(
@@ -401,7 +428,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupRotationBlue = new LoadedObject()
         this.groupRotationBlue.origin = new Vector3(8.43, 0, -19)
-        this.groupRotationBlue.normal = new Vector3(0, -1, 0)
+        this.groupRotationBlue.directionVector = new Vector3(0, -1, 0)
         this.groupRotationBlue.position = originOffset
         this.groupRotationBlue.material = this.materialBlue
         this.groupRotationBlue.load(this.baseUrl + 'assets/LnR-VirmsGroupRotationBlue.obj').subscribe(
@@ -417,7 +444,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupRotationSilver = new LoadedObject()
         this.groupRotationSilver.origin = new Vector3(8.43, 0, -19)
-        this.groupRotationSilver.normal = new Vector3(0, -1, 0)
+        this.groupRotationSilver.directionVector = new Vector3(0, -1, 0)
         this.groupRotationSilver.position = originOffset
         this.groupRotationSilver.material = this.materialSilver
         this.groupRotationSilver.load(this.baseUrl + 'assets/LnR-VirmsGroupRotationSilver.obj').subscribe(
@@ -433,7 +460,7 @@ export class LnrEngine3dService implements OnDestroy {
       () => {
         this.groupExtensionArm = new LoadedObject()
         this.groupExtensionArm.origin = new Vector3(0.65, 2.41, 0)
-        this.groupExtensionArm.normal = new Vector3(0, -1, 0)
+        this.groupExtensionArm.directionVector = new Vector3(0, -1, 0)
         this.groupExtensionArm.position = originOffset
         this.groupExtensionArm.material = this.materialBlue
         this.groupExtensionArm.load(this.baseUrl + 'assets/LnR-VirmsGroupExtensionArm.obj').subscribe(
