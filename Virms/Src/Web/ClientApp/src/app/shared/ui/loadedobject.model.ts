@@ -2,10 +2,10 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
-import { Observable } from 'rxjs';
-import * as THREE from 'three';
-import { Group, Material, Object3D, Quaternion, Vector3 } from 'three';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { Observable } from 'rxjs'
+import * as THREE from 'three'
+import { Group, Material, Object3D, Quaternion, Vector3 } from 'three'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 
 export interface LoadableObject {
 
@@ -44,7 +44,7 @@ export interface LoadableObject {
 
 export class LoadedObject implements LoadableObject {
 
-  private readonly worldSpaceDirectionVector: Vector3 = new THREE.Vector3(0, 0, 1);
+  private readonly worldSpaceDirectionVector: Vector3 = new THREE.Vector3(0, 0, 1)
 
   origin: Vector3
   position: Vector3
@@ -135,8 +135,8 @@ export class LoadedObject implements LoadableObject {
     const q = new Quaternion()
     q.setFromUnitVectors(this.directionVector, this.worldSpaceDirectionVector)
 
-    const qRtn = new Quaternion();
-    qRtn.setFromAxisAngle(axis, rtn);
+    const qRtn = new Quaternion()
+    qRtn.setFromAxisAngle(axis, rtn)
     q.multiply(qRtn)
     this.object.setRotationFromQuaternion(q)
 

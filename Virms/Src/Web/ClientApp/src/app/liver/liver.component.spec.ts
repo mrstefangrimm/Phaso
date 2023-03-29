@@ -13,8 +13,8 @@ import { LiverComponent } from './liver.component'
 import { LiverEngine3dService } from './liverengine3d.service'
 
 describe('LiverComponent', () => {
-  let component: LiverComponent;
-  let fixture: ComponentFixture<LiverComponent>;
+  let component: LiverComponent
+  let fixture: ComponentFixture<LiverComponent>
   const routerSpy = jasmine.createSpyObj('Router', [''])
   const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post'])
   const tocServiceSpy = jasmine.createSpyObj('TocService', ['getTableOfContent'])
@@ -53,7 +53,7 @@ describe('LiverComponent', () => {
         { provide: GatingEngine3dService, useValue: gatingEngineServiceSpy },
       ]
     })
-    .compileComponents();
+    .compileComponents()
   })
 
   beforeEach(() => {

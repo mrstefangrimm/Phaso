@@ -29,8 +29,8 @@ export class IsocalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.info(IsocalComponent.name, "ngOnInit")
 
-    this.engine3d.createScene(this.rendererCanvas);
-    this.engine3d.animate();
+    this.engine3d.createScene(this.rendererCanvas)
+    this.engine3d.animate()
 
     this.setVisibilies()
   }

@@ -5,8 +5,8 @@ import * as THREE from 'three'
 import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model';
-import { ThreeObject } from '../shared/ui/threeobject.model';
+import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model'
+import { ThreeObject } from '../shared/ui/threeobject.model'
 
 @Injectable({providedIn: 'root'})
 
@@ -83,7 +83,7 @@ export class MarkerEngine3dService implements OnDestroy {
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
-    });
+    })
     this.renderer.setSize(w, h)
 
     // create the scene
@@ -97,8 +97,8 @@ export class MarkerEngine3dService implements OnDestroy {
     controls.minDistance = 0
     controls.maxDistance = 2000
 
-    var axesHelper = new THREE.AxesHelper(50);
-    this.scene.add(axesHelper);
+    var axesHelper = new THREE.AxesHelper(50)
+    this.scene.add(axesHelper)
 
     // soft white light
     this.light = new THREE.AmbientLight(0x404040)

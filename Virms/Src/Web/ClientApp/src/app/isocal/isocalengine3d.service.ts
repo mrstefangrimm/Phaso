@@ -85,7 +85,7 @@ export class IsocalEngine3dService implements OnDestroy {
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
-    });
+    })
     this.renderer.setSize(w, h)
 
     // create the scene
@@ -99,22 +99,22 @@ export class IsocalEngine3dService implements OnDestroy {
     this.orbit.minDistance = 0
     this.orbit.maxDistance = 2500
 
-    var axesHelper = new THREE.AxesHelper(600);
-    this.scene.add(axesHelper);
+    //var axesHelper = new THREE.AxesHelper(600)
+    //this.scene.add(axesHelper)
 
-    this.light = new THREE.SpotLight(0xffffff);
-    this.light.position.set(0, 0, 600);
+    this.light = new THREE.SpotLight(0xFFFFFF)
+    this.light.position.set(0, 0, 600)
 
-    this.light.castShadow = true;
+    this.light.castShadow = true
 
-    this.light.shadow.mapSize.width = 1024;
-    this.light.shadow.mapSize.height = 1024;
+    this.light.shadow.mapSize.width = 1024
+    this.light.shadow.mapSize.height = 1024
 
-    this.light.shadow.camera.near = 500;
-    this.light.shadow.camera.far = 4000;
-    this.light.shadow.camera.fov = 30;
+    this.light.shadow.camera.near = 500
+    this.light.shadow.camera.far = 4000
+    this.light.shadow.camera.fov = 30
 
-    this.scene.add(this.light);
+    this.scene.add(this.light)
 
     this.backGround = null
     this.backGroundXray = new THREE.Color(0x000000)
@@ -301,9 +301,9 @@ export class IsocalEngine3dService implements OnDestroy {
     this.light.position.y = this.camera.position.y
     this.light.position.z = this.camera.position.z
 
-    //const delta = this.camera.position.x - this.currentX;
-    //this.currentX = this.camera.position.x;
-    //var rotX = Math.atan(delta / 300);
+    //const delta = this.camera.position.x - this.currentX
+    //this.currentX = this.camera.position.x
+    //var rotX = Math.atan(delta / 300)
     //console.info(this.camera.position.x, delta, -rotX)
     //this.detector.rotateY(rotX)
 

@@ -23,7 +23,7 @@ export class TocService {
         tocFakeResponse.hrefs['motionsystems'] = 'https://webaepp.dynv6.net:50445/api/motionsystems'
         tocFakeResponse.hrefs['liveimage'] = 'https://webaepp.dynv6.net:50445/images'
         console.info(tocFakeResponse)
-        subscriber.next(tocFakeResponse);
+        subscriber.next(tocFakeResponse)
       })
     }
     else {
@@ -31,7 +31,7 @@ export class TocService {
         const tocFakeResponse: TocResponse = { hrefs: {} }
         tocFakeResponse.hrefs['motionsystems'] = this.baseUrl + 'api/motionsystems'
         console.info(tocFakeResponse)
-        subscriber.next(tocFakeResponse);
+        subscriber.next(tocFakeResponse)
       })
     }
   }

@@ -6,7 +6,7 @@ import * as THREE from 'three'
 import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model';
+import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model'
 
 @Injectable({providedIn: 'root'})
 
@@ -104,7 +104,7 @@ export class LiverEngine3dService implements OnDestroy {
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
-    });
+    })
     this.renderer.setSize(w, h)
 
     // create the scene
