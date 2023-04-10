@@ -6,7 +6,6 @@ import * as THREE from 'three'
 import { Vector3 } from 'three'
 import { ElementRef, Inject, Injectable, NgZone, OnDestroy } from '@angular/core'
 import { LoadableObject, LoadedObject, NotLoadedObject } from './loadedobject.model'
-import { tick } from '@angular/core/testing'
 
 @Injectable({providedIn: 'root'})
 export class GatingEngine3dService implements OnDestroy {

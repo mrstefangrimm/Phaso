@@ -27,8 +27,12 @@ export class MarkerEngine3dService implements OnDestroy {
   private materialTissueXray: THREE.Material
   private materialMarker: THREE.Material
   private materialMarkerXray: THREE.Material
+  private materialGraphite: THREE.Material
+  private materialGraphiteXray: THREE.Material
 
   body: LoadableObject
+  bodyRigidMarkers: LoadableObject
+
   // TODO - target was added for testing, please remove
   //target: LoadableObject
 
@@ -58,6 +62,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.materialTissueXray.dispose()
     this.materialMarker.dispose()
     this.materialMarkerXray.dispose()
+    this.materialGraphite.dispose()
+    this.materialGraphiteXray.dispose()
     this.cylinderLeftUpper.dispose()
     this.markerLeftUpper.dispose()
     this.cylinderLeftLower.dispose()
@@ -110,6 +116,9 @@ export class MarkerEngine3dService implements OnDestroy {
     this.backGroundXray = new THREE.Color(0x000000)
     this.materialMarker = new THREE.MeshBasicMaterial({ color: 0xFFFF00, transparent: false })
     this.materialMarkerXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: false })
+    this.materialGraphite = new THREE.MeshBasicMaterial({ color: 0xAAAAAA, opacity: 0.6, transparent: false })
+    this.materialGraphiteXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.6, transparent: false })
+
     this.materialTissue = new THREE.MeshPhysicalMaterial({
       color: 0xFFFFFF,
       metalness: 0,
@@ -151,6 +160,24 @@ export class MarkerEngine3dService implements OnDestroy {
           })
       })
 
+    LoadedObject.tryAdd(this.bodyRigidMarkers).subscribe(existing => this.scene.add(existing),
+      () => {
+        this.bodyRigidMarkers = new LoadedObject()
+        this.bodyRigidMarkers.origin = new Vector3(0, 0, 0)
+        this.bodyRigidMarkers.directionVector = cadDirection
+        this.bodyRigidMarkers.position = new Vector3(0, 0, 0)
+        this.bodyRigidMarkers.material = this.materialTissue
+        this.bodyRigidMarkers.load(this.baseUrl + 'assets/Gris5A-BodyRigidMarkers.obj').subscribe(
+          object3d => {
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
+          },
+          () => {
+            this.bodyRigidMarkers = new NotLoadedObject()
+            console.warn(MarkerEngine3dService.name, "createScene", "rigid markers are not shown")
+          })
+      })
+
     this.cylinderLeftUpper = new ThreeObject()
     this.cylinderLeftUpper.fromWorldToLocalOrigin = new Vector3(-25, 25, 0)
     this.cylinderLeftUpper.position = new Vector3(0, 0, 0)
@@ -166,7 +193,7 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerLeftUpper = new ThreeObject()
     this.markerLeftUpper.fromWorldToLocalOrigin = new Vector3(-25, 25, 0)
     this.markerLeftUpper.position = new Vector3(10.606, -10.606, 2)
-    this.markerLeftUpper.geometry = new THREE.CylinderGeometry(1, 1, 4, 32)
+    this.markerLeftUpper.geometry = new THREE.CylinderGeometry(1, 1, 8, 32)
     this.markerLeftUpper.geometry.rotateX(Math.PI / 2)
     this.markerLeftUpper.material = this.materialMarker
     this.markerLeftUpper.build().subscribe(
@@ -190,7 +217,7 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerLeftLower = new ThreeObject()
     this.markerLeftLower.fromWorldToLocalOrigin = new Vector3(-25, -25, 0)
     this.markerLeftLower.position = new Vector3(10.606, 10.606, 22)
-    this.markerLeftLower.geometry = new THREE.CylinderGeometry(1, 1, 4, 32)
+    this.markerLeftLower.geometry = new THREE.CylinderGeometry(1, 1, 8, 32)
     this.markerLeftLower.geometry.rotateX(Math.PI / 2)
     this.markerLeftLower.material = this.materialMarker
     this.markerLeftLower.build().subscribe(
@@ -214,7 +241,7 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerRightUpper = new ThreeObject()
     this.markerRightUpper.fromWorldToLocalOrigin = new Vector3(25, 25, 0)
     this.markerRightUpper.position = new Vector3(-10.606, -10.606, -18)
-    this.markerRightUpper.geometry = new THREE.CylinderGeometry(1, 1, 4, 32)
+    this.markerRightUpper.geometry = new THREE.CylinderGeometry(1, 1, 8, 32)
     this.markerRightUpper.geometry.rotateX(Math.PI / 2)
     this.markerRightUpper.material = this.materialMarker
     this.markerRightUpper.build().subscribe(
@@ -256,7 +283,7 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerRightLower = new ThreeObject()
     this.markerRightLower.fromWorldToLocalOrigin = new Vector3(25, -25, 0)
     this.markerRightLower.position = new Vector3(-10.606, 10.606, -2)
-    this.markerRightLower.geometry = new THREE.CylinderGeometry(1, 1, 4, 32)
+    this.markerRightLower.geometry = new THREE.CylinderGeometry(1, 1, 8, 32)
     this.markerRightLower.geometry.rotateX(Math.PI / 2)
     this.markerRightLower.material = this.materialMarker
     this.markerRightLower.build().subscribe(
@@ -308,6 +335,7 @@ export class MarkerEngine3dService implements OnDestroy {
       this.scene.background = this.backGroundXray
 
       this.body.setMaterial(this.materialTissueXray)
+      this.bodyRigidMarkers.setMaterial(this.materialGraphiteXray)
 
       this.cylinderLeftUpper.setMaterial(this.materialTissueXray)
       this.cylinderLeftLower.setMaterial(this.materialTissueXray)
@@ -323,6 +351,7 @@ export class MarkerEngine3dService implements OnDestroy {
       this.scene.background = this.backGround
 
       this.body.setMaterial(this.materialTissue)
+      this.bodyRigidMarkers.setMaterial(this.materialGraphite)
 
       this.cylinderLeftUpper.setMaterial(this.materialTissue)
       this.cylinderLeftLower.setMaterial(this.materialTissue)
