@@ -51,7 +51,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     console.info(LiverComponent.name, "ngOnInit")
 
     console.debug(LiverComponent.name, window.innerWidth, window.innerHeight)
-    var dim = Math.max(250, Math.min(window.innerWidth - 235, window.innerHeight - 100))
+    var sideNavSpace = this.context.sideNavOpen ? 235 : 140
+    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
 
@@ -76,12 +77,26 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onResize(event) {
-    console.info(LiverComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
+    console.debug(LiverComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
     event.target.innerWidth;
 
-    var dim = Math.max(250, Math.min(event.target.innerWidth - 235, event.target.innerHeight - 100))
+    var sideNavSpace = this.context.sideNavOpen ? 235 : 140
+    var dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
+  }
+
+  onSideNavChanged() {
+    console.info(LiverComponent.name, "onSideNavChanged")
+
+    this.context.sideNavOpen = !this.context.sideNavOpen
+
+    var sideNavSpace = this.context.sideNavOpen ? 235 : 140
+    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
+
+    this.engine3d.setSize(dim, dim)
   }
 
   @HostListener('window:beforeunload', ['$event'])

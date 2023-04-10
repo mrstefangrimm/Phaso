@@ -348,6 +348,10 @@ export class LungEngine3dService implements OnDestroy {
       })
   }
 
+  setSize(width: number, height: number) {
+    this.renderer.setSize(width, height, true)
+  }
+
   animate() {
     console.debug(LungEngine3dService.name, "animate")
 
@@ -367,7 +371,7 @@ export class LungEngine3dService implements OnDestroy {
     })
   }
 
-  render() {
+  private render() {
     this.frameId = requestAnimationFrame(() => {
       this.render()
     })
@@ -379,7 +383,7 @@ export class LungEngine3dService implements OnDestroy {
     this.renderer.render(this.scene, this.camera)
   }
 
-  resize() {
+  private resize() {
     const w = this.canvas.width
     const h = this.canvas.height
 

@@ -36,7 +36,8 @@ export class IsocalComponent implements OnInit, OnDestroy {
     console.info(IsocalComponent.name, "ngOnInit")
 
     console.debug(IsocalComponent.name, window.innerWidth, window.innerHeight)
-    var dim = Math.max(250, Math.min(window.innerWidth - 210, window.innerHeight - 100))
+    var sideNavSpace = this.context.sideNavOpen ? 210 : 140
+    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
 
@@ -52,12 +53,26 @@ export class IsocalComponent implements OnInit, OnDestroy {
   }
 
   onResize(event) {
-    console.info(IsocalComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
+    console.debug(IsocalComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
     event.target.innerWidth;
 
-    var dim = Math.max(250, Math.min(event.target.innerWidth - 210, event.target.innerHeight - 100))
+    var sideNavSpace = this.context.sideNavOpen ? 210 : 140
+    var dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
+  }
+
+  onSideNavChanged() {
+    console.info(IsocalComponent.name, "onSideNavChanged")
+
+    this.context.sideNavOpen = !this.context.sideNavOpen
+
+    var sideNavSpace = this.context.sideNavOpen ? 210 : 140
+    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
+
+    this.engine3d.setSize(dim, dim)
   }
 
   onX1Changed(event) {

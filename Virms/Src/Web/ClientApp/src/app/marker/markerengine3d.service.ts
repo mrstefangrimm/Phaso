@@ -292,6 +292,10 @@ export class MarkerEngine3dService implements OnDestroy {
       })
   }
 
+  setSize(width: number, height: number) {
+    this.renderer.setSize(width, height, true)
+  }
+
   animate() {
     console.debug(MarkerEngine3dService.name, "animate")
 
@@ -311,14 +315,14 @@ export class MarkerEngine3dService implements OnDestroy {
     })
   }
 
-  render() {
+  private render() {
     this.frameId = requestAnimationFrame(() => {
       this.render()
     })
     this.renderer.render(this.scene, this.camera)
   }
 
-  resize() {
+  private resize() {
     const w = this.canvas.width
     const h = this.canvas.width
 

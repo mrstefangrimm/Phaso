@@ -10,7 +10,7 @@
                mode="side"
                position="end">
     <div>
-      <button mat-button (click)="context.sideNavOpen = true"><</button>
+      <button mat-button (click)="onSideNavChanged()"><</button>
     </div>
     <div align="center">
       <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
@@ -22,7 +22,7 @@
                position="end">
     <div align="left">
       <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
-      <button mat-button (click)="context.sideNavOpen = false">></button>
+      <button mat-button (click)="onSideNavChanged()">></button>
     </div>
     <div *ngIf="synced">
       <button mat-button (click)="context.automaticControlsEnabled = false">Manual</button>
@@ -206,8 +206,6 @@
       </mat-sidenav>
 
       <mat-sidenav-content>
-
-        <a download="logo.gif" href="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">Download transparent png</a>
 
         <div class="stack-horz">
           <div class="content">
