@@ -70,16 +70,15 @@ export class IsocalEngine3dService implements OnDestroy {
     this.y2.dispose()
   }
 
-  createScene(canvas: ElementRef<HTMLCanvasElement>) {
+  createScene(canvas: ElementRef<HTMLCanvasElement>, width: number, height: number) {
     console.info(IsocalEngine3dService.name, "createScene")
 
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement
 
-    const w = this.canvas.width
-    const h = this.canvas.height
-
-    console.debug(w,h)
+    const w = width
+    const h = height
+    console.debug(w, h)
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,

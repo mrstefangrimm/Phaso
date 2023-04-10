@@ -12,12 +12,18 @@ import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcompone
 @Component({
   selector: 'app-liver',
   templateUrl: './liver.component.html',
-  styleUrls: ['./liver.component.css']
+  styleUrls: ['./liver.component.css'],
+  host: {
+    '(window:resize)': 'onResize($event)'
+  }
 })
 export class LiverComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>
+
+  rendererWidth: number
+  rendererHeight: number
 
   @ViewChild('gatingRendererCanvas', { static: true })
   gatingRendererCanvas: ElementRef<HTMLCanvasElement>
@@ -44,7 +50,12 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   ngOnInit() {
     console.info(LiverComponent.name, "ngOnInit")
 
-    this.engine3d.createScene(this.rendererCanvas)
+    console.debug(LiverComponent.name, window.innerWidth, window.innerHeight)
+    var dim = Math.max(250, Math.min(window.innerWidth - 235, window.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
+
+    this.engine3d.createScene(this.rendererCanvas, dim, dim)
     this.engine3d.animate()
 
     this.gatingEngine3d.createScene(this.gatingRendererCanvas)
@@ -62,6 +73,15 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     this.engine3d.ngOnDestroy()
     this.gatingEngine3d.ngOnDestroy()
     this.onDestroy()
+  }
+
+  onResize(event) {
+    console.info(LiverComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
+    event.target.innerWidth;
+
+    var dim = Math.max(250, Math.min(event.target.innerWidth - 235, event.target.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
   }
 
   @HostListener('window:beforeunload', ['$event'])

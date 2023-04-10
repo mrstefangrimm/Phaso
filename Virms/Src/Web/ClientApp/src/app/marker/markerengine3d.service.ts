@@ -74,16 +74,15 @@ export class MarkerEngine3dService implements OnDestroy {
     this.markerRightLower.dispose()
   }
 
-  createScene(canvas: ElementRef<HTMLCanvasElement>) {
+  createScene(canvas: ElementRef<HTMLCanvasElement>, width: number, height: number) {
     console.info(MarkerEngine3dService.name, "createScene")
 
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement
 
-    const w = this.canvas.width
-    const h = this.canvas.width
-
-    console.debug(w,h)
+    const w = width
+    const h = height
+    console.debug(w, h)
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -103,8 +102,8 @@ export class MarkerEngine3dService implements OnDestroy {
     controls.minDistance = 0
     controls.maxDistance = 2000
 
-    var axesHelper = new THREE.AxesHelper(50)
-    this.scene.add(axesHelper)
+    //var axesHelper = new THREE.AxesHelper(50)
+    //this.scene.add(axesHelper)
 
     // soft white light
     this.light = new THREE.AmbientLight(0x404040)

@@ -11,12 +11,18 @@ import { LnrEngine3dService } from './lnrengine3d.service'
 @Component({
   selector: 'app-lnr',
   templateUrl: './lnr.component.html',
-  styleUrls: ['./lnr.component.css']
+  styleUrls: ['./lnr.component.css'],
+  host: {
+    '(window:resize)': 'onResize($event)'
+  }
 })
 export class LnrComponent implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>
+
+  rendererWidth: number
+  rendererHeight: number
 
   constructor(
     public context: LnrService,
@@ -27,7 +33,12 @@ export class LnrComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.info(LnrComponent.name, "ngOnInit")
 
-    this.engine3d.createScene(this.rendererCanvas);
+    console.debug(LnrComponent.name, window.innerWidth, window.innerHeight)
+    var dim = Math.max(250, Math.min(window.innerWidth - 210, window.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
+
+    this.engine3d.createScene(this.rendererCanvas, dim, dim)
     this.engine3d.animate();
 
     this.setVisibilies()
@@ -36,6 +47,15 @@ export class LnrComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     console.info(LnrComponent.name, "ngOnDestroy")
     this.engine3d.ngOnDestroy()
+  }
+
+  onResize(event) {
+    console.info(LnrComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
+    event.target.innerWidth;
+
+    var dim = Math.max(250, Math.min(event.target.innerWidth - 210, event.target.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
   }
 
   onLngChanged(event) {

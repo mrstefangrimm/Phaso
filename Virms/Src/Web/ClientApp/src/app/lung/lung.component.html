@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
+<!-- Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
      Licensed under the GPL. See LICENSE file in the project root for full license information.
 -->
 
@@ -154,8 +154,8 @@
           <div class="content">
             <canvas #rendererCanvas
                     id="renderCanvas"
-                    width="500"
-                    height="500">
+                    [width]=rendererWidth
+                    [height]=rendererHeight>
             </canvas>
           </div>
           <div class="content">

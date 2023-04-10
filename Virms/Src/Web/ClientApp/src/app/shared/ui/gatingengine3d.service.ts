@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -45,7 +45,6 @@ export class GatingEngine3dService implements OnDestroy {
 
     const w = this.canvas.width
     const h = this.canvas.height
-
     console.debug(w, h)
 
     this.renderer = new THREE.WebGLRenderer({

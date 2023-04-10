@@ -11,12 +11,18 @@ import { IsocalEngine3dService } from './isocalengine3d.service'
 @Component({
   selector: 'app-isocal',
   templateUrl: './isocal.component.html',
-  styleUrls: ['./isocal.component.css']
+  styleUrls: ['./isocal.component.css'],
+  host: {
+    '(window:resize)': 'onResize($event)'
+  }
 })
 export class IsocalComponent implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>
+
+  rendererWidth: number
+  rendererHeight: number
 
   private shownAsXray: boolean = false
 
@@ -29,7 +35,12 @@ export class IsocalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.info(IsocalComponent.name, "ngOnInit")
 
-    this.engine3d.createScene(this.rendererCanvas)
+    console.debug(IsocalComponent.name, window.innerWidth, window.innerHeight)
+    var dim = Math.max(250, Math.min(window.innerWidth - 210, window.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
+
+    this.engine3d.createScene(this.rendererCanvas, dim, dim)
     this.engine3d.animate()
 
     this.setVisibilies()
@@ -38,6 +49,15 @@ export class IsocalComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     console.info(IsocalComponent.name, "ngOnDestroy")
     this.engine3d.ngOnDestroy()
+  }
+
+  onResize(event) {
+    console.info(IsocalComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
+    event.target.innerWidth;
+
+    var dim = Math.max(250, Math.min(event.target.innerWidth - 210, event.target.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
   }
 
   onX1Changed(event) {

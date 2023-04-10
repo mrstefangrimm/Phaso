@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -83,16 +83,15 @@ export class LungEngine3dService implements OnDestroy {
     this.secondTarget.dispose()
   }
 
-  createScene(canvas: ElementRef<HTMLCanvasElement>) {
+  createScene(canvas: ElementRef<HTMLCanvasElement>, width: number, height: number) {
     console.info(LungEngine3dService.name, "createScene")
 
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement
 
-    const w = this.canvas.width
-    const h = this.canvas.height
-
-    console.debug(w,h)
+    const w = width
+    const h = height
+    console.debug(w, h)
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -162,16 +161,7 @@ export class LungEngine3dService implements OnDestroy {
       opacity: 0.6,
       transparent: true
     })
-    this.materialLeftLungInsertXray = new THREE.MeshPhysicalMaterial({
-      color: 0xFFFFFF,
-      metalness: 0,
-      roughness: 0,
-      alphaTest: 0.5,
-      depthWrite: false,
-      transmission: 0.1,
-      opacity: 0.5,
-      transparent: true
-    })
+    this.materialLeftLungInsertXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.4, transparent: true })
     this.materialLungs = new THREE.MeshPhysicalMaterial({
       color: 0x0000FF,
       metalness: 0,
@@ -182,7 +172,7 @@ export class LungEngine3dService implements OnDestroy {
       opacity: 1,
       transparent: true
     })
-    this.materialLungsXray = new THREE.MeshPhysicalMaterial({
+   this.materialLungsXray = new THREE.MeshPhysicalMaterial({
       color: 0xFFFFFF,
       metalness: 0,
       roughness: 0,
