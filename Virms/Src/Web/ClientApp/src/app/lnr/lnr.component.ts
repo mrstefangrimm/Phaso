@@ -34,13 +34,14 @@ export class LnrComponent implements OnInit, OnDestroy {
     console.info(LnrComponent.name, "ngOnInit")
 
     console.debug(LnrComponent.name, window.innerWidth, window.innerHeight)
-    var sideNavSpace = this.context.sideNavOpen ? 210 : 140
-    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
-    this.rendererWidth = dim
-    this.rendererHeight = dim
+    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    var w = Math.max(250, window.innerWidth - sideNavSpace)
+    var h = Math.max(250, window.innerHeight - 100)
+    this.rendererWidth = w
+    this.rendererHeight = h
 
-    this.engine3d.createScene(this.rendererCanvas, dim, dim)
-    this.engine3d.animate();
+    this.engine3d.createScene(this.rendererCanvas, w, h)
+    this.engine3d.animate()
 
     this.setVisibilies()
   }
@@ -54,10 +55,11 @@ export class LnrComponent implements OnInit, OnDestroy {
     console.debug(LnrComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
     event.target.innerWidth;
 
-    var sideNavSpace = this.context.sideNavOpen ? 210 : 140
-    var dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
-    this.rendererWidth = dim
-    this.rendererHeight = dim
+    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    var w = Math.max(250, window.innerWidth - sideNavSpace)
+    var h = Math.max(250, window.innerHeight - 100)
+    this.rendererWidth = w
+    this.rendererHeight = h
   }
 
   onSideNavChanged() {
@@ -65,12 +67,13 @@ export class LnrComponent implements OnInit, OnDestroy {
 
     this.context.sideNavOpen = !this.context.sideNavOpen
 
-    var sideNavSpace = this.context.sideNavOpen ? 210 : 140
-    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
-    this.rendererWidth = dim
-    this.rendererHeight = dim
+    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    var w = Math.max(250, window.innerWidth - sideNavSpace)
+    var h = Math.max(250, window.innerHeight - 100)
+    this.rendererWidth = w
+    this.rendererHeight = h
 
-    this.engine3d.setSize(dim, dim)
+    this.engine3d.setSize(w, h)
   }
 
   onLngChanged(event) {

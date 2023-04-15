@@ -78,7 +78,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
   onResize(event) {
     console.debug(LiverComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
-    event.target.innerWidth;
+    event.target.innerWidth
 
     var sideNavSpace = this.context.sideNavOpen ? 235 : 140
     var dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))

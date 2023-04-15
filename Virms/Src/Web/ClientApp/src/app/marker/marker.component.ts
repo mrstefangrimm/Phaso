@@ -86,7 +86,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
   onResize(event) {
     console.debug(MarkerComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
-    event.target.innerWidth;
+    event.target.innerWidth
 
     var sideNavSpace = this.context.sideNavOpen ? 390 : 140
     var dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
