@@ -117,6 +117,9 @@ export class LiverEngine3dService implements OnDestroy {
     controls.minDistance = 0
     controls.maxDistance = 2000
 
+    //var axesHelper = new THREE.AxesHelper(600)
+    //this.scene.add(axesHelper)
+
     // soft white light
     this.light = new THREE.AmbientLight(0x404040)
     this.light.position.y = 1000

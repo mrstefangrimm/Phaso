@@ -103,16 +103,6 @@ export class IsocalEngine3dService implements OnDestroy {
 
     this.light = new THREE.SpotLight(0xFFFFFF)
     this.light.position.set(0, 0, 600)
-
-    this.light.castShadow = true
-
-    this.light.shadow.mapSize.width = 1024
-    this.light.shadow.mapSize.height = 1024
-
-    this.light.shadow.camera.near = 500
-    this.light.shadow.camera.far = 4000
-    this.light.shadow.camera.fov = 30
-
     this.scene.add(this.light)
 
     this.backGround = null

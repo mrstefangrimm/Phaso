@@ -111,18 +111,11 @@ export class LungEngine3dService implements OnDestroy {
     controls.minDistance = 0
     controls.maxDistance = 2000
 
+    //var axesHelper = new THREE.AxesHelper(600)
+    //this.scene.add(axesHelper)
+
     this.light = new THREE.SpotLight(0xFFFFFF)
     this.light.position.set(0, 1000, 0)
-
-    this.light.castShadow = true
-
-    this.light.shadow.mapSize.width = 1024
-    this.light.shadow.mapSize.height = 1024
-
-    this.light.shadow.camera.near = 5000
-    this.light.shadow.camera.far = 4000
-    this.light.shadow.camera.fov = 300
-
     this.scene.add(this.light)
 
     this.backGround = null
@@ -172,7 +165,7 @@ export class LungEngine3dService implements OnDestroy {
       opacity: 1,
       transparent: true
     })
-   this.materialLungsXray = new THREE.MeshPhysicalMaterial({
+    this.materialLungsXray = new THREE.MeshPhysicalMaterial({
       color: 0xFFFFFF,
       metalness: 0,
       roughness: 0,

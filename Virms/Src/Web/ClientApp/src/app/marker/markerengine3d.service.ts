@@ -16,7 +16,7 @@ export class MarkerEngine3dService implements OnDestroy {
   private renderer: THREE.WebGLRenderer
   private camera: THREE.PerspectiveCamera
   private scene: THREE.Scene
-  private light: THREE.AmbientLight
+  private light: THREE.Light
   private frameId: number = null
 
   private meshes = []
@@ -24,13 +24,14 @@ export class MarkerEngine3dService implements OnDestroy {
   private backGround: THREE.Color
   private backGroundXray: THREE.Color
   private materialTissue: THREE.Material
-  private materialTissueXray: THREE.Material
+  private materialTissueBodyXray: THREE.Material
+  private materialTissueCylinderXray: THREE.Material
   private materialMarker: THREE.Material
   private materialMarkerXray: THREE.Material
   private materialGraphite: THREE.Material
   private materialGraphiteXray: THREE.Material
 
-  body: LoadableObject
+  body: ThreeObject
   bodyRigidMarkers: LoadableObject
 
   // TODO - target was added for testing, please remove
@@ -59,7 +60,8 @@ export class MarkerEngine3dService implements OnDestroy {
     this.frameId = null
     this.meshes.forEach(m => this.scene.remove(m))
     this.materialTissue.dispose()
-    this.materialTissueXray.dispose()
+    this.materialTissueBodyXray.dispose()
+    this.materialTissueCylinderXray.dispose()
     this.materialMarker.dispose()
     this.materialMarkerXray.dispose()
     this.materialGraphite.dispose()
@@ -94,8 +96,8 @@ export class MarkerEngine3dService implements OnDestroy {
     // create the scene
     this.scene = new THREE.Scene()
 
-    this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 500)
-    this.camera.position.set(-100, 100, 120)
+    this.camera = new THREE.PerspectiveCamera(30, w / h, 1, 3000)
+    this.camera.position.set(300, 300, -300)
     this.scene.add(this.camera)
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -105,10 +107,8 @@ export class MarkerEngine3dService implements OnDestroy {
     //var axesHelper = new THREE.AxesHelper(50)
     //this.scene.add(axesHelper)
 
-    // soft white light
-    this.light = new THREE.AmbientLight(0x404040)
-    this.light.position.y = 1000
-    this.light.position.z = 1000
+    this.light = new THREE.SpotLight(0xFFFFFF, 3)
+    this.light.position.set(0, 1500, 0)
     this.scene.add(this.light)
 
     this.backGround = null
@@ -116,65 +116,41 @@ export class MarkerEngine3dService implements OnDestroy {
     this.materialMarker = new THREE.MeshBasicMaterial({ color: 0xFFFF00, transparent: false })
     this.materialMarkerXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: false })
     this.materialGraphite = new THREE.MeshBasicMaterial({ color: 0xAAAAAA, opacity: 0.6, transparent: false })
-    this.materialGraphiteXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.6, transparent: false })
+    this.materialGraphiteXray = new THREE.MeshBasicMaterial({ color: 0x999999, opacity: 0.6, transparent: false })
 
     this.materialTissue = new THREE.MeshPhysicalMaterial({
-      color: 0xFFFFFF,
+      color: 0xC89D7C,
       metalness: 0,
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.8,
+      transmission: 0.6,
       opacity: 1,
       transparent: true
     })
-    this.materialTissueXray = new THREE.MeshPhysicalMaterial({
-      color: 0xFFFFFF,
+
+    this.materialTissueBodyXray = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, opacity: 0.8, transparent: true })
+
+    this.materialTissueCylinderXray = new THREE.MeshPhysicalMaterial({
+      color: 0x555555,
       metalness: 0,
       roughness: 0,
       alphaTest: 0.5,
       depthWrite: false,
-      transmission: 0.4,
-      opacity: 1,
+      transmission: 0.7,
+      opacity: 0.7,
       transparent: true
     })
 
-    const cadDirection = new Vector3(0, -1, 0)
-
-    LoadedObject.tryAdd(this.body).subscribe(existing => this.scene.add(existing),
-      () => {
-        this.body = new LoadedObject()
-        this.body.origin = new Vector3(0, 0, 0)
-        this.body.directionVector = cadDirection
-        this.body.position = new Vector3(0, 0, 0)
-        this.body.material = this.materialTissue
-        this.body.load(this.baseUrl + 'assets/Gris5A-Body.obj').subscribe(
-          object3d => {
-            this.scene.add(object3d)
-            this.meshes.push(object3d)
-          },
-          () => {
-            this.body = new NotLoadedObject()
-            console.warn(MarkerEngine3dService.name, "createScene", "body is not shown")
-          })
-      })
-
-    LoadedObject.tryAdd(this.bodyRigidMarkers).subscribe(existing => this.scene.add(existing),
-      () => {
-        this.bodyRigidMarkers = new LoadedObject()
-        this.bodyRigidMarkers.origin = new Vector3(0, 0, 0)
-        this.bodyRigidMarkers.directionVector = cadDirection
-        this.bodyRigidMarkers.position = new Vector3(0, 0, 0)
-        this.bodyRigidMarkers.material = this.materialTissue
-        this.bodyRigidMarkers.load(this.baseUrl + 'assets/Gris5A-BodyRigidMarkers.obj').subscribe(
-          object3d => {
-            this.scene.add(object3d)
-            this.meshes.push(object3d)
-          },
-          () => {
-            this.bodyRigidMarkers = new NotLoadedObject()
-            console.warn(MarkerEngine3dService.name, "createScene", "rigid markers are not shown")
-          })
+    this.body = new ThreeObject()
+    this.body.fromWorldToLocalOrigin = new Vector3(0, 0, 0)
+    this.body.position = new Vector3(0, 0, 0)
+    this.body.geometry = new THREE.BoxGeometry(118, 142, 96)
+    this.body.material = this.materialTissue
+    this.body.build().subscribe(
+      object3d => {
+        this.scene.add(object3d)
+        this.meshes.push(object3d)
       })
 
     this.cylinderLeftUpper = new ThreeObject()
@@ -249,24 +225,6 @@ export class MarkerEngine3dService implements OnDestroy {
         this.meshes.push(object3d)
       })
 
-    //LoadedObject.tryAdd(this.target).subscribe(existing => this.scene.add(existing),
-    //  () => {
-    //    this.target = new LoadedObject()
-    //    this.target.origin = new Vector3(-35.2, 0, -45)
-    //    this.target.directionVector = cadDirection
-    //    this.target.position = new Vector3(-35.2 + 25, -45 + 25, 0)
-    //    this.target.material = this.materialMarker
-    //    this.target.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinderInsert.obj').subscribe(
-    //      object3d => {
-    //        this.scene.add(object3d)
-    //        this.meshes.push(object3d)
-    //      },
-    //      () => {
-    //        this.target = new NotLoadedObject()
-    //        console.warn(MarkerEngine3dService.name, "createScene", "primary target is not shown")
-    //      })
-    //  })
-
     this.cylinderRightLower = new ThreeObject()
     this.cylinderRightLower.fromWorldToLocalOrigin = new Vector3(25, -25, 0)
     this.cylinderRightLower.position = new Vector3(0, 0, 0)
@@ -290,6 +248,45 @@ export class MarkerEngine3dService implements OnDestroy {
         this.scene.add(object3d)
         this.meshes.push(object3d)
       })
+
+    const cadDirection = new Vector3(0, -1, 0)
+
+    LoadedObject.tryAdd(this.bodyRigidMarkers).subscribe(existing => this.scene.add(existing),
+      () => {
+        this.bodyRigidMarkers = new LoadedObject()
+        this.bodyRigidMarkers.origin = new Vector3(0, 0, 0)
+        this.bodyRigidMarkers.directionVector = cadDirection
+        this.bodyRigidMarkers.position = new Vector3(0, 0, 0)
+        this.bodyRigidMarkers.material = this.materialGraphite
+        this.bodyRigidMarkers.load(this.baseUrl + 'assets/Gris5A-BodyRigidMarkers.obj').subscribe(
+          object3d => {
+            this.scene.add(object3d)
+            this.meshes.push(object3d)
+          },
+          () => {
+            this.bodyRigidMarkers = new NotLoadedObject()
+            console.warn(MarkerEngine3dService.name, "createScene", "rigid markers are not shown")
+          })
+      })
+
+    //LoadedObject.tryAdd(this.target).subscribe(existing => this.scene.add(existing),
+    //  () => {
+    //    this.target = new LoadedObject()
+    //    this.target.origin = new Vector3(-35.2, 0, -45)
+    //    this.target.directionVector = cadDirection
+    //    this.target.position = new Vector3(-35.2 + 25, -45 + 25, 0)
+    //    this.target.material = this.materialMarker
+    //    this.target.load(this.baseUrl + 'assets/No3-LungLeftUpperCylinderInsert.obj').subscribe(
+    //      object3d => {
+    //        this.scene.add(object3d)
+    //        this.meshes.push(object3d)
+    //      },
+    //      () => {
+    //        this.target = new NotLoadedObject()
+    //        console.warn(MarkerEngine3dService.name, "createScene", "primary target is not shown")
+    //      })
+    //  })
+
   }
 
   setSize(width: number, height: number) {
@@ -319,6 +316,11 @@ export class MarkerEngine3dService implements OnDestroy {
     this.frameId = requestAnimationFrame(() => {
       this.render()
     })
+
+    this.light.position.x = this.camera.position.x
+    this.light.position.y = this.camera.position.y
+    this.light.position.z = this.camera.position.z
+
     this.renderer.render(this.scene, this.camera)
   }
 
@@ -337,13 +339,13 @@ export class MarkerEngine3dService implements OnDestroy {
     if (xray) {
       this.scene.background = this.backGroundXray
 
-      this.body.setMaterial(this.materialTissueXray)
+      this.body.setMaterial(this.materialTissueBodyXray)
       this.bodyRigidMarkers.setMaterial(this.materialGraphiteXray)
 
-      this.cylinderLeftUpper.setMaterial(this.materialTissueXray)
-      this.cylinderLeftLower.setMaterial(this.materialTissueXray)
-      this.cylinderRightUpper.setMaterial(this.materialTissueXray)
-      this.cylinderRightLower.setMaterial(this.materialTissueXray)
+      this.cylinderLeftUpper.setMaterial(this.materialTissueCylinderXray)
+      this.cylinderLeftLower.setMaterial(this.materialTissueCylinderXray)
+      this.cylinderRightUpper.setMaterial(this.materialTissueCylinderXray)
+      this.cylinderRightLower.setMaterial(this.materialTissueCylinderXray)
 
       this.markerLeftUpper.setMaterial(this.materialMarkerXray)
       this.markerLeftLower.setMaterial(this.materialMarkerXray)
