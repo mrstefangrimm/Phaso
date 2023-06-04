@@ -11,12 +11,18 @@ import { IsocalEngine3dService } from './isocalengine3d.service'
 @Component({
   selector: 'app-isocal',
   templateUrl: './isocal.component.html',
-  styleUrls: ['./isocal.component.css']
+  styleUrls: ['./isocal.component.css'],
+  host: {
+    '(window:resize)': 'onResize($event)'
+  }
 })
 export class IsocalComponent implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>
+
+  rendererWidth: number
+  rendererHeight: number
 
   private shownAsXray: boolean = false
 
@@ -29,7 +35,14 @@ export class IsocalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.info(IsocalComponent.name, "ngOnInit")
 
-    this.engine3d.createScene(this.rendererCanvas)
+    console.debug(IsocalComponent.name, window.innerWidth, window.innerHeight)
+    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    var w = Math.max(250, window.innerWidth - sideNavSpace)
+    var h = Math.max(250, window.innerHeight - 100)
+    this.rendererWidth = w
+    this.rendererHeight = h
+
+    this.engine3d.createScene(this.rendererCanvas, w, h)
     this.engine3d.animate()
 
     this.setVisibilies()
@@ -38,6 +51,31 @@ export class IsocalComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     console.info(IsocalComponent.name, "ngOnDestroy")
     this.engine3d.ngOnDestroy()
+  }
+
+  onResize(event) {
+    console.debug(IsocalComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
+    event.target.innerWidth
+
+    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    var w = Math.max(250, window.innerWidth - sideNavSpace)
+    var h = Math.max(250, window.innerHeight - 100)
+    this.rendererWidth = w
+    this.rendererHeight = h
+  }
+
+  onSideNavChanged() {
+    console.info(IsocalComponent.name, "onSideNavChanged")
+
+    this.context.sideNavOpen = !this.context.sideNavOpen
+
+    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    var w = Math.max(250, window.innerWidth - sideNavSpace)
+    var h = Math.max(250, window.innerHeight - 100)
+    this.rendererWidth = w
+    this.rendererHeight = h
+
+    this.engine3d.setSize(w, h)
   }
 
   onX1Changed(event) {

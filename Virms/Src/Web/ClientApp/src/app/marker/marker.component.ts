@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core'
@@ -12,12 +12,18 @@ import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcompone
 @Component({
   selector: 'app-marker',
   templateUrl: './marker.component.html',
-  styleUrls: ['./marker.component.css']
+  styleUrls: ['./marker.component.css'],
+  host: {
+    '(window:resize)': 'onResize($event)'
+  }
 })
 export class MarkerComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
   @ViewChild('rendererCanvas', { static: true })
   rendererCanvas: ElementRef<HTMLCanvasElement>
+
+  rendererWidth: number
+  rendererHeight: number
 
   @ViewChild('gatingRendererCanvas', { static: true })
   gatingRendererCanvas: ElementRef<HTMLCanvasElement>
@@ -45,10 +51,16 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
     console.info(MarkerComponent.name, "c'tor")
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     console.info(MarkerComponent.name, "ngOnInit")
 
-    this.engine3d.createScene(this.rendererCanvas)
+    console.debug(MarkerComponent.name, window.innerWidth, window.innerHeight)
+    var sideNavSpace = this.context.sideNavOpen ? 390 : 140
+    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
+
+    this.engine3d.createScene(this.rendererCanvas, dim, dim)
     this.engine3d.animate()
 
     this.gatingEngine3d.createScene(this.gatingRendererCanvas)
@@ -70,6 +82,29 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   WindowBeforeUnoad($event: any) {
     //$event.preventDefault()
     this.onDestroy()
+  }
+
+  onResize(event) {
+    console.debug(MarkerComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
+    event.target.innerWidth
+
+    var sideNavSpace = this.context.sideNavOpen ? 390 : 140
+    var dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
+  }
+
+  onSideNavChanged() {
+    console.info(MarkerComponent.name, "onSideNavChanged")
+
+    this.context.sideNavOpen = !this.context.sideNavOpen
+
+    var sideNavSpace = this.context.sideNavOpen ? 390 : 140
+    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
+    this.rendererWidth = dim
+    this.rendererHeight = dim
+
+    this.engine3d.setSize(dim, dim)
   }
 
   override updateUI(data: MotionSystemData) {

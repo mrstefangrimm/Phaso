@@ -28,17 +28,17 @@ Currently the following clients exist:
 | Virms.Web         | LGPL    |
 | LiveImageProducer | LGPL    |
 
-| Tool             | License           |
-| ---------------- | ----------------- |
-| Arduino IDE      | GPL               |
-| avrdude          | GPL               |
-| Arduino CLI      | GPL               |
-| QM               | GPL               |
-| QPN_AVR          | GPL               |
-| Processing       | GPL               |
-| gcc              | GPL               |
-| VS2019 community | Microsoft license |
-| Android Studio   | Google license    |
+| Tool                         | License           |
+| ---------------------------- | ----------------- |
+| Arduino IDE                  | GPL               |
+| avrdude                      | GPL               |
+| Arduino CLI                  | GPL               |
+| QM                           | GPL               |
+| QPN_AVR                      | GPL               |
+| Processing                   | GPL               |
+| gcc                          | GPL               |
+| Visual Studio 2022 community | Microsoft license |
+| Android Studio               | Google license    |
 
 Libraries
 

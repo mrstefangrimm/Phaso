@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Stefan Grimm. All rights reserved.
+// Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
@@ -89,16 +89,15 @@ export class LiverEngine3dService implements OnDestroy {
     this.cylinderRightInsertBack.dispose()
   }
 
-  createScene(canvas: ElementRef<HTMLCanvasElement>) {
+  createScene(canvas: ElementRef<HTMLCanvasElement>, width: number, height: number) {
     console.info(LiverEngine3dService.name, "createScene")
 
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement
 
-    const w = this.canvas.width
-    const h = this.canvas.height
-
-    console.debug(w,h)
+    const w = width
+    const h = height
+    console.debug(w, h)
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -117,6 +116,9 @@ export class LiverEngine3dService implements OnDestroy {
     const controls = new OrbitControls(this.camera, this.renderer.domElement)
     controls.minDistance = 0
     controls.maxDistance = 2000
+
+    //var axesHelper = new THREE.AxesHelper(600)
+    //this.scene.add(axesHelper)
 
     // soft white light
     this.light = new THREE.AmbientLight(0x404040)
@@ -400,6 +402,10 @@ export class LiverEngine3dService implements OnDestroy {
       })
   }
 
+  setSize(width: number, height: number) {
+    this.renderer.setSize(width, height, true)
+  }
+
   animate() {
     console.debug(LiverEngine3dService.name, "animate")
 
@@ -419,14 +425,14 @@ export class LiverEngine3dService implements OnDestroy {
     })
   }
 
-  render() {
+  private render() {
     this.frameId = requestAnimationFrame(() => {
       this.render()
     })
     this.renderer.render(this.scene, this.camera)
   }
 
-  resize() {
+  private resize() {
     const w = this.canvas.width
     const h = this.canvas.height
 
