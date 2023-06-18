@@ -7,8 +7,8 @@ import { NavigationContextBaseModel } from "../shared/ui/navigationcontextbase.m
 @Injectable({ providedIn: 'root' })
 export class LnrService extends NavigationContextBaseModel {
 
-  showAsTransparent: boolean = false
-  showCover: boolean = false
+  showAsTransparent = false
+  showCover = false
 
   constructor() {
     super()

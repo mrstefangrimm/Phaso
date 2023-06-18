@@ -67,7 +67,7 @@ export class GatingEngine3dService implements OnDestroy {
     this.light.position.z = 1000
     this.scene.add(this.light)
 
-    var materialGatingPanel = new THREE.MeshPhysicalMaterial({
+    const materialGatingPanel = new THREE.MeshPhysicalMaterial({
       color: 0x0000AA,
       metalness: 0,
       roughness: 0,

@@ -196,7 +196,6 @@ export class NotLoadedObject implements LoadableObject {
   }
 
   rotate(rtn: number, axis: Vector3) {
-   
   }
 
   setVisible(show: boolean) {

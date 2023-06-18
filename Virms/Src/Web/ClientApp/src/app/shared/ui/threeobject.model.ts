@@ -12,10 +12,10 @@ export class ThreeObject {
   material: Material
   geometry: THREE.BufferGeometry
 
-  private posX: number = 0
-  private posZ: number = 0
-  private rtnY: number = 0
-  private rtnZ: number = 0
+  private posX = 0
+  private posZ = 0
+  private rtnY = 0
+  private rtnZ = 0
   private object: Object3D
 
   build(): Observable<Object3D> {

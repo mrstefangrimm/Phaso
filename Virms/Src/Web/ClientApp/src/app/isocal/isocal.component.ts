@@ -24,7 +24,7 @@ export class IsocalComponent implements OnInit, OnDestroy {
   rendererWidth: number
   rendererHeight: number
 
-  private shownAsXray: boolean = false
+  private shownAsXray = false
 
   constructor(
     public context: IsocalService,
@@ -36,9 +36,9 @@ export class IsocalComponent implements OnInit, OnDestroy {
     console.info(IsocalComponent.name, "ngOnInit")
 
     console.debug(IsocalComponent.name, window.innerWidth, window.innerHeight)
-    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
-    var w = Math.max(250, window.innerWidth - sideNavSpace)
-    var h = Math.max(250, window.innerHeight - 100)
+    const sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    const w = Math.max(250, window.innerWidth - sideNavSpace)
+    const h = Math.max(250, window.innerHeight - 100)
     this.rendererWidth = w
     this.rendererHeight = h
 
@@ -57,9 +57,9 @@ export class IsocalComponent implements OnInit, OnDestroy {
     console.debug(IsocalComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
     event.target.innerWidth
 
-    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
-    var w = Math.max(250, window.innerWidth - sideNavSpace)
-    var h = Math.max(250, window.innerHeight - 100)
+    const sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    const w = Math.max(250, window.innerWidth - sideNavSpace)
+    const h = Math.max(250, window.innerHeight - 100)
     this.rendererWidth = w
     this.rendererHeight = h
   }
@@ -69,9 +69,9 @@ export class IsocalComponent implements OnInit, OnDestroy {
 
     this.context.sideNavOpen = !this.context.sideNavOpen
 
-    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
-    var w = Math.max(250, window.innerWidth - sideNavSpace)
-    var h = Math.max(250, window.innerHeight - 100)
+    const sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    const w = Math.max(250, window.innerWidth - sideNavSpace)
+    const h = Math.max(250, window.innerHeight - 100)
     this.rendererWidth = w
     this.rendererHeight = h
 

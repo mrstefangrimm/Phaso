@@ -31,16 +31,16 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   selectedPatternId: number
   executingPatternId: number
 
-  leftUpperLng: number = 127
-  leftUpperRtn: number = 127
-  leftLowerLng: number = 127
-  leftLowerRtn: number = 127
-  rightUpperLng: number = 127
-  rightUpperRtn: number = 127
-  rightLowerLng: number = 127
-  rightLowerRtn: number = 127
-  gatingLng: number = 127
-  gatingRtn: number = 127
+  leftUpperLng = 127
+  leftUpperRtn = 127
+  leftLowerLng = 127
+  leftLowerRtn = 127
+  rightUpperLng = 127
+  rightUpperRtn = 127
+  rightLowerLng = 127
+  rightLowerRtn = 127
+  gatingLng = 127
+  gatingRtn = 127
 
   constructor(
     public context: MarkerService,
@@ -55,8 +55,8 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
     console.info(MarkerComponent.name, "ngOnInit")
 
     console.debug(MarkerComponent.name, window.innerWidth, window.innerHeight)
-    var sideNavSpace = this.context.sideNavOpen ? 390 : 140
-    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
+    const sideNavSpace = this.context.sideNavOpen ? 390 : 140
+    const dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
 
@@ -88,8 +88,8 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
     console.debug(MarkerComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
     event.target.innerWidth
 
-    var sideNavSpace = this.context.sideNavOpen ? 390 : 140
-    var dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
+    const sideNavSpace = this.context.sideNavOpen ? 390 : 140
+    const dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
   }
@@ -99,8 +99,8 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
     this.context.sideNavOpen = !this.context.sideNavOpen
 
-    var sideNavSpace = this.context.sideNavOpen ? 390 : 140
-    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
+    const sideNavSpace = this.context.sideNavOpen ? 390 : 140
+    const dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
 
@@ -111,55 +111,55 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
     if (this.synced && (this.inUseByMe || this.inUseByOther)) {
       {
         this.leftUpperLng = data.axes[ServoNumber.LULNG].position
-        let lng = (this.leftUpperLng - 127) / 10
+        const lng = (this.leftUpperLng - 127) / 10
         this.engine3d.cylinderLeftUpper.setPosZ(lng)
         this.engine3d.markerLeftUpper.setPosZ(lng)
 
         this.leftUpperRtn = data.axes[ServoNumber.LURTN].position
-        let rtn = (this.leftUpperRtn - 127) / 100
+        const rtn = (this.leftUpperRtn - 127) / 100
         this.engine3d.cylinderLeftUpper.setRtnZ(rtn)
         this.engine3d.markerLeftUpper.setRtnZ(rtn)
       }
       {
         this.leftLowerLng = data.axes[ServoNumber.LLLNG].position
-        let lng = (this.leftLowerLng - 127) / 10
+        const lng = (this.leftLowerLng - 127) / 10
         this.engine3d.cylinderLeftLower.setPosZ(lng)
         this.engine3d.markerLeftLower.setPosZ(lng)
 
         this.leftLowerRtn = data.axes[ServoNumber.LLRTN].position
-        let rtn = (this.leftLowerRtn - 127) / 100
+        const rtn = (this.leftLowerRtn - 127) / 100
         this.engine3d.cylinderLeftLower.setRtnZ(rtn)
         this.engine3d.markerLeftLower.setRtnZ(rtn)
       }
       {
         this.rightUpperLng = data.axes[ServoNumber.RULNG].position
-        let lng = (this.rightUpperLng - 127) / 10
+        const lng = (this.rightUpperLng - 127) / 10
         this.engine3d.cylinderRightUpper.setPosZ(lng)
         this.engine3d.markerRightUpper.setPosZ(lng)
 
         this.rightUpperRtn = data.axes[ServoNumber.RURTN].position
-        let rtn = (this.rightUpperRtn - 127) / 100
+        const rtn = (this.rightUpperRtn - 127) / 100
         this.engine3d.cylinderRightUpper.setRtnZ(rtn)
         this.engine3d.markerRightUpper.setRtnZ(rtn)
       }
       {
         this.rightLowerLng = data.axes[ServoNumber.RLLNG].position
-        let lng = (this.rightLowerLng - 127) / 10
+        const lng = (this.rightLowerLng - 127) / 10
         this.engine3d.cylinderRightLower.setPosZ(lng)
         this.engine3d.markerRightLower.setPosZ(lng)
 
         this.rightLowerRtn = data.axes[ServoNumber.RLRTN].position
-        let rtn = (this.rightLowerRtn - 127) / 100
+        const rtn = (this.rightLowerRtn - 127) / 100
         this.engine3d.cylinderRightLower.setRtnZ(rtn)
         this.engine3d.markerRightLower.setRtnZ(rtn)
       }
       {
         this.gatingLng = data.axes[ServoNumber.GALNG].position
-        let lng = (this.gatingLng - 127) / 10
+        const lng = (this.gatingLng - 127) / 10
         this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
 
         this.gatingRtn = data.axes[ServoNumber.GARTN].position
-        let rtn = (this.gatingRtn - 127) / 100
+        const rtn = (this.gatingRtn - 127) / 100
         this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
       }
     }
@@ -168,7 +168,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   onStartPattern() {
     console.info(MarkerComponent.name, "onStartPattern", "selected pattern:", this.selectedPatternId)
     if (this.inUseByMe) {
-      let mp: MotionPatternResponse = this.patterns.find(x => x.id = this.selectedPatternId)
+      const mp: MotionPatternResponse = this.patterns.find(x => x.id = this.selectedPatternId)
       if (mp != undefined) {
         mp.data.executing = true
         this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
@@ -182,10 +182,10 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
   onStopPattern() {
     console.info(MarkerComponent.name, "onStopPattern", "executing pattern:", this.executingPatternId)
-    let temp = this.executingPatternId
+    const temp = this.executingPatternId
     this.executingPatternId = undefined
     if (this.inUseByMe) {
-      let mp: MotionPatternResponse = this.patterns.find(x => x.id = temp)
+      const mp: MotionPatternResponse = this.patterns.find(x => x.id = temp)
       if (mp != undefined) {
         mp.data.executing = false
         this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
@@ -197,12 +197,12 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onLeftUpperLngChanged(event) {
-    let lng = (event.value - 127) / 10
+    const lng = (event.value - 127) / 10
     this.engine3d.cylinderLeftUpper.setPosZ(lng)
     this.engine3d.markerLeftUpper.setPosZ(lng)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.LULNG
       servoPos.position = event.value
 
@@ -211,12 +211,12 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onLeftUpperRtnChanged(event) {
-    let rtn = (event.value - 127) / 100
+    const rtn = (event.value - 127) / 100
     this.engine3d.cylinderLeftUpper.setRtnZ(rtn)
     this.engine3d.markerLeftUpper.setRtnZ(rtn)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.LURTN
       servoPos.position = event.value
 
@@ -225,12 +225,12 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onLeftLowerLngChanged(event) {
-    let lng = (event.value - 127) / 10
+    const lng = (event.value - 127) / 10
     this.engine3d.cylinderLeftLower.setPosZ(lng)
     this.engine3d.markerLeftLower.setPosZ(lng)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.LLLNG
       servoPos.position = event.value
 
@@ -239,12 +239,12 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onLeftLowerRtnChanged(event) {
-    let rtn = (event.value - 127) / 100
+    const rtn = (event.value - 127) / 100
     this.engine3d.cylinderLeftLower.setRtnZ(rtn)
     this.engine3d.markerLeftLower.setRtnZ(rtn)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.LLRTN
       servoPos.position = event.value
 
@@ -253,13 +253,13 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onRightUpperLngChanged(event) {
-    let lng = (event.value - 127) / 10
+    const lng = (event.value - 127) / 10
     this.engine3d.cylinderRightUpper.setPosZ(lng)
     this.engine3d.markerRightUpper.setPosZ(lng)
     //this.engine3d.target.setLng(lng)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.RULNG
       servoPos.position = event.value
 
@@ -268,13 +268,13 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onRightUpperRtnChanged(event) {
-    let rtn = (event.value - 127) / 100
+    const rtn = (event.value - 127) / 100
     this.engine3d.cylinderRightUpper.setRtnZ(rtn)
     this.engine3d.markerRightUpper.setRtnZ(rtn)
     //this.engine3d.target.setRtn(rtn)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.RURTN
       servoPos.position = event.value
 
@@ -283,12 +283,12 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onRightLowerLngChanged(event) {
-    let lng = (event.value - 127) / 10
+    const lng = (event.value - 127) / 10
     this.engine3d.cylinderRightLower.setPosZ(lng)
     this.engine3d.markerRightLower.setPosZ(lng)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.RLLNG
       servoPos.position = event.value
 
@@ -297,12 +297,12 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onRightLowerRtnChanged(event) {
-    let rtn = (event.value - 127) / 100
+    const rtn = (event.value - 127) / 100
     this.engine3d.cylinderRightLower.setRtnZ(rtn)
     this.engine3d.markerRightLower.setRtnZ(rtn)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.RLRTN
       servoPos.position = event.value
 
@@ -311,11 +311,11 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onGatingLngChanged(event) {
-    let lng = (event.value - 127) / 10
+    const lng = (event.value - 127) / 10
     this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.GALNG
       servoPos.position = event.value
 
@@ -324,11 +324,11 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
   }
 
   onGatingRtnChanged(event) {
-    let rtn = (event.value - 127) / 100
+    const rtn = (event.value - 127) / 100
     this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.GARTN
       servoPos.position = event.value
 

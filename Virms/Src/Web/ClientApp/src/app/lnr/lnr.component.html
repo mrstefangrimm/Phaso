@@ -31,22 +31,25 @@
           <br />
           <mat-slider min="0"
                       max="255"
-                      step="1"
-                      [(value)]="upperLng"
-                      (input)="onLngChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   value="127"
+                   #lng
+                   (input)="onLngChanged(lng)" />
           </mat-slider>
-          {{upperLng}}
+          {{lng.value}}
           <br />
           Rotational motion:
           <br />
           <mat-slider min="0"
                       max="255"
-                      step="1"
-                      [thumbLabel]="false"
-                      [(value)]="upperRtn"
-                      (input)="onRtnChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   value="127"
+                   #rtn
+                   (input)="onRtnChanged(rtn)" />
           </mat-slider>
-          {{upperRtn}}
+          {{rtn.value}}
         </td>
       </tr>
     </table>

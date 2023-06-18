@@ -78,11 +78,11 @@ export class MotionsystemComponentBaseModel  {
         this.inUseByOther = false
       }
 
-      let a = +new Date()
-      let b = +(new Date(data.timestamp))
+      const a = +new Date()
+      const b = +(new Date(data.timestamp))
       if (a - b > 300000) {
         console.warn("Kick out ", data.clientId, "which reserved the motion system at", data.timestamp)
-        let data2 = new MotionSystemData
+        const data2 = new MotionSystemData
         data2.inUse = false
         this.remoteService.patch(this.motionSystemId, data2).subscribe(
           result => {
@@ -95,7 +95,7 @@ export class MotionsystemComponentBaseModel  {
     this.updateUI(data)
   }
 
-  updateUI(data: MotionSystemData) {}
+  updateUI(data: MotionSystemData) { }
 
   getLivePicture() {
     if (this.timeStamp) {
@@ -111,7 +111,7 @@ export class MotionsystemComponentBaseModel  {
 
   onTakeControl() {
     if (this.state == UIState.NotInControl) {
-      let data = new MotionSystemData
+      const data = new MotionSystemData
       data.inUse = true
       this.state = UIState.InControl
       this.inUseByMe = true
@@ -123,7 +123,7 @@ export class MotionsystemComponentBaseModel  {
 
   private onLetControl() {
     if (this.state == UIState.InControl) {
-      let data = new MotionSystemData
+      const data = new MotionSystemData
       data.inUse = false
       this.remoteService.patch(this.motionSystemId, data).subscribe(
         result => {
