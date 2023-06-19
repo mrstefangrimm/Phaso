@@ -31,12 +31,12 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   selectedPatternId: number
   executingPatternId: number
 
-  leftLng: number = 127
-  leftRtn: number = 127
-  rightLng: number = 127
-  rightRtn: number = 127
-  gatingLng: number = 127
-  gatingRtn: number = 127
+  leftLng = 127
+  leftRtn = 127
+  rightLng = 127
+  rightRtn = 127
+  gatingLng = 127
+  gatingRtn = 127
 
   constructor(
     public context: LiverService,
@@ -51,8 +51,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     console.info(LiverComponent.name, "ngOnInit")
 
     console.debug(LiverComponent.name, window.innerWidth, window.innerHeight)
-    var sideNavSpace = this.context.sideNavOpen ? 235 : 140
-    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
+    const sideNavSpace = this.context.sideNavOpen ? 235 : 140
+    const dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
 
@@ -80,8 +80,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     console.debug(LiverComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
     event.target.innerWidth
 
-    var sideNavSpace = this.context.sideNavOpen ? 235 : 140
-    var dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
+    const sideNavSpace = this.context.sideNavOpen ? 235 : 140
+    const dim = Math.max(250, Math.min(event.target.innerWidth - sideNavSpace, event.target.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
   }
@@ -91,8 +91,8 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
     this.context.sideNavOpen = !this.context.sideNavOpen
 
-    var sideNavSpace = this.context.sideNavOpen ? 235 : 140
-    var dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
+    const sideNavSpace = this.context.sideNavOpen ? 235 : 140
+    const dim = Math.max(250, Math.min(window.innerWidth - sideNavSpace, window.innerHeight - 100))
     this.rendererWidth = dim
     this.rendererHeight = dim
 
@@ -110,7 +110,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     if (this.synced && (this.inUseByMe || this.inUseByOther)) {
       {
         this.leftLng = data.axes[ServoNumber.LLNG].position
-        let lng = (this.leftLng - 127) / 10
+        const lng = (this.leftLng - 127) / 10
         this.engine3d.cylinderLeft.setLng(lng)
         this.engine3d.cylinderLeftCylinder.setLng(lng)
         this.engine3d.cylinderLeftInsertCenter.setLng(lng)
@@ -118,7 +118,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
         this.engine3d.cylinderLeftMarkers.setLng(lng)
 
         this.leftRtn = data.axes[ServoNumber.LRTN].position
-        let rtn = (this.leftRtn - 127) / 100
+        const rtn = (this.leftRtn - 127) / 100
         this.engine3d.cylinderLeft.setRtn(rtn)
         this.engine3d.cylinderLeftCylinder.setRtn(rtn)
         this.engine3d.cylinderLeftInsertCenter.setRtn(rtn)
@@ -127,7 +127,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
       }
       {
         this.rightLng = data.axes[ServoNumber.RLNG].position
-        let lng = (this.rightLng - 127) / 10
+        const lng = (this.rightLng - 127) / 10
         this.engine3d.cylinderRight.setLng(lng)
         this.engine3d.cylinderRightCylinderCenter.setLng(lng)
         this.engine3d.cylinderRightCylinderBack.setLng(lng)
@@ -135,7 +135,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
         this.engine3d.cylinderRightInsertBack.setLng(lng)
 
         this.rightRtn = data.axes[ServoNumber.RRTN].position
-        let rtn = (this.rightRtn - 127) / 100
+        const rtn = (this.rightRtn - 127) / 100
         this.engine3d.cylinderRight.setRtn(rtn)
         this.engine3d.cylinderRightCylinderCenter.setRtn(rtn)
         this.engine3d.cylinderRightCylinderBack.setRtn(rtn)
@@ -144,11 +144,11 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
       }
       {
         this.gatingLng = data.axes[ServoNumber.GALNG].position
-        let lng = (this.gatingLng - 127) / 10
+        const lng = (this.gatingLng - 127) / 10
         this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng * 2, 0))
 
         this.gatingRtn = data.axes[ServoNumber.GARTN].position
-        let rtn = (this.gatingRtn - 127) / 100
+        const rtn = (this.gatingRtn - 127) / 100
         this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
       }
     }
@@ -157,7 +157,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   onStartPattern() {
     console.info(LiverComponent.name, "onStartPattern", "selected pattern:", this.selectedPatternId)
     if (this.inUseByMe) {
-      let mp: MotionPatternResponse = this.patterns.find(x => x.id = this.selectedPatternId)
+      const mp: MotionPatternResponse = this.patterns.find(x => x.id = this.selectedPatternId)
       if (mp != undefined) {
         mp.data.executing = true
         this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
@@ -171,10 +171,10 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
   onStopPattern() {
     console.info(LiverComponent.name, "onStopPattern", "executing pattern:", this.executingPatternId)
-    let temp = this.executingPatternId
+    const temp = this.executingPatternId
     this.executingPatternId = undefined
     if (this.inUseByMe) {
-      let mp: MotionPatternResponse = this.patterns.find(x => x.id = temp)
+      const mp: MotionPatternResponse = this.patterns.find(x => x.id = temp)
       if (mp != undefined) {
         mp.data.executing = false
         this.remoteService.patchMotionPattern(this.motionSystemId, this.selectedPatternId, mp.data).subscribe(
@@ -186,7 +186,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onLeftLngChanged(event) {
-    let lng = (event.value - 127) / 10
+    const lng = (event.value - 127) / 10
     this.engine3d.cylinderLeft.setLng(lng)
     this.engine3d.cylinderLeftCylinder.setLng(lng)
     this.engine3d.cylinderLeftInsertCenter.setLng(lng)
@@ -194,7 +194,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     this.engine3d.cylinderLeftMarkers.setLng(lng)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.LLNG
       servoPos.position = event.value
 
@@ -203,7 +203,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onLeftRtnChanged(event) {
-    let rtn = (event.value -127) / 100
+    const rtn = (127 - event.value) / 100
     this.engine3d.cylinderLeft.setRtn(rtn)
     this.engine3d.cylinderLeftCylinder.setRtn(rtn)
     this.engine3d.cylinderLeftInsertCenter.setRtn(rtn)
@@ -211,7 +211,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     this.engine3d.cylinderLeftMarkers.setRtn(rtn)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.LRTN
       servoPos.position = event.value
 
@@ -220,7 +220,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onRightLngChanged(event) {
-    let lng = (event.value - 127) / 10
+    const lng = (event.value - 127) / 10
     this.engine3d.cylinderRight.setLng(lng)
     this.engine3d.cylinderRightCylinderCenter.setLng(lng)
     this.engine3d.cylinderRightCylinderBack.setLng(lng)
@@ -228,7 +228,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     this.engine3d.cylinderRightInsertBack.setLng(lng)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.RLNG
       servoPos.position = event.value
 
@@ -237,7 +237,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onRightRtnChanged(event) {
-    let rtn = (event.value - 127) / 100
+    const rtn = (127 - event.value) / 100
     this.engine3d.cylinderRight.setRtn(rtn)
     this.engine3d.cylinderRightCylinderCenter.setRtn(rtn)
     this.engine3d.cylinderRightCylinderBack.setRtn(rtn)
@@ -245,7 +245,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
     this.engine3d.cylinderRightInsertBack.setRtn(rtn)
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.RRTN
       servoPos.position = event.value
 
@@ -254,11 +254,11 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onGatingLngChanged(event) {
-    let lng = (event.value - 127) / 10
+    const lng = (event.value - 127) / 10
     this.gatingEngine3d.gatingPlatform.translate(new Vector3(0, lng*2, 0))
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.GALNG
       servoPos.position = event.value
 
@@ -267,11 +267,11 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
   }
 
   onGatingRtnChanged(event) {
-    let rtn = (event.value -127) / 100
+    const rtn = (event.value -127) / 100
     this.gatingEngine3d.gatingPlatform.rotate(rtn, new Vector3(0, 0, 1))
 
     if (this.inUseByMe) {
-      let servoPos = new ServoPosition
+      const servoPos = new ServoPosition
       servoPos.servoNumber = ServoNumber.GARTN
       servoPos.position = event.value
 

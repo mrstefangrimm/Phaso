@@ -23,7 +23,7 @@ export class MotionSystemsService {
   liveImageUrl: string
 
   getMotionSystems(): Observable<MotionSystemsResponse> {
-    let doWork = () => {
+    const doWork = () => {
       return this.http.get<MotionSystemsResponse>(this.apiBaseUrl)
     }
     if (this.apiBaseUrl) {
@@ -38,7 +38,7 @@ export class MotionSystemsService {
 
   getMotionSystemData(alias: string): Observable<MotionSystemResponse> {
 
-    let doWork = (subscriber) => {
+    const doWork = (subscriber) => {
       this.http.get<MotionSystemsResponse>(this.apiBaseUrl).subscribe(
         result => {
           result.data.forEach(x => {
@@ -66,8 +66,8 @@ export class MotionSystemsService {
 
   getMotionSystem(id: number): Observable<MotionSystemResponse> {
 
-    let doWork = () => {
-      let request = this.apiBaseUrl + '/' + id
+    const doWork = () => {
+      const request = this.apiBaseUrl + '/' + id
       //console.debug(request)
       return this.http.get<MotionSystemResponse>(request)
     }
@@ -83,8 +83,8 @@ export class MotionSystemsService {
 
   patchServoPositions(motionSystemId: number, positions: ServoPosition[]) {
 
-    let doWork = () => {
-      let request = this.apiBaseUrl + '/' + motionSystemId + '/motionstep'
+    const doWork = () => {
+      const request = this.apiBaseUrl + '/' + motionSystemId + '/motionstep'
       console.debug(request, positions)
       this.http.patch(request, positions).subscribe(null, err => console.error(err))
     }
@@ -100,10 +100,10 @@ export class MotionSystemsService {
 
   patch(motionSystemId: number, data: MotionSystemData): Observable<any> {
 
-    let doWork = () => {
+    const doWork = () => {
       data.clientId = this.clientId
       data.timestamp = new Date()
-      let request = this.apiBaseUrl + '/' + motionSystemId
+      const request = this.apiBaseUrl + '/' + motionSystemId
       console.debug(request, data)
       return this.http.patch(request, data)
     }
@@ -119,8 +119,8 @@ export class MotionSystemsService {
 
   patchMotionPattern(motionSystemId: number, patternId: number, data: MotionPatternData): Observable<any> {
 
-    let doWork = () => {
-      let request = this.apiBaseUrl + '/' + motionSystemId + '/motionpatterns/' + patternId
+    const doWork = () => {
+      const request = this.apiBaseUrl + '/' + motionSystemId + '/motionpatterns/' + patternId
       console.info(request, data)
       return this.http.patch<any>(request, data)
     }

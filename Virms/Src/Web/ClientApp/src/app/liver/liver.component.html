@@ -35,61 +35,67 @@
           <br />
           <mat-slider min="0"
                       max="255"
-                      step="1"
-                      [thumbLabel]="false"
-                      [(value)]="leftLng"
-                      (input)="onLeftLngChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   [value]="leftLng"
+                   #ll
+                   (input)="onLeftLngChanged(ll)" />
           </mat-slider>
-          {{leftLng}}
+          {{ll.value}}
           <br />
           <mat-slider min="0"
                       max="255"
-                      step="1"
-                      [thumbLabel]="false"
-                      [(value)]="leftRtn"
-                      (input)="onLeftRtnChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   [value]="leftRtn"
+                   #lr
+                   (input)="onLeftRtnChanged(lr)" />
           </mat-slider>
-          {{leftRtn}}
+          {{lr.value}}
           <br />
           Right:
           <br />
           <mat-slider min="0"
                       max="255"
-                      step="1"
-                      [thumbLabel]="false"
-                      [(value)]="rightLng"
-                      (input)="onRightLngChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   [value]="rightLng"
+                   #rl
+                   (input)="onRightLngChanged(rl)" />
           </mat-slider>
-          {{rightLng}}
+          {{rl.value}}
           <br />
           <mat-slider min="0"
                       max="255"
-                      step="1"
-                      [thumbLabel]="false"
-                      [(value)]="rightRtn"
-                      (input)="onRightRtnChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   [value]="rightRtn"
+                   #rr
+                   (input)="onRightRtnChanged(rr)" />
           </mat-slider>
-          {{rightRtn}}
+          {{rr.value}}
           <br />
           Gating:
           <br />
           <mat-slider min="0"
                       max="255"
-                      step="1"
-                      [thumbLabel]="false"
-                      [(value)]="gatingLng"
-                      (input)="onGatingLngChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   [value]="gatingLng"
+                   #gl
+                   (input)="onGatingLngChanged(gl)" />
           </mat-slider>
-          {{gatingLng}}
+          {{gl.value}}
           <br />
           <mat-slider min="0"
                       max="255"
-                      step="1"
-                      [thumbLabel]="false"
-                      [(value)]="gatingRtn"
-                      (input)="onGatingRtnChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   [value]="gatingRtn"
+                   #gr
+                   (input)="onGatingRtnChanged(gr)" />
           </mat-slider>
-          {{gatingRtn}}
+          {{gr.value}}
         </td>
       </tr>
       <tr *ngIf="context.automaticControlsEnabled">

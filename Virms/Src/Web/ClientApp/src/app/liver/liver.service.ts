@@ -7,11 +7,11 @@ import { NavigationContextBaseModel } from "../shared/ui/navigationcontextbase.m
 @Injectable({ providedIn: 'root' })
 export class LiverService extends NavigationContextBaseModel {
 
-  showAsXray: boolean = false
-  showBody: boolean = true
-  showLeftCylinder: boolean = true
-  showRightCylinder: boolean = true
-  showMarkers: boolean = true
+  showAsXray = false
+  showBody = true
+  showLeftCylinder = true
+  showRightCylinder = true
+  showMarkers = true
 
   constructor() {
     super()

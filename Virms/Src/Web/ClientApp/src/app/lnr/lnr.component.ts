@@ -34,9 +34,9 @@ export class LnrComponent implements OnInit, OnDestroy {
     console.info(LnrComponent.name, "ngOnInit")
 
     console.debug(LnrComponent.name, window.innerWidth, window.innerHeight)
-    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
-    var w = Math.max(250, window.innerWidth - sideNavSpace)
-    var h = Math.max(250, window.innerHeight - 100)
+    const sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    const w = Math.max(250, window.innerWidth - sideNavSpace)
+    const h = Math.max(250, window.innerHeight - 100)
     this.rendererWidth = w
     this.rendererHeight = h
 
@@ -55,9 +55,9 @@ export class LnrComponent implements OnInit, OnDestroy {
     console.debug(LnrComponent.name, "onResize", event.target.innerWidth, event.target.innerHeight)
     event.target.innerWidth;
 
-    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
-    var w = Math.max(250, window.innerWidth - sideNavSpace)
-    var h = Math.max(250, window.innerHeight - 100)
+    const sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    const w = Math.max(250, window.innerWidth - sideNavSpace)
+    const h = Math.max(250, window.innerHeight - 100)
     this.rendererWidth = w
     this.rendererHeight = h
   }
@@ -67,9 +67,9 @@ export class LnrComponent implements OnInit, OnDestroy {
 
     this.context.sideNavOpen = !this.context.sideNavOpen
 
-    var sideNavSpace = this.context.sideNavOpen ? 220 : 150
-    var w = Math.max(250, window.innerWidth - sideNavSpace)
-    var h = Math.max(250, window.innerHeight - 100)
+    const sideNavSpace = this.context.sideNavOpen ? 220 : 150
+    const w = Math.max(250, window.innerWidth - sideNavSpace)
+    const h = Math.max(250, window.innerHeight - 100)
     this.rendererWidth = w
     this.rendererHeight = h
 
@@ -79,16 +79,16 @@ export class LnrComponent implements OnInit, OnDestroy {
   onLngChanged(event) {
     console.debug(event.value)
 
-    let alpha = event.value / 255 * Math.PI
+    const alpha = event.value / 255 * Math.PI
 
     const magicNum = -49.2
     const magicAng = 0.307
     const c2 = 52 * 52
-    let x = Math.sin(alpha) * 26
-    let a = x - 10.13
-    let b = Math.sqrt(c2 - a * a)
-    let lng = magicNum + b + Math.cos(alpha) * -26
-    let beta = magicAng - Math.asin(a / 52)
+    const x = Math.sin(alpha) * 26
+    const a = x - 10.13
+    const b = Math.sqrt(c2 - a * a)
+    const lng = magicNum + b + Math.cos(alpha) * -26
+    const beta = magicAng - Math.asin(a / 52)
 
     this.engine3d.groupCarriageBlue.setLng(lng)
     this.engine3d.groupCarriageSilver.setLng(lng)
@@ -100,7 +100,7 @@ export class LnrComponent implements OnInit, OnDestroy {
     this.engine3d.groupRotationSilver.setLng(lng)
     this.engine3d.groupExtensionArm.setLng(lng)
 
-    let rtnServoArm = (event.value - 127) / 80
+    const rtnServoArm = (event.value - 127) / 80
     this.engine3d.groupServoArmGold.rotate(-rtnServoArm, new Vector3(0, 0, 1))
     this.engine3d.groupServoArmSilver.rotate(-rtnServoArm, new Vector3(0, 0, 1))
     this.engine3d.groupServoArmAnthracite.rotate(-rtnServoArm, new Vector3(0, 0, 1))
@@ -112,7 +112,7 @@ export class LnrComponent implements OnInit, OnDestroy {
   onRtnChanged(event) {
     console.debug(event.value)
 
-    let rtn = (event.value - 127) / 80
+    const rtn = (event.value - 127) / 80
     this.engine3d.groupRotationWhite.setRtn(rtn)
     this.engine3d.groupRotationWood.setRtn(rtn)
     this.engine3d.groupRotationBlue.setRtn(rtn)

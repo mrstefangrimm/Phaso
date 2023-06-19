@@ -7,10 +7,10 @@ import { NavigationContextBaseModel } from "../shared/ui/navigationcontextbase.m
 @Injectable({ providedIn: 'root' })
 export class MarkerService extends NavigationContextBaseModel {
 
-  showAsXray: boolean = false
-  showBody: boolean = true
-  showCylinders: boolean = true
-  showMarkers: boolean = true
+  showAsXray = false
+  showBody = true
+  showCylinders = true
+  showMarkers = true
 
   constructor() {
     super()

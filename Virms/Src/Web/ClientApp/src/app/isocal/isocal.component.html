@@ -32,74 +32,75 @@
           <br />
           <mat-slider min="0"
                       max="20"
-                      step="1"
-                      [thumbLabel]="false"
-                      [value]="x1"
-                      (input)="onX1Changed($event)">
+                      step="1">
+            <input matSliderThumb
+                   #x1
+                   (input)="onX1Changed(x1)" />
           </mat-slider>
-          {{x1}}
+          {{x1.value}}
           <br />
           <mat-slider min="0"
                       max="20"
-                      step="1"
-                      [thumbLabel]="false"
-                      [value]="x2"
-                      (input)="onX2Changed($event)">
+                      step="1">
+            <input matSliderThumb
+                   #x2
+                   (input)="onX2Changed(x2)" />
           </mat-slider>
-          {{x2}}
+          {{x2.value}}
           <br />
           Y1/Y2:
           <br />
           <mat-slider min="0"
                       max="20"
-                      step="1"
-                      [thumbLabel]="false"
-                      [value]="y1"
-                      (input)="onY1Changed($event)">
+                      step="1">
+            <input matSliderThumb
+                   #y1
+                   (input)="onY1Changed(y1)" />
           </mat-slider>
-          {{y1}}
+          {{y1.value}}
           <br />
           <mat-slider min="0"
                       max="20"
-                      step="1"
-                      [thumbLabel]="false"
-                      [value]="y2"
-                      (input)="onY2Changed($event)">
+                      step="1">
+            <input matSliderThumb
+                   #y2
+                   (input)="onY2Changed(y2)" />
           </mat-slider>
-          {{y2}}
+          {{y2.value}}
           <br />
           Coll Rtn:
           <br />
           <mat-slider min="0"
                       max="360"
-                      step="1"
-                      [thumbLabel]="false"
-                      [value]="collRtn"
-                      (input)="onCollRtnChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   #collRtn
+                   (input)="onCollRtnChanged(collRtn)" />
           </mat-slider>
-          {{collRtn}}
+          {{collRtn.value}}
           <br />
           Gantry Rtn:
           <br />
           <mat-slider min="0"
                       max="360"
-                      step="1"
-                      [thumbLabel]="false"
-                      [value]="gantryRtn"
-                      (input)="onGantryRtnChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   #gantryRtn
+                   (input)="onGantryRtnChanged(gantryRtn)" />
           </mat-slider>
-          {{gantryRtn}}
+          {{gantryRtn.value}}
           <br />
           Couch Lng:
           <br />
           <mat-slider min="-100"
                       max="15"
-                      step="1"
-                      [thumbLabel]="false"
-                      [value]="couchLng"
-                      (input)="onCouchLngChanged($event)">
+                      step="1">
+            <input matSliderThumb
+                   value="0"
+                   #couchLng
+                   (input)="onCouchLngChanged(couchLng)" />
           </mat-slider>
-          {{couchLng}}
+          {{couchLng.value}}
         </td>
       </tr>
     </table>

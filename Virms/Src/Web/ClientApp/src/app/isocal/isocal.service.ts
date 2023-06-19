@@ -7,7 +7,7 @@ import { NavigationContextBaseModel } from "../shared/ui/navigationcontextbase.m
 @Injectable({ providedIn: 'root' })
 export class IsocalService extends NavigationContextBaseModel {
 
-  showAsXray: boolean = false
+  showAsXray = false
 
   constructor() {
     super()

@@ -4,8 +4,8 @@
 
 export class NavigationContextBaseModel  {
 
-  sideNavOpen: boolean = true
-  automaticControlsEnabled: boolean = false
+  sideNavOpen = true
+  automaticControlsEnabled = false
   visiblitiesOpen: boolean
 
   constructor() {
