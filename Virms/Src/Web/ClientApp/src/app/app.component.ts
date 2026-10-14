@@ -2,10 +2,11 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 @Component({
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './app.component.html'
 })
 export class AppComponent {
