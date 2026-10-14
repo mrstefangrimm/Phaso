@@ -7,6 +7,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core'
 import { Vector3 } from 'three'
 import { LnrService } from './lnr.service'
 import { LnrEngine3dService } from './lnrengine3d.service'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatIcon } from '@angular/material/icon'
+import { MatCheckbox } from '@angular/material/checkbox'
+import { MatSlider } from '@angular/material/slider'
 
 @Component({
   selector: 'app-lnr',
@@ -15,7 +19,8 @@ import { LnrEngine3dService } from './lnrengine3d.service'
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:resize)': 'onResize($event)'
-  }
+  },
+  imports: [MatSidenavModule, MatIcon, MatCheckbox, MatSlider],
 })
 export class LnrComponent implements OnInit, OnDestroy {
 

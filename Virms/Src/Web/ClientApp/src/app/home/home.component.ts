@@ -2,12 +2,20 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatDividerModule } from '@angular/material/divider'
+import { MarkerComponent } from '../marker/marker.component'
+import { LiverComponent } from '../liver/liver.component'
+import { LungComponent } from '../lung/lung.component'
+import { LnrComponent } from '../lnr/lnr.component'
+import { IsocalComponent } from '../isocal/isocal.component'
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  imports: [MatSidenavModule, MatDividerModule, MarkerComponent, LiverComponent, LungComponent, IsocalComponent, LnrComponent],
 })
 export class HomeComponent implements OnInit {
 

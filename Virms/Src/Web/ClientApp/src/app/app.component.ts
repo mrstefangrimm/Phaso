@@ -3,11 +3,13 @@
 //
 
 import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { RouterModule } from '@angular/router'
 
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.Eager,
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  imports: [RouterModule],
 })
 export class AppComponent {
 

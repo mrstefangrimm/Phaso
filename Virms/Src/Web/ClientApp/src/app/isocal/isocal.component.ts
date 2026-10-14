@@ -7,6 +7,10 @@ import { Vector3 } from 'three'
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { IsocalService } from './isocal.service'
 import { IsocalEngine3dService } from './isocalengine3d.service'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatSlider } from '@angular/material/slider'
+import { MatCheckbox } from '@angular/material/checkbox'
+import { MatIcon } from '@angular/material/icon'
 
 @Component({
   selector: 'app-isocal',
@@ -15,7 +19,8 @@ import { IsocalEngine3dService } from './isocalengine3d.service'
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:resize)': 'onResize($event)'
-  }
+  },
+  imports: [MatSidenavModule, MatSlider, MatCheckbox, MatIcon],
 })
 export class IsocalComponent implements OnInit, OnDestroy {
 

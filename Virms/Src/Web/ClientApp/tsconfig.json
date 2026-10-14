@@ -2,7 +2,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "esModuleInterop": true,
@@ -12,10 +11,25 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "es2020",
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "paths": {
+      "threeobject": [
+        "./dist/threeobject"
+      ]
+    },
     "lib": [
       "es2018",
       "dom"
     ],
     "useDefineForClassFields": false
-  }
+  },
+    "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "typeCheckHostBindings": true,
+    "strictTemplates": true
+  },
 }

@@ -8,6 +8,13 @@ import { MotionPatternResponse, MotionSystemData, MotionSystemsService, ServoPos
 import { LungService } from './lung.service'
 import { LungEngine3dService } from './lungengine3d.service'
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatFormField, MatLabel } from '@angular/material/form-field'
+import { MatCheckbox } from '@angular/material/checkbox'
+import { MatOption } from '@angular/material/core'
+import { MatSelect } from '@angular/material/select'
+import { MatSlider } from '@angular/material/slider'
+import { MatIcon } from '@angular/material/icon'
 
 @Component({
   selector: 'app-lung',
@@ -16,7 +23,8 @@ import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcompone
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:resize)': 'onResize($event)'
-  }
+  },
+  imports: [MatSidenavModule, MatLabel, MatFormField, MatCheckbox, MatOption, MatSelect, MatSlider, MatIcon],
 })
 export class LungComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 

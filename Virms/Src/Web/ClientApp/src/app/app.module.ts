@@ -28,13 +28,13 @@ import { HomeComponent } from './home/home.component'
 
 @NgModule({
   declarations: [
-    AppComponent,
-    MarkerComponent,
-    LiverComponent,
-    LungComponent,
-    LnrComponent,
-    IsocalComponent,
-    HomeComponent,
+    //AppComponent,
+    //MarkerComponent,
+    //LiverComponent,
+    //LungComponent,
+    //LnrComponent,
+    //IsocalComponent,
+    //HomeComponent,
   ],
   imports: [
     BrowserModule,

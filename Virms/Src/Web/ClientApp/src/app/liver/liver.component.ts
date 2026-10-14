@@ -8,6 +8,12 @@ import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service'
 import { LiverEngine3dService } from './liverengine3d.service'
 import { LiverService } from './liver.service'
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatCheckbox } from '@angular/material/checkbox'
+import { MatOption } from '@angular/material/core'
+import { MatFormField, MatLabel, MatSelect } from '@angular/material/select'
+import { MatSlider } from '@angular/material/slider'
+import { MatIcon } from '@angular/material/icon'
 
 @Component({
   selector: 'app-liver',
@@ -16,7 +22,8 @@ import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcompone
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:resize)': 'onResize($event)'
-  }
+  },
+  imports: [MatSidenavModule, MatCheckbox, MatOption, MatSelect, MatLabel, MatFormField, MatSlider, MatIcon],
 })
 export class LiverComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 

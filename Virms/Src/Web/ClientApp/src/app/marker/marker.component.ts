@@ -8,6 +8,11 @@ import { MotionPatternResponse, MotionSystemData, MotionSystemsService, ServoPos
 import { MarkerService } from './marker.service'
 import { MarkerEngine3dService } from './markerengine3d.service'
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatCheckbox } from '@angular/material/checkbox'
+import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select'
+import { MatIcon } from '@angular/material/icon'
+import { MatSlider } from '@angular/material/slider'
 
 @Component({
   selector: 'app-marker',
@@ -16,7 +21,8 @@ import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcompone
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:resize)': 'onResize($event)'
-  }
+  },
+  imports: [MatSidenavModule, MatCheckbox, MatOption, MatSelect, MatLabel, MatFormField, MatSlider, MatIcon],
 })
 export class MarkerComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
