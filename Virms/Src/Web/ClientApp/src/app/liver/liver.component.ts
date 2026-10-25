@@ -10,12 +10,13 @@ import { LiverService } from './liver.service'
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
 
 @Component({
-  selector: 'app-liver',
-  templateUrl: './liver.component.html',
-  styleUrls: ['./liver.component.css'],
-  host: {
-    '(window:resize)': 'onResize($event)'
-  }
+    selector: 'app-liver',
+    templateUrl: './liver.component.html',
+    styleUrls: ['./liver.component.css'],
+    host: {
+        '(window:resize)': 'onResize($event)'
+    },
+    standalone: false
 })
 export class LiverComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 

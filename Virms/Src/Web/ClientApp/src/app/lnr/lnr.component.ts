@@ -9,12 +9,13 @@ import { LnrService } from './lnr.service'
 import { LnrEngine3dService } from './lnrengine3d.service'
 
 @Component({
-  selector: 'app-lnr',
-  templateUrl: './lnr.component.html',
-  styleUrls: ['./lnr.component.css'],
-  host: {
-    '(window:resize)': 'onResize($event)'
-  }
+    selector: 'app-lnr',
+    templateUrl: './lnr.component.html',
+    styleUrls: ['./lnr.component.css'],
+    host: {
+        '(window:resize)': 'onResize($event)'
+    },
+    standalone: false
 })
 export class LnrComponent implements OnInit, OnDestroy {
 

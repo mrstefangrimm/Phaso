@@ -9,12 +9,13 @@ import { IsocalService } from './isocal.service'
 import { IsocalEngine3dService } from './isocalengine3d.service'
 
 @Component({
-  selector: 'app-isocal',
-  templateUrl: './isocal.component.html',
-  styleUrls: ['./isocal.component.css'],
-  host: {
-    '(window:resize)': 'onResize($event)'
-  }
+    selector: 'app-isocal',
+    templateUrl: './isocal.component.html',
+    styleUrls: ['./isocal.component.css'],
+    host: {
+        '(window:resize)': 'onResize($event)'
+    },
+    standalone: false
 })
 export class IsocalComponent implements OnInit, OnDestroy {
 

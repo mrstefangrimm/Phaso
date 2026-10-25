@@ -10,12 +10,13 @@ import { LungEngine3dService } from './lungengine3d.service'
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
 
 @Component({
-  selector: 'app-lung',
-  templateUrl: './lung.component.html',
-  styleUrls: ['./lung.component.css'],
-  host: {
-    '(window:resize)': 'onResize($event)'
-  }
+    selector: 'app-lung',
+    templateUrl: './lung.component.html',
+    styleUrls: ['./lung.component.css'],
+    host: {
+        '(window:resize)': 'onResize($event)'
+    },
+    standalone: false
 })
 export class LungComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 

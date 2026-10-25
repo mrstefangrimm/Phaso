@@ -10,12 +10,13 @@ import { MarkerEngine3dService } from './markerengine3d.service'
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
 
 @Component({
-  selector: 'app-marker',
-  templateUrl: './marker.component.html',
-  styleUrls: ['./marker.component.css'],
-  host: {
-    '(window:resize)': 'onResize($event)'
-  }
+    selector: 'app-marker',
+    templateUrl: './marker.component.html',
+    styleUrls: ['./marker.component.css'],
+    host: {
+        '(window:resize)': 'onResize($event)'
+    },
+    standalone: false
 })
 export class MarkerComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
