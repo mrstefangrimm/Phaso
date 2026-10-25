@@ -1,7 +1,7 @@
 // Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core'
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener, ChangeDetectionStrategy } from '@angular/core'
 import { Vector3 } from 'three'
 import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service'
 import { MotionPatternResponse, MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service'
@@ -16,6 +16,7 @@ import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcompone
     host: {
         '(window:resize)': 'onResize($event)'
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MarkerComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {

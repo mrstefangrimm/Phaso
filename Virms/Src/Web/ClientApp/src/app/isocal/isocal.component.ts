@@ -1,7 +1,7 @@
 // Copyright (c) 2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-import { ViewChild } from '@angular/core'
+import { ViewChild, ChangeDetectionStrategy } from '@angular/core'
 import { ElementRef } from '@angular/core'
 import { Vector3 } from 'three'
 import { Component, OnInit, OnDestroy } from '@angular/core'
@@ -15,6 +15,7 @@ import { IsocalEngine3dService } from './isocalengine3d.service'
     host: {
         '(window:resize)': 'onResize($event)'
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IsocalComponent implements OnInit, OnDestroy {
