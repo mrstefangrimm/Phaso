@@ -1,138 +1,142 @@
 <!-- Copyright (c) 2023 Stefan Grimm. All rights reserved.
-     Licensed under the GPL. See LICENSE file in the project root for full license information.
+Licensed under the GPL. See LICENSE file in the project root for full license information.
 -->
 
 <h1>Isocal Phantom</h1>
 
 <mat-sidenav-container>
-  <mat-sidenav *ngIf="!context.sideNavOpen"
-               opened
-               mode="side"
-               position="end">
-    <div>
-      <button mat-button (click)="onSideNavChanged()"><</button>
-    </div>
-    <div align="center">
-      <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
-    </div>
-  </mat-sidenav>
-  <mat-sidenav *ngIf="context.sideNavOpen"
-               opened
-               mode="side"
-               position="end">
-    <div align="left">
-      <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
-      <button mat-button (click)="onSideNavChanged()">></button>
-    </div>
-
-    <table>
-      <tr>
-        <td>
-          X1/X2:
-          <br />
-          <mat-slider min="0"
-                      max="20"
-                      step="1">
-            <input matSliderThumb
-                   #x1
-                   (input)="onX1Changed(x1)" />
-          </mat-slider>
-          {{x1.value}}
-          <br />
-          <mat-slider min="0"
-                      max="20"
-                      step="1">
-            <input matSliderThumb
-                   #x2
-                   (input)="onX2Changed(x2)" />
-          </mat-slider>
-          {{x2.value}}
-          <br />
-          Y1/Y2:
-          <br />
-          <mat-slider min="0"
-                      max="20"
-                      step="1">
-            <input matSliderThumb
-                   #y1
-                   (input)="onY1Changed(y1)" />
-          </mat-slider>
-          {{y1.value}}
-          <br />
-          <mat-slider min="0"
-                      max="20"
-                      step="1">
-            <input matSliderThumb
-                   #y2
-                   (input)="onY2Changed(y2)" />
-          </mat-slider>
-          {{y2.value}}
-          <br />
-          Coll Rtn:
-          <br />
-          <mat-slider min="0"
+  @if (!context.sideNavOpen) {
+    <mat-sidenav
+      opened
+      mode="side"
+      position="end">
+      <div>
+        <button mat-button (click)="onSideNavChanged()"><</button>
+      </div>
+      <div align="center">
+        <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
+      </div>
+    </mat-sidenav>
+  }
+  @if (context.sideNavOpen) {
+    <mat-sidenav
+      opened
+      mode="side"
+      position="end">
+      <div align="left">
+        <button mat-icon-button (click)="context.visiblitiesOpen = !context.visiblitiesOpen"><mat-icon>more_vert</mat-icon></button>
+        <button mat-button (click)="onSideNavChanged()">></button>
+      </div>
+      <table>
+        <tr>
+          <td>
+            X1/X2:
+            <br />
+            <mat-slider min="0"
+              max="20"
+              step="1">
+              <input matSliderThumb
+                #x1
+                (input)="onX1Changed(x1)" />
+              </mat-slider>
+              {{x1.value}}
+              <br />
+              <mat-slider min="0"
+                max="20"
+                step="1">
+                <input matSliderThumb
+                  #x2
+                  (input)="onX2Changed(x2)" />
+                </mat-slider>
+                {{x2.value}}
+                <br />
+                Y1/Y2:
+                <br />
+                <mat-slider min="0"
+                  max="20"
+                  step="1">
+                  <input matSliderThumb
+                    #y1
+                    (input)="onY1Changed(y1)" />
+                  </mat-slider>
+                  {{y1.value}}
+                  <br />
+                  <mat-slider min="0"
+                    max="20"
+                    step="1">
+                    <input matSliderThumb
+                      #y2
+                      (input)="onY2Changed(y2)" />
+                    </mat-slider>
+                    {{y2.value}}
+                    <br />
+                    Coll Rtn:
+                    <br />
+                    <mat-slider min="0"
                       max="360"
                       step="1">
-            <input matSliderThumb
-                   #collRtn
-                   (input)="onCollRtnChanged(collRtn)" />
-          </mat-slider>
-          {{collRtn.value}}
-          <br />
-          Gantry Rtn:
-          <br />
-          <mat-slider min="0"
-                      max="360"
-                      step="1">
-            <input matSliderThumb
-                   #gantryRtn
-                   (input)="onGantryRtnChanged(gantryRtn)" />
-          </mat-slider>
-          {{gantryRtn.value}}
-          <br />
-          Couch Lng:
-          <br />
-          <mat-slider min="-100"
-                      max="15"
-                      step="1">
-            <input matSliderThumb
-                   value="0"
-                   #couchLng
-                   (input)="onCouchLngChanged(couchLng)" />
-          </mat-slider>
-          {{couchLng.value}}
-        </td>
-      </tr>
-    </table>
+                      <input matSliderThumb
+                        #collRtn
+                        (input)="onCollRtnChanged(collRtn)" />
+                      </mat-slider>
+                      {{collRtn.value}}
+                      <br />
+                      Gantry Rtn:
+                      <br />
+                      <mat-slider min="0"
+                        max="360"
+                        step="1">
+                        <input matSliderThumb
+                          #gantryRtn
+                          (input)="onGantryRtnChanged(gantryRtn)" />
+                        </mat-slider>
+                        {{gantryRtn.value}}
+                        <br />
+                        Couch Lng:
+                        <br />
+                        <mat-slider min="-100"
+                          max="15"
+                          step="1">
+                          <input matSliderThumb
+                            value="0"
+                            #couchLng
+                            (input)="onCouchLngChanged(couchLng)" />
+                          </mat-slider>
+                          {{couchLng.value}}
+                        </td>
+                      </tr>
+                    </table>
+                  </mat-sidenav>
+                }
+                <mat-sidenav-content>
+                  <mat-sidenav-container hasBackdrop="false">
+                    @if (context.visiblitiesOpen) {
+                      <mat-sidenav
+                        opened
+                        mode="over"
+                        position="end">
+                        <div>
+                          <mat-checkbox [checked]="context.showAsXray"
+                            (change)="onXrayChecked($event.checked)">
+                            X-Ray
+                          </mat-checkbox>
+                        </div>
+                      </mat-sidenav>
+                    }
+                    <mat-sidenav-content>
 
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-sidenav-container hasBackdrop="false">
-      <mat-sidenav *ngIf="context.visiblitiesOpen"
-                   opened
-                   mode="over"
-                   position="end">
-        <div>
-          <mat-checkbox [checked]="context.showAsXray"
-                        (change)="onXrayChecked($event.checked)">
-            X-Ray
-          </mat-checkbox>
-        </div>
-      </mat-sidenav>
-      <mat-sidenav-content>
+                      <div class="stack-horz">
+                        <div class="content">
+                          <canvas #rendererCanvas
+                            id="renderCanvas"
+                            [width]=rendererWidth
+                            [height]=rendererHeight>
+                          </canvas>
+                        </div>
+                      </div>
 
-        <div class="stack-horz">
-          <div class="content">
-            <canvas #rendererCanvas
-                    id="renderCanvas"
-                    [width]=rendererWidth
-                    [height]=rendererHeight>
-            </canvas>
-          </div>
-        </div>
+                    </mat-sidenav-content>
+                  </mat-sidenav-container>
 
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-
-  </mat-sidenav-content>
-</mat-sidenav-container>
+                </mat-sidenav-content>
+              </mat-sidenav-container>
