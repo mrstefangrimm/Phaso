@@ -42,7 +42,7 @@ import { HomeComponent } from './home/home.component'
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       // Paths do not work on github.io
-      //{ path: 'a', component: HomeComponent, pathMatch: 'full' },
+      { path: 'lnr', component: LnrComponent, pathMatch: 'full' },
       //{ path: 'b', component: HomeComponent, pathMatch: 'full' },
       //{ path: 'c', component: HomeComponent, pathMatch: 'full' },
       //{ path: 'd', component: HomeComponent, pathMatch: 'full' },

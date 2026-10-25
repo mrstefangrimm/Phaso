@@ -8,7 +8,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { LoadableObject, LoadedObject, NotLoadedObject } from '../shared/ui/loadedobject.model'
 
 @Injectable({providedIn: 'root'})
-
 export class LnrEngine3dService implements OnDestroy {
 
   private canvas: HTMLCanvasElement
@@ -120,11 +119,15 @@ export class LnrEngine3dService implements OnDestroy {
     controls.maxDistance = 500
 
     const light = new THREE.PointLight(0xffffff, 2)
-    light.position.set(300, 700, 0)
+    light.position.set(300, -700, 0)
     this.scene.add(light)
     const light2 = new THREE.PointLight(0xffffff, 2)
-    light2.position.set(0, -500, 300)
+    light2.position.set(0, 500, 300)
     this.scene.add(light2)
+
+    // var light3 = new THREE.AmbientLight(0xffffff);
+    // this.scene.add(light3);
+
 
     this.backGround = null
     this.backGroundXray = null
