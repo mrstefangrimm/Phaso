@@ -46,7 +46,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
   constructor(
     public context: MarkerService,
-    public remoteService: MotionSystemsService,
+    remoteService: MotionSystemsService,
     private readonly engine3d: MarkerEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService) {
     super(remoteService, 'GRIS5A')

@@ -42,7 +42,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
   constructor(
     public context: LiverService,
-    public remoteService: MotionSystemsService,
+    remoteService: MotionSystemsService,
     private readonly engine3d: LiverEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService) {
     super(remoteService, 'NO2')

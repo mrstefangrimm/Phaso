@@ -16,7 +16,7 @@ export class LungEngine3dService implements OnDestroy {
   private renderer: THREE.WebGLRenderer
   private camera: THREE.PerspectiveCamera
   private scene: THREE.Scene
-  private light: THREE.AmbientLight
+  private light: THREE.Light
   private frameId: number = null
 
   private meshes = []

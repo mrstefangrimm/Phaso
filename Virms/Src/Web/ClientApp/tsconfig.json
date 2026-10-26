@@ -12,6 +12,14 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "es2020",
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    // new
+    "strict": true,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
+    "noImplicitOverride": true,
+    "ignoreDeprecations": "6.0",
+    "noImplicitReturns": false
   }
 }

@@ -1,13 +1,13 @@
 // Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-import { Observable } from 'rxjs'
-import * as THREE from 'three'
-import { Material, Object3D, Quaternion, Vector3 } from 'three'
+import { Observable } from 'rxjs';
+import * as THREE from 'three';
+import { Material, Object3D, Vector3 } from 'three';
 
 export class ThreeObject {
 
-  fromWorldToLocalOrigin: Vector3 // From world space origin to the local orign
+  fromWorldToLocalOrigin: Vector3; // From world space origin to the local origin
   position: Vector3 // From the local origin to the center of the object
   material: Material
   geometry: THREE.BufferGeometry

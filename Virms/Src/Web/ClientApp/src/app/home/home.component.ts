@@ -12,12 +12,12 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
 })
 export class HomeComponent implements OnInit {
 
-  sideNavOpen: boolean
-  markerPhantomActive: boolean
-  liverPhantomActive: boolean
-  lungPhantomActive: boolean
-  isocalPhantomActive: boolean
-  lnrActuatorActive: boolean
+  sideNavOpen = false;
+  markerPhantomActive = false;
+  liverPhantomActive = false;
+  lungPhantomActive = false;
+  isocalPhantomActive = false;
+  lnrActuatorActive = false;
 
   constructor() {
     console.info(HomeComponent.name, "c'tor")

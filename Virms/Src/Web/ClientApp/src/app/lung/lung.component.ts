@@ -42,7 +42,7 @@ export class LungComponent extends MotionsystemComponentBaseModel implements OnI
 
   constructor(
     public context: LungService,
-    public remoteService: MotionSystemsService,
+    remoteService: MotionSystemsService,
     private readonly engine3d: LungEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService) {
     super(remoteService, 'NO3')
