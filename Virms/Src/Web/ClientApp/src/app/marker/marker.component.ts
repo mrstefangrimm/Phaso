@@ -81,7 +81,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
   @HostListener('window:beforeunload', ['$event'])
   @HostListener('window:pagehide', ['$event'])
-  WindowBeforeUnoad($event: any) {
+  WindowBeforeUnoad($event) {
     //$event.preventDefault()
     this.onDestroy()
   }
