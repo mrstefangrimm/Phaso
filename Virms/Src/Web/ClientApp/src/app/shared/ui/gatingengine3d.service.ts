@@ -134,5 +134,4 @@ export class GatingEngine3dService implements OnDestroy {
 
     this.renderer.setSize(w, h)
   }
-
 }
