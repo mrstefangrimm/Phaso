@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { AppComponent } from './app.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { RouterModule } from '@angular/router'
+import { RouterModule, RouterOutlet } from '@angular/router'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatIconModule } from '@angular/material/icon'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -40,9 +40,9 @@ import { HomeComponent } from './home/home.component'
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      {path: '', component: HomeComponent, pathMatch: 'full'},
       // Paths do not work on github.io
-      { path: 'lnr', component: LnrComponent, pathMatch: 'full' },
+      {path: 'lnr', component: LnrComponent, pathMatch: 'full'},
       //{ path: 'b', component: HomeComponent, pathMatch: 'full' },
       //{ path: 'c', component: HomeComponent, pathMatch: 'full' },
       //{ path: 'd', component: HomeComponent, pathMatch: 'full' },
@@ -63,7 +63,8 @@ import { HomeComponent } from './home/home.component'
     MatMenuModule,
     MatToolbarModule,
     MatDividerModule,
-    SharedModule
+    SharedModule,
+    RouterOutlet
   ],
   providers: [],
   bootstrap: [
