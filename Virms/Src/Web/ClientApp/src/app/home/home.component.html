@@ -1,67 +1,88 @@
-<!-- Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
-     Licensed under the GPL. See LICENSE file in the project root for full license information.
+<!-- Copyright (c) 2021 Stefan Grimm. All rights reserved.
+Licensed under the GPL. See LICENSE file in the project root for full license information.
 -->
-
 <mat-sidenav-container>
-  <mat-sidenav *ngIf="!sideNavOpen" opened mode="side">
-    <button mat-button (click)="sideNavOpen = true">></button>
-  </mat-sidenav>
-  <mat-sidenav *ngIf="sideNavOpen" opened mode="over">
-    <div align="right">
-      <button mat-button (click)="sideNavOpen = false"><</button>
-    </div>
-    <div>Device:</div>
-    <div>
-      <button mat-button (click)="onMarkerPhantomClicked()">Marker Phantom</button>
-    </div>
-    <div>
-      <button mat-button (click)="onLiverPhantomClicked()">Liver Phantom</button>
-    </div>
-    <div>
-      <button mat-button (click)="onLungPhantomClicked()">Lung Phantom</button>
-    </div>
-    <div>
-      <button mat-button (click)="onIsocalPhantomClicked()">Isocal Phantom</button>
-    </div>
-    <div>
-      <button mat-button (click)="onLnrActuatorClicked()">LnR Actuator</button>
-    </div>
-  </mat-sidenav>
+  @if (sideNavOpen) {
+    <mat-sidenav #sidenav opened mode="over" disableClose>
+      <div align="right">
+        <button mat-button (click)="sideNavOpen = false; sidenav.close()"><</button>
+      </div>
+      <div>Device:</div>
+      <div>
+        <button mat-button (click)="onMarkerPhantomClicked(); sidenav.close()">Marker Phantom</button>
+      </div>
+      <div>
+        <button mat-button (click)="onLiverPhantomClicked(); sidenav.close()">Liver Phantom</button>
+      </div>
+      <div>
+        <button mat-button (click)="onLungPhantomClicked(); sidenav.close()">Lung Phantom</button>
+      </div>
+      <div>
+        <button mat-button (click)="onIsocalPhantomClicked(); sidenav.close()">Isocal Phantom</button>
+      </div>
+      <div>
+        <button mat-button (click)="onLnrActuatorClicked(); sidenav.close()">LnR Actuator</button>
+      </div>
+    </mat-sidenav>
+  }
+  @else {
+    <mat-sidenav opened mode="side">
+      <button mat-button (click)="sideNavOpen = true">></button>
+    </mat-sidenav>
+  }
   <mat-sidenav-content>
-    <app-marker *ngIf="markerPhantomActive"></app-marker>
-    <app-liver *ngIf="liverPhantomActive"></app-liver>
-    <app-lung *ngIf="lungPhantomActive"></app-lung>
-    <app-isocal *ngIf="isocalPhantomActive"></app-isocal>
-    <app-lnr *ngIf="lnrActuatorActive"></app-lnr>
-    <table *ngIf="showHome()"
-           width="100%">
-      <tbody>
-        <tr>
-          <td align="right">
-            <button (click)="onMarkerPhantomClicked()"><img src="assets/MarkerPhantom.jpg" /></button>
-          </td>
-          <td>
-            <button (click)="onLiverPhantomClicked()"><img src="assets/LiverPhantom.jpg" /></button>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">
-            <button (click)="onLungPhantomClicked()"><img src="assets/LungPhantom.jpg" /></button>
-          </td>
-          <td>
-            <button (click)="onIsocalPhantomClicked()"><img src="assets/IsocalPhantom.jpg" /></button>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">
-            <button (click)="onLnrActuatorClicked()"><img src="assets/LnrActuator.jpg" /></button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    @if (markerPhantomActive) {
+      <app-marker></app-marker>
+    }
+    @if (liverPhantomActive) {
+      <app-liver></app-liver>
+    }
+    @if (lungPhantomActive) {
+      <app-lung></app-lung>
+    }
+    @if (isocalPhantomActive) {
+      <app-isocal></app-isocal>
+    }
+    @if (lnrActuatorActive) {
+      <app-lnr></app-lnr>
+    }
+    @if (showHome()) {
+      <table
+        width="100%">
+        <tbody>
+          <tr>
+            <td align="right">
+              <button (click)="onMarkerPhantomClicked()"><img src="assets/MarkerPhantom.jpg" alt="marker" /></button>
+            </td>
+            <td>
+              <button (click)="onLiverPhantomClicked()"><img src="assets/LiverPhantom.jpg" alt="liver" /></button>
+            </td>
+          </tr>
+          <tr>
+            <td align="right">
+              <button (click)="onLungPhantomClicked()"><img src="assets/LungPhantom.jpg" alt="lung" /></button>
+            </td>
+            <td>
+              <button (click)="onIsocalPhantomClicked()"><img src="assets/IsocalPhantom.jpg" alt="isocal" /></button>
+            </td>
+          </tr>
+          <tr>
+            <td align="right">
+              <button (click)="onLnrActuatorClicked()"><img src="assets/LnrActuator.jpg" alt="lnr" /></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    }
   </mat-sidenav-content>
 </mat-sidenav-container>
-<footer>
-  <mat-divider></mat-divider>
-  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Stefan Grimm</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+<footer class="license">
+  This work © 2021 by Stefan Grimm is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+  Commons Attribution-ShareAlike 4.0 International</a><img
+  src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""
+  style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+  src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""
+  style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+  src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt=""
+  style="max-width: 1em;max-height:1em;margin-left: .2em;">
 </footer>

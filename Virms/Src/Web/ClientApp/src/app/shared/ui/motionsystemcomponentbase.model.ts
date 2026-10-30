@@ -95,7 +95,9 @@ export class MotionsystemComponentBaseModel  {
     this.updateUI(data)
   }
 
-  updateUI(data: MotionSystemData) { }
+  updateUI(data: MotionSystemData) {
+    // Intentionally left blank
+  }
 
   getLivePicture() {
     if (this.timeStamp) {
@@ -117,6 +119,7 @@ export class MotionsystemComponentBaseModel  {
       this.inUseByMe = true
       this.remoteService.patch(this.motionSystemId, data).subscribe(
         result => {
+          // Intentionally left blank
         }, err => console.error(err))
     }
   }
@@ -161,7 +164,7 @@ export class MotionsystemComponentBaseModel  {
 const enum UIState {
   // There is no connection to the web service
   // or the device has not synced with the service
-  // or the service does not allow to use the device. 
+  // or the service does not allow to use the device.
   DeviceNotReady,
   // Device is ready to use.
   NotInControl,

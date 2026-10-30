@@ -1,7 +1,7 @@
 // Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core'
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener, ChangeDetectionStrategy } from '@angular/core'
 import { Vector3 } from 'three'
 import { MotionPatternResponse, MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service'
 import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service'
@@ -10,12 +10,14 @@ import { LiverService } from './liver.service'
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
 
 @Component({
-  selector: 'app-liver',
-  templateUrl: './liver.component.html',
-  styleUrls: ['./liver.component.css'],
-  host: {
-    '(window:resize)': 'onResize($event)'
-  }
+    selector: 'app-liver',
+    templateUrl: './liver.component.html',
+    styleUrls: ['./liver.component.css'],
+    host: {
+        '(window:resize)': 'onResize($event)'
+    },
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LiverComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
@@ -40,7 +42,7 @@ export class LiverComponent extends MotionsystemComponentBaseModel implements On
 
   constructor(
     public context: LiverService,
-    public remoteService: MotionSystemsService,
+    remoteService: MotionSystemsService,
     private readonly engine3d: LiverEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService) {
     super(remoteService, 'NO2')

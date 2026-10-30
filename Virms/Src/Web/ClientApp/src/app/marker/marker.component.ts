@@ -1,7 +1,7 @@
 // Copyright (c) 2021-2023 Stefan Grimm. All rights reserved.
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core'
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener, ChangeDetectionStrategy } from '@angular/core'
 import { Vector3 } from 'three'
 import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service'
 import { MotionPatternResponse, MotionSystemData, MotionSystemsService, ServoPosition } from '../shared/remote/motionsystems.service'
@@ -10,12 +10,14 @@ import { MarkerEngine3dService } from './markerengine3d.service'
 import { MotionsystemComponentBaseModel } from '../shared/ui/motionsystemcomponentbase.model'
 
 @Component({
-  selector: 'app-marker',
-  templateUrl: './marker.component.html',
-  styleUrls: ['./marker.component.css'],
-  host: {
-    '(window:resize)': 'onResize($event)'
-  }
+    selector: 'app-marker',
+    templateUrl: './marker.component.html',
+    styleUrls: ['./marker.component.css'],
+    host: {
+        '(window:resize)': 'onResize($event)'
+    },
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class MarkerComponent extends MotionsystemComponentBaseModel implements OnInit, OnDestroy {
 
@@ -44,7 +46,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
   constructor(
     public context: MarkerService,
-    public remoteService: MotionSystemsService,
+    remoteService: MotionSystemsService,
     private readonly engine3d: MarkerEngine3dService,
     private readonly gatingEngine3d: GatingEngine3dService) {
     super(remoteService, 'GRIS5A')
@@ -79,7 +81,7 @@ export class MarkerComponent extends MotionsystemComponentBaseModel implements O
 
   @HostListener('window:beforeunload', ['$event'])
   @HostListener('window:pagehide', ['$event'])
-  WindowBeforeUnoad($event: any) {
+  WindowBeforeUnoad($event) {
     //$event.preventDefault()
     this.onDestroy()
   }

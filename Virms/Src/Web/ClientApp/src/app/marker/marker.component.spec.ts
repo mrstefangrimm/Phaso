@@ -1,65 +1,45 @@
-// Copyright (c) 2022 Stefan Grimm. All rights reserved.
-// Licensed under the GPL. See LICENSE file in the project root for full license information.
-//
-import { HttpClient } from '@angular/common/http'
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing'
-import { Router } from '@angular/router'
-import { FakeMotionSystemsService } from '../shared/remote/fakemotionsystems.service'
-import { MotionSystemsService } from '../shared/remote/motionsystems.service'
-import { TocService } from '../shared/remote/toc.service'
-import { GatingEngine3dService } from '../shared/ui/gatingengine3d.service'
-
-import { MarkerComponent } from './marker.component'
-import { MarkerEngine3dService } from './markerengine3d.service'
+import { provideZonelessChangeDetection } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { MarkerComponent } from './marker.component';
+import { MarkerService } from './marker.service';
+import { MarkerEngine3dService } from './markerengine3d.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {GatingEngine3dService} from '../shared/ui/gatingengine3d.service';
 
 describe('MarkerComponent', () => {
-  let component: MarkerComponent
-  let fixture: ComponentFixture<MarkerComponent>
-  const routerSpy = jasmine.createSpyObj('Router', [''])
-  const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post'])
-  const tocServiceSpy = jasmine.createSpyObj('TocService', ['getTableOfContent'])
-
-  const gatingEngineServiceSpy = jasmine.createSpyObj('GatingEngine3dService', ['createScene', 'animate'])
-
-  const loadableObjectSpy = jasmine.createSpyObj('LoadableObject', ['setVisible'])
-  class FakeEngineService {
-    createScene() { }
-    animate() { }
-    setXray() { }
-    body = loadableObjectSpy
-    cylinderLeftUpper = loadableObjectSpy
-    markerLeftUpper = loadableObjectSpy
-    cylinderLeftLower = loadableObjectSpy
-    markerLeftLower = loadableObjectSpy
-    cylinderRightUpper = loadableObjectSpy
-    markerRightUpper = loadableObjectSpy
-    cylinderRightLower = loadableObjectSpy
-    markerRightLower = loadableObjectSpy
-  }
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MarkerComponent],
+      imports: [MatSidenavModule],
       providers: [
-        { provide: ComponentFixtureAutoDetect, useValue: true },
-        { provide: Router, useValue: routerSpy },
-        { provide: HttpClient, useValue: httpClientSpy },
-        { provide: TocService, useValue: tocServiceSpy },
-        { provide: MotionSystemsService, useClass: FakeMotionSystemsService },
-        { provide: MarkerEngine3dService, useClass: FakeEngineService },
-        { provide: GatingEngine3dService, useValue: gatingEngineServiceSpy },
+        provideZonelessChangeDetection(),
+        { provide: 'BASE_URL', useValue: '/api' },
+        { provide: 'PROD_MODE', useValue: '/api' },
+        MarkerService,
+        {
+          provide: MarkerEngine3dService, useValue: {
+            createScene: vi.fn(),
+            animate: vi.fn(),
+            setTransparent: vi.fn(),
+            ngOnDestroy: vi.fn(),
+          }
+        },
+        {
+          provide: GatingEngine3dService, useValue: {
+            createScene: vi.fn(),
+            animate: vi.fn(),
+            setTransparent: vi.fn(),
+            ngOnDestroy: vi.fn()
+          }
+        }
       ]
-    })
-    .compileComponents()
-  })
+    }).compileComponents();
+  });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(MarkerComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
-
-  it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+  it('should create the component', () => {
+    const fixture = TestBed.createComponent(MarkerComponent);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+});

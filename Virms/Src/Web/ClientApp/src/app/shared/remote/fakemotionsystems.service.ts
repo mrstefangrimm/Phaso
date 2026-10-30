@@ -6,6 +6,7 @@ import { MotionSystemsResponse } from "./motionsystems.service"
 
 export class FakeMotionSystemsService {
   getMotionSystemData(): Observable<MotionSystemsResponse> {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     return new Observable<MotionSystemsResponse>(_ => { })
   }
 }

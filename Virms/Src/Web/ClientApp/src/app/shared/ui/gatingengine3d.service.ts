@@ -17,7 +17,7 @@ export class GatingEngine3dService implements OnDestroy {
   private light: THREE.AmbientLight
   private frameId: number = null
 
-  private mesh: undefined
+  private mesh: any | undefined = undefined
 
   gatingPlatform: LoadableObject
 
@@ -134,5 +134,4 @@ export class GatingEngine3dService implements OnDestroy {
 
     this.renderer.setSize(w, h)
   }
-
 }
