@@ -2,6 +2,8 @@
   // Licensed under the GPL. See LICENSE file in the project root for full license information.
   //
   import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
+  import { Router } from "@angular/router";
+  import { environment } from '../../environments/environment';
 
   @Component({
       selector: 'app-home',
@@ -19,12 +21,20 @@
     isocalPhantomActive = false;
     lnrActuatorActive = false;
 
-    constructor() {
+    constructor(private router: Router) {
       console.info(HomeComponent.name, "c'tor")
     }
 
     ngOnInit() {
-      console.info(HomeComponent.name, "ngOnInit")
+      console.info(HomeComponent.name,
+        "ngOnInit, production: ", environment.production,
+        " default route: ", environment.defaultRoute);
+
+      if (environment.defaultRoute) {
+        console.info(HomeComponent.name, "hello");
+        this.router.navigate([`/${environment.defaultRoute}`]);
+      }
+
       // Paths do not work on github.io
       //if (this.router.url == '/a') {
       //  this.onMarkerPhantomClicked()
