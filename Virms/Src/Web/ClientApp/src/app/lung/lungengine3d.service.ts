@@ -104,7 +104,7 @@ export class LungEngine3dService implements OnDestroy {
     this.scene = new THREE.Scene()
 
     this.camera = new THREE.PerspectiveCamera(30, w / h, 1, 3000)
-    this.camera.position.set(0, 1000, 0)
+    this.camera.position.set(300, 300, 500)
     this.scene.add(this.camera)
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement)

@@ -2,7 +2,7 @@
 // Licensed under the GPL. See LICENSE file in the project root for full license information.
 //
 
-import { NgModule, provideZonelessChangeDetection} from '@angular/core';
+import { NgModule, provideZonelessChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser'
 import { AppComponent } from './app.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -43,15 +43,9 @@ import { HomeComponent } from './home/home.component'
       {path: '', component: HomeComponent, pathMatch: 'full'},
       // Paths do not work on github.io
       {path: 'lnr', component: LnrComponent, pathMatch: 'full'},
-      //{ path: 'b', component: HomeComponent, pathMatch: 'full' },
-      //{ path: 'c', component: HomeComponent, pathMatch: 'full' },
-      //{ path: 'd', component: HomeComponent, pathMatch: 'full' },
-      //{
-      //  // markerphantom, liverphantom, lungphantom, lnractuator
-      //  path: ':motionSystem',
-      //  component: HomeComponent,
-      //  pathMatch: 'full'
-      //},
+      {path: 'markerphantom', component: MarkerComponent, pathMatch: 'full'},
+      {path: 'liverphantom', component: LiverComponent, pathMatch: 'full'},
+      {path: 'lungphantom', component: LungComponent, pathMatch: 'full'},
     ]),
     MatSliderModule,
     MatInputModule,
