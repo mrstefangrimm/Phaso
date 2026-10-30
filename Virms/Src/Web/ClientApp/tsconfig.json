@@ -5,17 +5,21 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "esModuleInterop": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    // new
+    "strict": true,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
+    "noImplicitOverride": true,
+    "ignoreDeprecations": "6.0",
+    "noImplicitReturns": false
   }
 }

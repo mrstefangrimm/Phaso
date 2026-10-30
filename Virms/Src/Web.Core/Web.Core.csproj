@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>Virms.$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>Virms.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IO.Ports" Version="7.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="10.0.14" />
   </ItemGroup>
 
   <ItemGroup>
